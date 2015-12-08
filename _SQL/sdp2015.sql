@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 02, 2015 at 08:37 PM
+-- Generation Time: Dec 03, 2015 at 08:29 PM
 -- Server version: 10.0.17-MariaDB
 -- PHP Version: 5.6.14
 
@@ -101,13 +101,13 @@ CREATE TABLE `calon_mahasiswa` (
 INSERT INTO `calon_mahasiswa` (`nomor_registrasi_id`, `email`, `password`, `nama`, `jenis_kelamin`, `tempat_lahir`, `tanggal_lahir`, `kewarganegaraan`, `status_sosial`, `agama`, `alamat`, `provinsi`, `kota`, `kodepos`, `nomor_hp`, `foto`, `rapor`, `nilai_mat`, `nilai_inggris`, `nilai_rata_rata`, `akte_kelahiran`, `kartu_keluarga`, `nama_sekolah`, `alamat_sekolah`, `provinsi_sekolah`, `kota_sekolah`, `kodepos_sekolah`, `nomor_telp_sekolah`, `relasi`, `nama_wali`, `alamat_wali`, `provinsi_wali`, `kota_wali`, `kodepos_wali`, `nomor_telp_wali`, `pekerjaan_wali`, `skhun`, `ijazah`, `informasi_kurikulum_id`, `tanggal_create`, `status`) VALUES
 ('12po09', 'raymondwongso@gmail.com', '123456', 'Raymond Wongso Hartanto', 'L', 'Surabaya', '1995-11-02', 'WNI', NULL, 'Buddha', 'Darmo Harapan Indah VI / WW12A', 'Jawa Timur', 'Surabaya', '60187', '08113192777', '', '', 0, 0, 0, '', '', 'SMAK Frateran', NULL, 'Jawa Timur', 'Surabaya', NULL, NULL, NULL, 'Go Ong Ka Kiat', 'Darmo Harapan Indah VI / WW12A', 'Jawa Timur', 'Surabaya', '60187', NULL, 'Wirausaha', NULL, NULL, 'S1INF131', '2015-11-12 20:45:54', 0),
 ('2ie93o', 'desmond@gmail.com', 'asd123', 'Desmond Dund', 'L', 'Surabaya', '2015-12-02', 'WNI', NULL, 'Kristen', NULL, 'DKI jakarta', 'jakarta barat', '22321', '44533221', NULL, NULL, 80, 80, 80, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'S1DKV150', '2015-12-02 16:40:31', 1),
-('38krn1', 'scott@gmail.com', 'asd123', 'Scott Pilgrimr', 'L', 'bogor', '1990-07-11', 'WNA', 'single', 'kristen', 'Jalan Dukuh Pakis 23 Bogor', 'jawa barat', 'bogor', '65525', '08155223344', '38krn1-Foto', '38krn1-Rapor', 75, 83, 79, '38krn1-akteKelahiran', '38krn1-kartuKeluarga', 'SMA Harvard', 'Jalan Banyu Urip XV / 5-10 Bogor', 'jawa barat', 'bogor', '655555', '0317532323', 'W', 'Brat Pidd', 'Jalan Simpang Darmo Permai Selatan 23 Bogor', 'jawa barat', 'bogor', '232323', '08775522342', 'Swasta', NULL, NULL, 'S1DKV150', '2015-12-02 16:41:01', 1),
+('38krn1', 'scott@gmail.com', 'asd123', 'Gozzidhy Andre', 'L', 'ambon', '1995-12-15', 'WNI', 'single', 'kristen', 'Petemon', 'daerah istimewa yogyakarta', 'yogyakarta', '62899', '081354764821', '38krn1-Foto', '38krn1-Rapor', 80, 95, 88, '38krn1-akteKelahiran', '38krn1-kartuKeluarga', 'SMA Inpres Taman Siswa', 'Pantai Indah Kapuk', 'kalimantan utara', 'tarakan', '241451', '07427579965', 'W', 'Joko Widowdow', 'Blauran No 37 (sebelah toko spatu bahagia)', 'sulawesi selatan', 'makassar', '902311', '081354764821', 'CEO Stark Industries', NULL, NULL, 'S1SIB151', '2015-12-02 16:41:01', 1),
 ('a02l3s', 'isaac@gmail.com', 'asd123', 'Isaac Newton', 'L', 'banda aceh', '2015-07-06', 'WNI', NULL, NULL, NULL, 'aceh', 'banda aceh', NULL, NULL, NULL, NULL, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'S1SIB150', '2015-12-02 16:41:27', 1),
 ('a7i4r1', 'stefanietanujaya@gmail.com', '123456', 'Stefanie Tanujaya', 'P', 'Surabaya', '0000-00-00', 'WNI', NULL, 'Buddha', '', 'Jawa Timur', 'Surabaya', '', '', '', '', 0, 0, 0, '', '', 'SMAK St. Louis', NULL, 'Jawa Timur', 'Surabaya', NULL, NULL, NULL, '', '', 'Jawa Timur', 'Surabaya', '', NULL, 'Wirausaha', NULL, NULL, 'S1INF131', '2015-11-12 20:45:54', 1),
 ('a983ke', 'harry@gmail.com', 'asd123', 'Harry Frost', 'L', 'bandung', '2015-06-10', 'WNI', NULL, NULL, NULL, 'bali', 'denpasar', NULL, NULL, NULL, NULL, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'S1SIB150', '2015-12-02 16:41:52', 1),
 ('and123', 'and123@gmail.com', 'and123', 'Andre Gozali', 'L', 'bali', '2015-12-08', 'WNI', NULL, NULL, NULL, 'bali', 'denpasar', NULL, NULL, NULL, NULL, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'D3INF150', '2015-11-29 13:01:23', 1),
 ('apl02d', 'evan@gmail.com', 'asd123', 'Evan Payton', 'L', 'bandung', '2015-07-22', 'WNI', NULL, 'kristen', 'evann', 'DKI jakarta', 'jakarta barat', '48485', '203498548920', 'apl02d-Foto', 'apl02d-Rapor', 98, 75, 87, 'apl02d-akteKelahiran', 'apl02d-kartuKeluarga', 'SMA Jakarta', 'jakarta', 'DKI jakarta', 'jakarta', '223421', '4409271233', 'O', 'Nessy', 'jalan jakarta', 'DKI jakarta', 'jakarta', '232123', '385793912', 'bekerja', NULL, NULL, 'S1DKV150', '2015-12-02 16:42:47', 1),
-('asd123', 'christianlimanto95@gmail.com', 'asd123', 'Holly Ellis', 'L', 'Surabaya', '2015-11-03', 'WNI', 'Single', 'Buddha', '321321', 'aceh', 'banda', '32132', '123123', 'asd123-Foto', 'asd123-Rapor', 12, 12, 12, 'asd123-akteKelahiran', 'asd123-kartuKeluarga', '123123', '123213', 'aceh', 'banda', '123122', '231321', 'O', 'Martha Ellis', 'Oak Street 45', 'aceh', 'banda', '213123', '213', '123123', NULL, NULL, 'S1DKV153', '2015-11-27 07:55:00', 1),
+('asd123', 'christianlimanto95@gmail.com', 'asd123', 'Holly Ellis', 'L', 'Surabaya', '2015-11-03', 'WNI', 'Single', 'Buddha', '321321', 'aceh', 'banda', '32132', '0819995523', 'asd123-Foto', 'asd123-Rapor', 12, 12, 12, 'asd123-akteKelahiran', 'asd123-kartuKeluarga', '123123', '123213', 'aceh', 'banda', '123122', '231321', 'O', 'Martha Ellis', 'Oak Street 45', 'kalimantan barat', 'pontianak', '213123', '7542213', 'Swasta', NULL, NULL, 'S1DKV153', '2015-11-27 07:55:00', 1),
 ('asd456', 'asd456@gmail.com', 'asd456', 'Christian Limanto', 'L', 'Surabaya', '2015-11-02', 'WNI', NULL, 'kristen', '123', 'aceh', 'banda aceh', '12321', '123123', 'asd456-Foto', 'asd456-Rapor', 12, 12, 12, 'asd456-akteKelahiran', 'asd456-kartuKeluarga', '1231321', '12312313', 'aceh', 'banda', '123123', '12312', 'O', '123123', '123123', 'aceh', 'banda', '123123', '123213', '123132', NULL, NULL, 'S1DKV150', '2015-11-27 07:55:14', 1),
 ('chr123', 'charlie@gmail.com', 'asd123', 'Charlie Hines', 'L', 'banda aceh', '2015-09-24', 'WNI', NULL, 'kristen', 'Aduhh', 'aceh', 'banda aceh', '22312', '4567885123', 'chr123-Foto', 'chr123-Rapor', 97, 80, 89, 'chr123-akteKelahiran', 'chr123-kartuKeluarga', 'SMA aceh', 'aceh', 'aceh', 'banda', '229482', '9847312223', 'O', 'Saya', 'Mulai lelah', 'aceh', 'banda', '223431', '94575391', 'Saudaraa', NULL, NULL, 'S1INF150', '2015-12-02 16:43:12', 1),
 ('cyn123', 'cyn123@gmail.com', 'cyn123', 'Ciwang Minata', 'P', 'surabaya', '2015-07-06', 'WNI', NULL, NULL, NULL, 'aceh', 'banda aceh', NULL, NULL, NULL, NULL, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'S1DKV150', '2015-11-29 13:00:59', 1),
@@ -123,7 +123,7 @@ INSERT INTO `calon_mahasiswa` (`nomor_registrasi_id`, `email`, `password`, `nama
 ('jjhy77', 'lukaskristanto@gmail.com', '123456', 'Lukas Kristanto', 'L', 'Surabaya', '0000-00-00', 'WNI', NULL, '', '', 'Jawa Timur', 'Surabaya', '', '', '', '', 0, 0, 0, '', '', '', NULL, 'Jawa Timur', 'Surabaya', NULL, NULL, NULL, '', '', 'Jawa Timur', 'Surabaya', '', NULL, '', NULL, NULL, 'S1INF131', '2015-11-12 20:45:54', 1),
 ('k9j9k0', 'kevin@gmail.com', 'asd123', 'Kevin Klein', 'L', 'balikpapan', '2015-12-15', 'WNI', NULL, 'kristen', 'Jalan', 'DKI jakarta', 'jakarta barat', '26641', '223232123', NULL, NULL, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'S1SIB150', '2015-12-02 16:46:37', 1),
 ('kikio0', 'angelineizumi@gmail.com', '123456', 'Angeline Izumi', 'P', 'Surabaya', '0000-00-00', 'WNI', NULL, '', '', 'Jawa Timur', 'Surabaya', '', '', '', '', 0, 0, 0, '', '', '', NULL, 'Jawa Timur', 'Surabaya', NULL, NULL, NULL, '', '', 'Jawa Timur', 'Surabaya', '', NULL, '', NULL, NULL, 'S1INF131', '2015-11-12 20:45:54', 1),
-('kl09op', 'sugihartojohanes@gmail.com', '123456', 'Sugiharto Johanes', 'L', 'Surabaya', '0000-00-00', 'WNI', NULL, '', '', 'Jawa Timur', 'Surabaya', '', '', '', '', 0, 0, 0, '', '', '', NULL, 'Jawa Timur', 'Surabaya', NULL, NULL, NULL, '', '', 'Jawa Timur', 'Surabaya', '', NULL, '', NULL, NULL, 'S1INF131', '2015-11-12 20:45:54', 1),
+('kl09op', 'sugihartojohanes@gmail.com', '123456', 'Sugiharto Johanes', 'L', 'Surabaya', '0000-00-00', 'WNI', NULL, '', '', 'Jawa Timur', 'Surabaya', '', '', '', '', 0, 0, 0, '', '', '', NULL, 'Jawa Timur', 'Surabaya', NULL, NULL, NULL, '', '', 'Jawa Timur', 'Surabaya', '', NULL, '', NULL, NULL, 'S1INF131', '2015-11-12 20:45:54', 0),
 ('kli908', 'rickysaid@gmail.com', '123456', 'Ricky Said', 'L', 'Surabaya', '0000-00-00', 'WNI', NULL, '', '', 'Jawa Timur', 'Surabaya', '', '', '', '', 0, 0, 0, '', '', '', NULL, 'Jawa Timur', 'Surabaya', NULL, NULL, NULL, '', '', 'Jawa Timur', 'Surabaya', '', NULL, '', NULL, NULL, 'S1INF131', '2015-11-12 20:45:54', 1),
 ('ms9kj3', 'foster@gmail.com', 'asd123', 'Foster Sutton', 'L', 'banda aceh', '2015-12-02', 'WNI', NULL, 'kristen', 'jaya', 'bali', 'denpasar', '23314', '09483712', 'ms9kj3-Foto', 'ms9kj3-Rapor', 85, 85, 85, 'ms9kj3-akteKelahiran', 'ms9kj3-kartuKeluarga', 'SMA BALI', 'BALI', 'bali', 'denpasar', '231213', '485938123', 'O', 'Kwan Yuw', 'Ngagel1', 'bali', 'denpasar', '123321', '2147483647', 'wirasuwastah', NULL, NULL, 'S1DKV150', '2015-12-02 16:47:25', 1),
 ('q0siwk', 'lydia@gmail.com', 'asd123', 'Lydia Carey', 'P', 'aceh', '2015-01-14', 'WNI', NULL, NULL, NULL, 'bali', 'denpasar', NULL, NULL, NULL, NULL, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'S1SIB150', '2015-12-03 00:50:49', 1),
@@ -799,7 +799,7 @@ INSERT INTO `mahasiswa` (`nrp`, `nomor_registrasi_id`, `email`, `password`, `nam
 ('213116261', 'kli908', 'rickysaid@gmail.com', '123456', 'Ricky Said', 'L', 'Surabaya', '0000-00-00', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '0', 0, '0', 1, 'S1INF131', 1),
 ('213116267', 'a7i4r1', 'stefanietanujaya@gmail.com', '123456', 'Stefanie Tanujaya', 'P', 'Surabaya', '0000-00-00', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '0', 0, '0', 1, 'S1INF131', 1),
 ('213116268', 'jj876u', 'stefanuskurniawan@gmail.com', '123456', 'Stefanus Kurniawan', 'L', 'Surabaya', '0000-00-00', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '0', 0, '0', 1, 'S1INF131', 1),
-('213116270', 'kl09op', 'asdasd@gmail.com', '123456', 'Sugiharto Johanes', 'L', 'Surabaya', '0000-00-00', 'WNI', 'Single', 'Buddha', 'Jalan Asem 23 Surabaya', 'jawa timur', 'surabaya', '60223', '087853223232', '', 'Lee Kum Kee', 'Taman Asri Surabaya 51', 'jawa barat', 'bogor', '08785323141', 'Swasta', '0', 0, '0', 1, 'S1INF131', 1),
+('213116270', 'kl09op', 'sugihartojohanes@gmail.com', '123456', 'Sugiharto Johanes', 'L', 'Surabaya', '0000-00-00', 'WNA', 'Single', 'Buddha', 'Taman Puspa Raya A1/19 Citraland', 'jawa timur', 'surabaya', '65525', '087852324', '', 'Lee Kum Kee', 'Robertson Quay Street 45', 'kalimantan timur', 'samarinda', '08552223344', 'Swasta', '0', 18, '0', 5, 'S1INF131', 1),
 ('213116278', 'gty564', 'yudhadarmawan@gmail.com', '123456', 'Yudha Darmawan', 'L', 'Surabaya', '0000-00-00', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '0', 0, '0', 1, 'S1INF131', 1),
 ('213180292', 'fewq23', 'nancyyonata@gmail.com', '123456', 'Nancy Yonata', 'P', 'Surabaya', '0000-00-00', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '0', 0, '0', 1, 'S1INF131', 1);
 
@@ -991,7 +991,8 @@ INSERT INTO `notifikasi` (`id`, `mahasiswa_nrp`, `dosen_nip`, `judul`, `isi`, `t
 (0, NULL, NULL, 'Kategori Mahasiswa', '2', '2015-11-30 10:42:47', 0),
 (0, NULL, NULL, 'Kategori Mahasiswa', '2', '2015-11-30 10:46:14', 0),
 (0, NULL, 'PMB', 'Belum Dikategorikan', '', '2015-12-01 13:09:01', 0),
-(0, NULL, 'PMB', 'Belum Dikategorikan', '', '2015-12-03 01:58:32', 0);
+(0, NULL, 'PMB', 'Belum Dikategorikan', '', '2015-12-03 01:58:32', 0),
+(0, NULL, 'PMB', 'Belum Dikategorikan', '', '2015-12-03 13:10:12', 0);
 
 -- --------------------------------------------------------
 
@@ -1003,8 +1004,10 @@ CREATE TABLE `pembayaran` (
   `id` varchar(15) NOT NULL,
   `jumlah` mediumint(8) UNSIGNED NOT NULL,
   `tanggal_bayar` date NOT NULL,
-  `calon_mahasiswa_nomor_registrasi` varchar(6) NOT NULL,
-  `mahasiswa_nrp` varchar(9) NOT NULL,
+  `tanggal_batas` date NOT NULL,
+  `semester` varchar(1) NOT NULL,
+  `calon_mahasiswa_nomor_registrasi` varchar(6) DEFAULT NULL,
+  `mahasiswa_nrp` varchar(9) DEFAULT NULL,
   `status` varchar(1) NOT NULL DEFAULT '1',
   `status_lihat` varchar(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -1013,11 +1016,23 @@ CREATE TABLE `pembayaran` (
 -- Dumping data for table `pembayaran`
 --
 
-INSERT INTO `pembayaran` (`id`, `jumlah`, `tanggal_bayar`, `calon_mahasiswa_nomor_registrasi`, `mahasiswa_nrp`, `status`, `status_lihat`) VALUES
-('UPP201508010001', 3300000, '2015-08-10', '', '213116256', '1', '0'),
-('UPP201508010002', 3300000, '2015-08-10', '', '213116270', '1', '0'),
-('UPP201508010003', 3300000, '2015-08-10', '', '213116268', '1', '0'),
-('UPP201510010001', 3300000, '2015-10-10', '', '213116256', '1', '0');
+INSERT INTO `pembayaran` (`id`, `jumlah`, `tanggal_bayar`, `tanggal_batas`, `semester`, `calon_mahasiswa_nomor_registrasi`, `mahasiswa_nrp`, `status`, `status_lihat`) VALUES
+('SPP001', 3398000, '2013-08-07', '2013-08-10', '1', 'kl09op', '213116270', '1', '0'),
+('SPP002', 3398000, '2015-10-03', '2015-10-10', '1', 'kl09op', '213116270', '1', '0'),
+('SPP003', 3398000, '2015-12-07', '2015-12-10', '1', 'kl09op', '213116270', '1', '0'),
+('SPP004', 3398000, '2015-02-08', '2015-02-10', '2', 'kl09op', '213116270', '1', '0'),
+('SPP005', 3398000, '2015-04-02', '2015-04-10', '2', 'kl09op', '213116270', '1', '0'),
+('SPP006', 4268000, '2015-06-04', '2015-06-10', '2', 'kl09op', '213116270', '1', '0'),
+('SPP007', 3398000, '2015-08-03', '2015-08-10', '3', 'kl09op', '213116270', '1', '0'),
+('SPP008', 3398000, '2015-10-09', '2015-10-10', '3', 'kl09op', '213116270', '1', '0'),
+('SPP009', 4268000, '2015-12-04', '2015-12-10', '3', 'kl09op', '213116270', '1', '0'),
+('SPP010', 3398000, '2015-02-06', '2015-02-10', '4', 'kl09op', '213116270', '1', '0'),
+('SPP011', 3398000, '2015-04-09', '2015-04-10', '4', 'kl09op', '213116270', '1', '0'),
+('SPP012', 3398000, '2015-06-08', '2015-06-10', '4', 'kl09op', '213116270', '1', '0'),
+('SPP013', 3398000, '2015-08-05', '2015-08-10', '5', 'kl09op', '213116270', '1', '0'),
+('SPP014', 3398000, '2015-10-07', '2015-10-10', '5', 'kl09op', '213116270', '1', '0'),
+('SPP015', 5573000, '0000-00-00', '2015-12-10', '5', 'kl09op', '213116270', '0', '0'),
+('UPP001', 4000000, '2013-09-20', '2013-10-10', '1', 'kl09op', '213116270', '1', '0');
 
 -- --------------------------------------------------------
 
@@ -1329,7 +1344,9 @@ ALTER TABLE `nomor_registrasi`
 -- Indexes for table `pembayaran`
 --
 ALTER TABLE `pembayaran`
-  ADD UNIQUE KEY `id` (`id`);
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `calon_mahasiswa_nomor_registrasi` (`calon_mahasiswa_nomor_registrasi`),
+  ADD KEY `mahasiswa_nrp` (`mahasiswa_nrp`);
 
 --
 -- Indexes for table `provinsi`
@@ -1433,6 +1450,14 @@ ALTER TABLE `mahasiswa`
 --
 ALTER TABLE `nilai_semester`
   ADD CONSTRAINT `nilai_semester_ibfk_1` FOREIGN KEY (`mahasiswa_nrp`) REFERENCES `mahasiswa` (`nrp`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `pembayaran`
+--
+ALTER TABLE `pembayaran`
+  ADD CONSTRAINT `fk_calon_mahasiswa_nomor_registrasi_pembayaran` FOREIGN KEY (`calon_mahasiswa_nomor_registrasi`) REFERENCES `calon_mahasiswa` (`nomor_registrasi_id`),
+  ADD CONSTRAINT `fk_mahasiswa_nomor_registrasi_pembayaran` FOREIGN KEY (`calon_mahasiswa_nomor_registrasi`) REFERENCES `mahasiswa` (`nomor_registrasi_id`),
+  ADD CONSTRAINT `fk_mahasiswa_nrp_pembayaran` FOREIGN KEY (`mahasiswa_nrp`) REFERENCES `mahasiswa` (`nrp`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
