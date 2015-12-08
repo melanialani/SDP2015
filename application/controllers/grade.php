@@ -4,15 +4,18 @@
  * Class Grade
  * Nama   				: grade.php
  * Pembuat 			    : Stefanie Tanujaya
- * Tanggal Pembuatan 	: 6 Januari 2015
+ * Tanggal Pembuatan 	: 6 November 2015
  * Version Control		:
- * v0.1 - 7 Januari 2015
+ * v0.1 - 7 November 2015
  * Menambahkan fungsi all, ajax_class, dan view.
- * v0.2 - 11 Januari 2015
+ * v0.2 - 11 November 2015
  * Menambah fungsi ajax_totalSKS, ajax_grade, saveGrade
- * v0.3 - 18 Januari 2015
+ * v0.3 - 18 Novemeber 2015
  * Menambah fungsi ajax_percentage, saveAllGrade
- *
+ * v0.4 - 20 November 2015
+ * Menambah fungsi printPdf dan perbaikan pada view
+ * v0.5 - 27 November 2015
+ * Menambhankan fungsi printPdf dengan pilihan
  */
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
@@ -61,7 +64,7 @@ class Grade extends CI_Controller {
         $lecturer_login = $this->session->userdata('username');
 
         if ($yearNow == null){
-            $yearNow  = $this->class_model->getActiveTermYear();
+            $yearNow  = $this->data_umum_model->getSemester();
         }
         else {
             $yearNow  = str_replace('_',' ',$yearNow);
@@ -69,12 +72,18 @@ class Grade extends CI_Controller {
         }
         echo $this->class_model->getTotalSKSForLecturer($lecturer_login,$yearNow);
     }
+
+    /**
+     * Ajax method
+     * Untuk melakukan ajax data kelas yang di ajar oleh dosen tertentu
+     * @param null $yearNow
+     */
     public function ajax_class($yearNow =null)
     {
 		// Mengambil Lecturer Login dari Session Yang Ada
         $lecturer_login = $this->session->userdata('username');
 		if ($yearNow == null){
-			$yearNow  = $this->class_model->getActiveTermYear();
+			$yearNow  = $this->data_umum_model->getSemester();
 		}
 		else {
 			$yearNow  = str_replace('_',' ',$yearNow);
@@ -96,10 +105,21 @@ class Grade extends CI_Controller {
         // Print Output Berupa JSON
         echo json_encode($output);
     }
-	public function ajax_percentage($classId){
+
+    /**
+     * Untuk mengajax ulang persentase kelas
+     * @param $classId kelas_id dari kelas tersebut
+     */
+    public function ajax_percentage($classId){
         $percentage =$this->grade_model->getPercentageClass($classId);
         echo $percentage["A"].' '.$percentage["B"].' '.$percentage["C"].' '.$percentage["D"].' '.$percentage["E"].' '.$percentage["IP Dosen"];
     }
+
+    /**
+     * Ajax method
+     * Untuk mengajax ulang nilai dan mahasiswa dari suatu kelas
+     * @param $classId kelas_id dari kelas yang ingin diketahuo
+     */
     public function ajax_grade($classId){
 
         // Load Data Kelas
@@ -118,33 +138,50 @@ class Grade extends CI_Controller {
         // Print Output Berupa JSON
         echo json_encode($output);
     }
+
+    /**
+     * Ajax method
+     * Untuk menyimpan nilai dari semua mahasiswa
+     * Menerima parameter Post berupa
+     * nrp, uts, uas, tugas, log
+     */
     public function saveAllGrade(){
-        $midTerm = $this->input->post('uts');
-        $finalTerm = $this->input->post('uas');
-        $homework = $this->input->post('tugas');
-        $nrp = $this->input->post('nrp');
-        $log = $this->input->post('log');
-        for ($ctr = 0; $ctr < count($midTerm); $ctr++) {
-            $log = $this->grade_model->updateStudentGrade($this->input->post('class_id'),
-                $nrp[$ctr],
-                $midTerm[$ctr],
-                $finalTerm[$ctr],
-                $homework[$ctr], $log);
+        if ($this->input->post('nrp')) {
+            $midTerm = $this->input->post('uts');
+            $finalTerm = $this->input->post('uas');
+            $homework = $this->input->post('tugas');
+            $nrp = $this->input->post('nrp');
+            $log = $this->input->post('log');
+            for ($ctr = 0; $ctr < count($midTerm); $ctr++) {
+                $log = $this->grade_model->updateStudentGrade($this->input->post('class_id'),
+                    $nrp[$ctr],
+                    $midTerm[$ctr],
+                    $finalTerm[$ctr],
+                    $homework[$ctr], $log);
+            }
+            $this->session->set_userdata('logClass', $this->input->post('class_id'));
+            $this->session->set_userdata('logGrade', $log);
+            echo $log;
         }
-        $this->session->set_userdata('logClass',$this->input->post('class_id'));
-        $this->session->set_userdata('logGrade',$log);
-        echo $log;
     }
+
+    /**
+     * Ajax method
+     * Untuk menyimpan nilai dari seorang mahasiswa
+     * menerima parameter post berupa nrp, uts, uas tugas, log
+     */
     public function saveGrade(){
-        $log = $this->input->post('log');
-        $log = $this->grade_model->updateStudentGrade($this->input->post('class_id'),
-            $this->input->post('nrp'),
-            $this->input->post('uts'),
-            $this->input->post('uas'),
-            $this->input->post('tugas'), $log);
-        $this->session->set_userdata('logClass',$this->input->post('class_id'));
-        $this->session->set_userdata('logGrade',$log);
-        echo $log;
+        if($this->input->post('nrp')) {
+            $log = $this->input->post('log');
+            $log = $this->grade_model->updateStudentGrade($this->input->post('class_id'),
+                $this->input->post('nrp'),
+                $this->input->post('uts'),
+                $this->input->post('uas'),
+                $this->input->post('tugas'), $log);
+            $this->session->set_userdata('logClass', $this->input->post('class_id'));
+            $this->session->set_userdata('logGrade', $log);
+            echo $log;
+        }
     }
     /**
      * Function : all()
@@ -154,7 +191,7 @@ class Grade extends CI_Controller {
 		$data['title'] = "Mata Kuliah yang Diajar";
 		$this->load->helper('form');
 		$data['ddYear'] = $this->class_model->getComboBoxAllYear();
-		$data['selectedDdYear'] = str_replace('/','-',str_replace(' ','_',$this->class_model->getActiveTermYear()));
+		$data['selectedDdYear'] = str_replace('/','-',str_replace(' ','_',$this->data_umum_model->getSemester()));
 		$this->load->view('includes/header',$data);
 		$this->load->view('grade/grade_view', $data);
 		$this->load->view('includes/footer');
@@ -191,6 +228,8 @@ class Grade extends CI_Controller {
             if ($success) {
                 $this->session->set_flashdata('alert_level', 'success');
                 $this->session->set_flashdata('alert', 'Berhasil Mengirim Data Nilai ke kajur!');
+                $kajur_id = $this->dosen_model->getKajurId($classId);
+                $this->notifikasi_model->sendNotification($this->session->userdata('username'),$kajur_id, $class[7]." telah menyelesaikan penilaian ".$class[0].' / '.$class[3]);
                 redirect('grade/view/'.$classId);
             }
             else {
@@ -261,8 +300,12 @@ class Grade extends CI_Controller {
 		$this->load->view('grade/detail_grade_view', $data);
 		$this->load->view('includes/footer');
 	}
-	
-	public function printPdf($classId){
+
+    /**
+     * Untuk mengeprint data nilai kelas berdasarkan kriteria tertentu
+     * @param $classId kelas_id
+     */
+    public function printPdf($classId){
 		$this->load->library('table');
         // Cek Berdasarkan session
 		$lecturer_login = $this->class_model->getLecturerIdByClass($classId);
@@ -316,9 +359,4 @@ class Grade extends CI_Controller {
 		$pdf->Output($pdfFilePath, "I");
 	}
 
-
-
-
-
-	
 }
