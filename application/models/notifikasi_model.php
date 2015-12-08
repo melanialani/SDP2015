@@ -1,55 +1,50 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+	class Notifikasi_model extends CI_Model{
+		/* -----------------------------------------------------
+		Function __construct()
+		Mengeload Inisialisasi Awal Model class_model
+		Input/Output : -
+		----------------------------------------------------- */
+		public function __construct(){
+			parent::__construct();
+            $this->load->database();
+		}
+		public function getNotification($limit, $start)
+		{
+			$name = $this->session->userdata('username');
+            $this->db->select('n.dari,n.tujuan,n.judul,d.nama as nama_asal, n.tanggal_create');
+            $this->db->from('notifikasi n, dosen d');
+            $this->db->where('d.nip = n.dari');
+            $this->db->where('n.tujuan',$name);
+			$this->db->limit($limit, $start);
+            $this->db->order_by('tanggal_create','desc');
+			$result = $this->db->get();
+			return $result->result();
+		}
 
-class Notifikasi_model extends CI_Model {
-	
-	function autoGenId()
-	{
-		$ctr = 1;
-		$id = "NO" . substr(date('y'), 0, 2) . date('m') . date('d');
-		
-		$resultnya = $this->db
-					->select('*')
-					->from('notifikasi')->get();
-		
-		foreach($resultnya->result() as $row)
+		public function getCountNotification()
 		{
-			if(substr($row->id, 0, 7) == $id)
-			{
-				$ctr++;
-			}
+			$name = $this->session->userdata('username');
+			$this->db->where('tujuan',$name);
+            $this->db->from('notifikasi');
+			return $this->db->count_all_results();
 		}
-		
-		if($ctr < 10)
+
+		public function sendNotif()
 		{
-			return $id . "000" . $ctr;
+			$lectureId = $this->mahasiswa_model->getLecture();
+			$studentId = $this->session->userdata('username');
+			$isi = $this->mahasiswa_model->getNameStudent($studentId) . ' telah melakukan perwalian';
+			$data = array('mahasiswa_nrp'=>$studentId, 'dosen_nip'=>$lectureId,'judul'=>'Konfirmasi Perwalian','isi'=>$isi);
+			$this->db->insert('notifikasi',$data);
 		}
-		else if($ctr >= 10 && $ctr < 100)
-		{
-			return $id . "00" . $ctr;
-		}
-		else if($ctr >= 100 && $ctr < 1000)
-		{
-			return $id . "0" . $ctr;
-		}
-		else 
-		{
-			return $id . $ctr;
-		}
+
+        public function sendNotification($asal, $tujuan, $message){
+            $data = ['dari' => $asal, 'tujuan' => $tujuan,'judul' => $message];
+            $this->db->set('tanggal_create','now()',false);
+            $this->db->insert('notifikasi', $data);
+            return $this->db->affected_rows();
+        }
+
 	}
-	
-	public function insertNotifikasi($judul, $isi)
-	{
-		$id = $this->autoGenId();
-		
-		$arrfields = [
-						'id' => $id,
-						'dosen_nip' => "PMB",
-						'judul' => $judul,
-						'isi' => $isi,
-					];
-		
-		$this->db->insert('notifikasi', $arrfields);
-		
-		return $this->db->affected_rows();
-	}
-}
+?>

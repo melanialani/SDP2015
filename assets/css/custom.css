@@ -28,6 +28,10 @@ body a{
 	background-image: url(../images/bgdosen.jpg);
 	background-size:100% 130%;
 	background-repeat:repeat-x;
+<<<<<<< HEAD
+=======
+	
+>>>>>>> refs/remotes/raymondwongso2/master
 }
 #nav .current a {
    color:#105b63;
@@ -195,6 +199,15 @@ footer{
  background:#ccc;
  border-radius:4px;
  }
+<<<<<<< HEAD
+=======
+ .notification-item2 {
+ padding:10px;
+ margin:5px;
+ background:#abf;
+ border-radius:4px;
+ }
+>>>>>>> refs/remotes/raymondwongso2/master
 .users a.content {
  text-decoration:none;
  background:#ccc;
