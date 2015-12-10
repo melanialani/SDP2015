@@ -11,10 +11,10 @@
 			<div class="navbar-collapse collapse" id="navbar">
 
 				<ul class="nav navbar-nav">
-                    <li><?= anchor('/Perwalian/home','Home');?></li>
+                    <li><?= anchor('/portalmahasiswa/home','Home');?></li>
 
                     <?php if ($this->session->userdata('user_role') == 'mahasiswa'){ ?>
-                        <li><?= anchor('/','Biodata');?></li>
+                        <li><?= anchor('/portalmahasiswa/profile','Biodata');?></li>
                         <li class="dropdown" <?php if($this->session->userdata('currentPage') == "frs"){echo "class='active'";} ?>>
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Perwalian <span class="caret"></span></a>
                             <ul class="dropdown-menu">
@@ -99,7 +99,7 @@
 
 
 
-					<li><a id="user" data-toggle="dropdown" data-target="#" href="#"><span class="glyphicon glyphicon-user"></span> <?php echo $this->session->userdata('username');?> <span class="caret"></span> </a>
+					<li><a id="user" class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#"><span class="glyphicon glyphicon-user"></span> <?php echo $this->session->userdata('username');?> <span class="caret"></span> </a>
 					<ul class="dropdown-menu users" role="menu" aria-labelledby="user">
                         <div class="notifications-wrapper">
                             <a class="content" href="#">

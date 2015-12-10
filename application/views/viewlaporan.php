@@ -139,6 +139,11 @@
             	<li><a href="<?php echo site_url('pimpinanPMB/laporanstatistik') ?>">Laporan Statistik</a></li>	
     		</ul>
         </li>
+		<li style="margin: 15px 0px 0px 700px;">
+			<?php echo form_open("pimpinanpmb/logout"); ?>
+			<a id="logout"><span style="color: #999999;" class="glyphicon glyphicon-log-out"></span><input type="submit" name="btnLogout" value="Logout" style="background-color: transparent; border: none; color: #999999;"></a>
+			<?php echo form_close(); ?>
+		</li>
       </ul>
     </div>
   </div>

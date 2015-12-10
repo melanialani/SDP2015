@@ -6,6 +6,7 @@ class Portalmahasiswa extends CI_Controller {
 	{
 		parent::__construct();
 		$this->load->library('session');
+		$this->load->helper('cookie');
 		$this->load->helper('url');
 		$this->load->helper('form');
 		$this->load->library('table');
@@ -13,6 +14,7 @@ class Portalmahasiswa extends CI_Controller {
 		$this->load->model('mahasiswa_model');
 		$this->load->model('kota_model');
 		$this->load->model('provinsi_model');
+		
 	}
 	
 	public function index()
@@ -39,18 +41,24 @@ class Portalmahasiswa extends CI_Controller {
 			else
 			{
 				$nomor_registrasi = $data[0]->nomor_registrasi_id;
+				$login = true;
 				if ($data[0]->status == "0")
 				{
-					$data = $this->mahasiswa_model->getDataMahasiswaByNomorRegistrasi($nomor_registrasi);
-					$nrp = $data[0]->nrp;
-					$mahasiswa = true;
+					if($this->session->userdata('user_role') != 'mahasiswa'){
+						redirect('/');
+					}
 				}
-				$login = true;
 			}
 		}
+		if($this->session->userdata('user_role') == 'mahasiswa'){
+            $data = $this->mahasiswa_model->getDataMahasiswaByNRP($this->session->userdata('username'));
+			$nrp = $data[0]->nrp;
+			$mahasiswa = true;
+			$login = true;
+        }
 		else
 		{
-			redirect("/registration", "refresh");
+			redirect("/");
 		}
 		
 		if ($login)
@@ -105,7 +113,8 @@ class Portalmahasiswa extends CI_Controller {
 				}
 				$param['persen'] = ($progress * 25) . "%";
 				
-				
+				$paramHeader['countNewNotif'] = "";
+				$this->load->view('includes/header', $paramHeader);
 				$this->load->view('portalmahasiswa_home', $param);
 			}
 		}
@@ -130,20 +139,24 @@ class Portalmahasiswa extends CI_Controller {
 			else
 			{
 				$nomor_registrasi = $data[0]->nomor_registrasi_id;
+				$login = true;
 				if ($data[0]->status == "0")
 				{
-					$data = $this->mahasiswa_model->getFullDataMahasiswaByNomorRegistrasi($nomor_registrasi);
-					$nrp = $data[0]->nrp;
-					$mahasiswa = true;
+					if($this->session->userdata('user_role') != 'mahasiswa'){
+						redirect('/');
+					}
 				}
-				$login = true;
 			}
 		}
+		if($this->session->userdata('user_role') == 'mahasiswa'){
+            $data = $this->mahasiswa_model->getFullDataMahasiswaByNRP($this->session->userdata('username'));
+			$nrp = $data[0]->nrp;
+			$mahasiswa = true;
+			$login = true;
+        }
 		else
 		{
-			redirect("/registration", "refresh");
-			//$nrp = "213116270";
-			//$data = $this->mahasiswa_model->getFullDataMahasiswaByNrp($nrp);
+			redirect("/");
 		}
 		
 		if ($login)
@@ -199,7 +212,7 @@ class Portalmahasiswa extends CI_Controller {
 				else
 				{
 					$this->mahasiswa_model->updateMahasiswa($data);
-					$data = $this->mahasiswa_model->getFullDataMahasiswaByNomorRegistrasi($nomor_registrasi);
+					$data = $this->mahasiswa_model->getFullDataMahasiswaByNRP($nrp);
 				}
 			}
 			
@@ -247,6 +260,8 @@ class Portalmahasiswa extends CI_Controller {
 			$param['nomor_telp_wali'] = $data[0]->nomor_telp_wali;
 			$param['pekerjaan_wali'] = $data[0]->pekerjaan_wali;
 			
+			$paramHeader['countNewNotif'] = "";
+			$this->load->view('includes/header', $paramHeader);
 			$this->load->view('portalmahasiswa_profile', $param);
 		}
 	}
@@ -254,7 +269,11 @@ class Portalmahasiswa extends CI_Controller {
 	public function logout()
 	{
 		$this->session->unset_userdata("email");
-		redirect("/registration", "refresh");
+		$this->session->unset_userdata("user_role");
+		$this->session->unset_userdata("username");
+		delete_cookie("sdp_username");
+		delete_cookie("sdp_user_role");
+		redirect("/");
 	}
 }
 

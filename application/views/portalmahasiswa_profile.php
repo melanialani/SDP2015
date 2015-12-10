@@ -2,34 +2,13 @@
 <head>
 <?php
 	require_once('header-pmb.php');
-	require_once('header.php');
 ?>
-<title>Portal Mahasiswa</title>
 <style>
 <?php require_once('portalmahasiswa_profile.css'); ?>
 </style>
 </head>
 
 <body>
-
-<nav class="navbar navbar-inverse" id="menubar">
-  <div class="container-fluid">
-    <div>
-      <ul class="nav navbar-nav" id="menubar_ul1">
-        <li><a href="<?php echo site_url('portalmahasiswa/home') ?>">Home</a></li>
-        <li class="dropdown">
-        	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Profile <span class="caret"></span></a>
-      		<ul class="dropdown-menu" id="menubar_ul2">
-            	<li id="li"><a href="<?php echo site_url('portalmahasiswa/profile') ?>">Biodata</a></li>
-            	<li><a href="<?php echo site_url('portalmahasiswa/logout') ?>">Logout</a></li>
-            	
-    		</ul>
-        </li>
-        <li><a href="#">Info Kuliah</a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
 
 <div id="container">	
 	<div id="judul">
@@ -140,6 +119,7 @@
 
 $(document).ready(function()
 {
+	$(".dropdown-toggle").dropdown();
 <?php 
 if ($kategori != "0")
 {

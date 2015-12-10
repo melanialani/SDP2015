@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <!--JUDUL DAN ICON UNTUK WEB STTS-->
 <link rel="stylesheet" href="<?php echo base_url("assets/bootstrap/css/bootstrap.min.css");?>"> 
 <link rel="stylesheet" href="<?php echo base_url("assets/css/custom.css");?>">
@@ -14,7 +13,7 @@
 <input type="image" src='<?php echo base_url("assets/images/logo.png");?>' name="home" onChange='form.submit'/> 
 <!-- <a href=""> <input type="submit" class="customNavbar" name="home"><img src="<?php echo base_url("assets/images/logo.png");?>"/></input> </a>-->
 </div>
-=======
+
 <html>
 <!--JUDUL DAN ICON UNTUK WEB STTS-->
 	<head>
@@ -55,4 +54,3 @@
         </div>
     <?php } $this->load->view('nav/navbar');?>
 
->>>>>>> refs/remotes/raymondwongso2/master

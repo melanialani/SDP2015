@@ -9,14 +9,20 @@ class pimpinanPMB extends CI_Controller {
 		$this->load->model('modelnya');
 		$this->load->library('form_validation');
 		$this->load->helper('url');
+		$this->load->library('session');
+		$this->load->helper('cookie');
 		
+		if($this->session->userdata('user_role') != 'dosen_pimpinanpmb'){
+            redirect('/');
+        }
 	}
 	
 	public function index()
 	{
-		$this->login();
+		$this->home();
 	}
 	
+	/*
 	public function login()
 	{
 		$data["email"] = "";
@@ -45,7 +51,7 @@ class pimpinanPMB extends CI_Controller {
 			$this->load->view('viewlogin',$data);
 		}
 	}
-	
+	*/
 	public function home()
 	{
 		$data['listUncategorized']=$this->modelnya->cekNotif();
@@ -485,6 +491,16 @@ class pimpinanPMB extends CI_Controller {
 		}
 		$data['TotalMhs']=$this->Modelnya->getTotalMhs();
 		$this->load->view('viewlaporanstatistik', $data);
+	}
+	
+	public function logout()
+	{
+		$this->session->unset_userdata("email");
+		$this->session->unset_userdata("user_role");
+		$this->session->unset_userdata("username");
+		delete_cookie("sdp_username");
+		delete_cookie("sdp_user_role");
+		redirect("/");
 	}
 }
 

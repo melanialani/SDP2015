@@ -11,26 +11,6 @@
 	border: 0;
 }
 
-#menubar_ul1 {
-	margin-left: 100px;
-}
-
-#menubar_ul1 li a{
-	color: #FFFFFF;
-}
-
-#menubar_ul1 li:hover {
-	background-color: #2b5987;
-}
-
-#menubar_ul2 {
-	background-color: #3873ae;
-}
-
-.dropdown ul li:hover > a{
-	background-color: #2b5987;
-}
-
 .footer {
 	position: absolute;
 	bottom: 0px;
