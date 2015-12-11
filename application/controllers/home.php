@@ -20,11 +20,14 @@ class Home extends CI_Controller
             $this->session->set_userdata('username',get_cookie('sdp_username'));
             $this->session->set_userdata('user_role',get_cookie('sdp_user_role'));
         }
-
+		
         if($this->session->userdata('username')){
             if($this->session->userdata('user_role') == 'mahasiswa'){
-                redirect('perwalian');
+                redirect('portalmahasiswa');
             }
+			else if ($this->session->userdata('user_role') == 'dosen_pimpinanpmb'){ //kalau pimpinan pmb
+				redirect('pimpinanpmb/home');
+			}
             else{ // kalau kajur atau dosen
                 redirect('grade/all');
             }
@@ -42,7 +45,7 @@ class Home extends CI_Controller
 
         //JIKA BUTTON LOGIN DI TEKAN MAKA MASUK KE IF INI
         if($this->input->post('btnLogin'))
-        {
+        {	
             //DICEK APAKAH USERNAME TIDAK ADA DALAM DATABASE, JIKA TIDAK ADA, MAKA FORM INPUT AKAN BERWARNA MERAH
             if($this->mahasiswa_model->isStudent($this->input->post('username')) == false and $this->dosen_model->isLecture($this->input->post('username')) == false){
                 $styleErrorUser = 'form-group has-error';
@@ -74,6 +77,15 @@ class Home extends CI_Controller
                         $role="dosen";
                         $this->session->set_userdata('user_role', 'dosen');
                     }
+					
+					//ADDED ON 11-12-2015 BY CHRISTIAN LIMANTO
+					//CEK APAKAH YG LOGIN ADALAH PIMPINAN PMB
+					$user_role = $this->user_model->getRole($user);
+					if ($user_role[0]->peran == "dosen_pimpinanpmb") {
+						$role="dosen_pimpinanpmb";
+						$this->session->set_userdata('user_role', $role);
+					}
+					
                     //JIKA MEMILIH FITUR REMEMBER ME
                     //MAKA USER LOGIN AKAN DISIMPAN KE COOKIE DENGAN LAMA 1 HARI
                     if ($this->input->post('remember')) {

@@ -1,0 +1,81 @@
+#container {
+	width: 800px;
+	min-height: 980px;
+	padding-left: 100px;
+	margin: 0 auto;
+	border-left: 10px solid #3873ae;
+}
+
+#menubar {
+	background-color: #3873ae;
+	border: 0;
+}
+
+.footer {
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+}
+
+#judul {
+	margin: 0px auto 0px;
+	vertical-align: text-bottom;
+	width: 200px;
+	text-align: center;
+	font-style: italic;
+	border-bottom: 2px solid #3873ae;
+}
+
+#datapribadi_container {
+	width: 700px;
+	margin: 50px auto 0px;
+	border: 2px solid #3873ae;
+}
+
+#datapribadi_title {
+	width: 180px;
+	font-size: 18pt;
+	background-color: #EDE8E3;
+	text-align: center;
+	margin: -18px auto 0;
+}
+
+#datapribadi_isi {
+	padding: 10px 0px 20px 30px;
+}
+
+table {
+	font-size : 14pt;
+	line-height: 150%;
+}
+
+#datawali_container {
+	width: 700px;
+	margin: 10px auto 0px;
+	padding: 0px 0px 20px 30px;
+	border: 2px solid #3873ae;
+}
+
+#datawali_title {
+	margin-left: 170px;
+	margin-top: 20px;
+	width: 260px;
+	text-align: center;
+	font-size: 18pt;
+	border: none;
+}
+
+#btnEdit, #btnCancel {
+	color: white;
+	float: right;
+	margin-top: 20px;
+}
+
+#btnEdit {
+	margin-right: -10px;
+}
+
+#btnCancel {
+	margin-right: 10px;
+	visibility: hidden;
+}
