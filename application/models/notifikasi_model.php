@@ -9,17 +9,13 @@
 			parent::__construct();
             $this->load->database();
 		}
-
-		public function getNotification($limit=null, $start=0)
+		public function getNotification($limit, $start)
 		{
 			$name = $this->session->userdata('username');
             $this->db->select('n.dari,n.tujuan,n.judul,d.nama as nama_asal, n.tanggal_create');
             $this->db->from('notifikasi n, dosen d');
             $this->db->where('d.nip = n.dari');
             $this->db->where('n.tujuan',$name);
-            if($limit !=null) {
-                $this->db->limit($limit, $start);
-            }
 			$this->db->limit($limit, $start);
             $this->db->order_by('tanggal_create','desc');
 			$result = $this->db->get();
@@ -39,7 +35,7 @@
 			$lectureId = $this->mahasiswa_model->getLecture();
 			$studentId = $this->session->userdata('username');
 			$isi = $this->mahasiswa_model->getNameStudent($studentId) . ' telah melakukan perwalian';
-			$data = array('mahasiswa_nrp'=>$studentId, 'dosen_nip'=>$lectureId,'judul'=>'Konfirmasi Perwalian','isi'=>$isi);
+			$data = array('dari'=>$studentId, 'tujuan'=>$lectureId,'judul'=>'Konfirmasi Perwalian','isi'=>$isi);
 			$this->db->insert('notifikasi',$data);
 		}
 
