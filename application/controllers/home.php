@@ -20,11 +20,14 @@ class Home extends CI_Controller
             $this->session->set_userdata('username',get_cookie('sdp_username'));
             $this->session->set_userdata('user_role',get_cookie('sdp_user_role'));
         }
-
+		
         if($this->session->userdata('username')){
             if($this->session->userdata('user_role') == 'mahasiswa'){
-                redirect('perwalian');
+                redirect('portalmahasiswa');
             }
+			else if ($this->session->userdata('user_role') == 'dosen_pimpinanpmb'){ //kalau pimpinan pmb
+				redirect('pimpinanpmb/home');
+			}
             else{ // kalau kajur atau dosen
                 redirect('grade/all');
             }
@@ -42,13 +45,13 @@ class Home extends CI_Controller
 
         //JIKA BUTTON LOGIN DI TEKAN MAKA MASUK KE IF INI
         if($this->input->post('btnLogin'))
-        {
+        {	
             //DICEK APAKAH USERNAME TIDAK ADA DALAM DATABASE, JIKA TIDAK ADA, MAKA FORM INPUT AKAN BERWARNA MERAH
-            if($this->Mahasiswa_model->isStudent($this->input->post('username')) == false and $this->Dosen_model->isLecture($this->input->post('username')) == false){
+            if($this->mahasiswa_model->isStudent($this->input->post('username')) == false and $this->dosen_model->isLecture($this->input->post('username')) == false){
                 $styleErrorUser = 'form-group has-error';
             }
             //DICEK APAKAH PASSWORD SALAH ATAU TIDAK, JIKA SALAH, MAKA FORM INPUT AKAN BERWARNA MERAH
-            if($this->Mahasiswa_model->isPassword($this->input->post('username'), $this->input->post('pass')) == false and $this->Dosen_model->isPassword($this->input->post('username'),$this->input->post('pass')) == false){
+            if($this->mahasiswa_model->isPassword($this->input->post('username'), $this->input->post('pass')) == false and $this->dosen_model->isPassword($this->input->post('username'),$this->input->post('pass')) == false){
                 $styleErrorPass = 'form-group has-error';
             }
             //UNTUK MENGECEK VALIDASI INPUT USER, JIKA KOSONG MENGGUNAKAN GETCUSTOMREQUIRED DAN MENGECEK APAKAH ID SUDAH ADA ATAU BELUM
@@ -60,11 +63,11 @@ class Home extends CI_Controller
                 //MAKA DIKELUARKAN MESSEGEBOX BAHWA LOGIN SUKSES
                 //echo '<script>alert("You Have Successfully updated this Record!");</script>';
                 //MENGECEK LAGI APAKAH YG LOGIN ADALAH DOSEN
-                if ($this->Dosen_model->isLecture($this->input->post('username'))) {
+                if ($this->dosen_model->isLecture($this->input->post('username'))) {
                     //DAN DILOMPATKAN KE DOSEN
                     //MENYIMPAN DATA LOGIN KE SESSION
                     $this->session->set_userdata('username', $user);
-                    $id = $this->Dosen_model->isMajorCoordinator($this->input->post('username'));
+                    $id = $this->dosen_model->isMajorCoordinator($this->input->post('username'));
                     $role = "";
                     if ($id){
                         $role ="kajur";
@@ -74,6 +77,15 @@ class Home extends CI_Controller
                         $role="dosen";
                         $this->session->set_userdata('user_role', 'dosen');
                     }
+					
+					//ADDED ON 11-12-2015 BY CHRISTIAN LIMANTO
+					//CEK APAKAH YG LOGIN ADALAH PIMPINAN PMB
+					$user_role = $this->user_model->getRole($user);
+					if ($user_role[0]->peran == "dosen_pimpinanpmb") {
+						$role="dosen_pimpinanpmb";
+						$this->session->set_userdata('user_role', $role);
+					}
+					
                     //JIKA MEMILIH FITUR REMEMBER ME
                     //MAKA USER LOGIN AKAN DISIMPAN KE COOKIE DENGAN LAMA 1 HARI
                     if ($this->input->post('remember')) {
@@ -183,11 +195,11 @@ class Home extends CI_Controller
 
     function getId($str)
     {
-        if($this->Dosen_model->isLecture($str))
+        if($this->dosen_model->isLecture($str))
         {
             return true;
         }
-        else if($this->Mahasiswa_model->isStudent($str))
+        else if($this->mahasiswa_model->isStudent($str))
         {
             return true;
         }
@@ -200,11 +212,11 @@ class Home extends CI_Controller
 
     function getPass($str)
     {
-        if($this->Dosen_model->isPassword($this->input->post('username'), $str))
+        if($this->dosen_model->isPassword($this->input->post('username'), $str))
         {
             return true;
         }
-        else if($this->Mahasiswa_model->isPassword($this->input->post('username'),$str))
+        else if($this->mahasiswa_model->isPassword($this->input->post('username'),$str))
         {
             return true;
         }
@@ -213,6 +225,9 @@ class Home extends CI_Controller
             $this->form_validation->set_message('getPass','Password salah');
             return false;
         }
+    }
+    public function login(){
+        redirect('/');
     }
 }
 

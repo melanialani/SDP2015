@@ -11,15 +11,15 @@
 			<div class="navbar-collapse collapse" id="navbar">
 
 				<ul class="nav navbar-nav">
-                    <li><?= anchor('/','Home');?></li>
+                    <li><?= anchor('/portalmahasiswa/home','Home');?></li>
 
                     <?php if ($this->session->userdata('user_role') == 'mahasiswa'){ ?>
-                        <li><?= anchor('/','Biodata');?></li>
-                        <li class="dropdown">
+                        <li><?= anchor('/portalmahasiswa/profile','Biodata');?></li>
+                        <li class="dropdown" <?php if($this->session->userdata('currentPage') == "frs"){echo "class='active'";} ?>>
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Perwalian <span class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                <li><?= anchor('/','FRS');?></li>
-                                <li><?= anchor('/','Batal/Tambah/Drop');?></li>
+                                <li><?= anchor('/Perwalian/frs/','FRS');?></li>
+                                <li><?= anchor('/bataltambah','Batal/Tambah/Drop');?></li>
                             </ul>
                         </li>
                         <li class="dropdown">
@@ -70,29 +70,18 @@
 
                 <!--- Navbar Umum-->
 				<ul class="nav navbar-nav navbar-right">
-					<li><a id="notif" data-toggle="dropdown" data-target="#" href="#"><span class="glyphicon glyphicon-bell"></span><span class="badge">4</span>
-					<!-- FROM HERE -->
 
-					<ul class="dropdown-menu notifications" role="menu" aria-labelledby="notif">
-
-						<div class="notification-heading"><h4 class="menu-title">Notifications</h4><h4 class="menu-title pull-right">View all<i class="glyphicon glyphicon-circle-arrow-right"></i></h4>
-						</div>
-						<li class="divider"></li>
-						<div class="notifications-wrapper">
-							<a class="content" href="#">
-								<div class="notification-item">
-									<h4 class="item-title">Budi sudah melakukan perwalian</h4>
-									<p class="item-info"><div class="btn btn-primary">Lihat Detail</div></p>
-								</div>
-							</a>
-						</div>
-					</ul>
+					<li><a id="notif" data-toggle="dropdown" data-target="#" href="#"><span class="glyphicon glyphicon-bell"></span> Notification  </a>
+                            <ul class="dropdown-menu notifications" role="menu" aria-labelledby="notif">
+                                <div class="notifications-wrapper" id="notifikasi">
+                                </div>
+                                <div class="notification-footer"><button class="btn btn-primary btn-block" id="notifikasi-viewmore">View More</button></div>
+                            </ul>
 					</li>
 
 
 
-					<li><a id="user" data-toggle="dropdown" data-target="#" href="#"><span class="glyphicon glyphicon-user"></span> <?php echo
-$this->session->userdata('username');?> <span class="caret"></span> </a>
+					<li><a id="user" class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#"><span class="glyphicon glyphicon-user"></span> <?php echo $this->session->userdata('username');?> <span class="caret"></span> </a>
 					<ul class="dropdown-menu users" role="menu" aria-labelledby="user">
                         <div class="notifications-wrapper">
                             <a class="content" href="#">
@@ -112,3 +101,27 @@ $this->session->userdata('username');?> <span class="caret"></span> </a>
 			</div>
 		</div>
 	</div>
+<script>
+    limit = 5;
+    start = 0;
+    batas = <?php echo $this->notifikasi_model->getCountNotification();?>;
+    $.post('<?php echo site_url('notification/get');?>',{limit:limit, start:start}, function(data){
+        $('#notifikasi').append(data);
+        start = start + limit;
+        if (start >= batas){
+            $('#notifikasi-viewmore').off('click');
+            $('#notifikasi-viewmore').remove();
+        }
+    });
+    $('#notifikasi-viewmore').on('click', function(){
+        $.post('<?php echo site_url('notification/get');?>',{limit:limit, start:start}, function(data){
+            $('#notifikasi').append(data);
+            start = start + limit;
+            if (start >= batas){
+                $('#notifikasi-viewmore').off('click');
+                $('#notifikasi-viewmore').remove();
+            }
+            $('#notif').dropdown('toggle');
+        });
+    });
+</script>
