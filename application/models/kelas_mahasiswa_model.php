@@ -57,13 +57,26 @@
 			$this->load->database();
 		}
 		
+		/* -----------------------------------------------------
+		Function insert()
+		Input : NRP, Kelas_id, matakuliah_id, status, nilai_id
+		Output : row yang berhasil diinsert
+		----------------------------------------------------- */
 		public function insert($studentID,$classID,$courseID,$status,$scoreID)
 		{
-			$data = array('mahasiswa_nrp'=>$studentID, 'kelas_id'=>$classID, 'mata_kuliah_id'=>$courseID,'status_ambil'=>$status,'nilai_id'=>$scoreID);
+			$studentID = $this->session->userdata('username');
+			$detailStudent = $this->mahasiswa_model->getDetailStudent($studentID);
+			$semester = (+$detailStudent->semester);
+			$data = array('mahasiswa_nrp'=>$studentID, 'kelas_id'=>$classID, 'mata_kuliah_id'=>$courseID,'status_ambil'=>$status,'nilai_id'=>$scoreID,'semester'=>$semester);
 			$this->db->insert('kelas_mahasiswa',$data);
 			return $this->db->affected_rows();
 		}
 		
+		/* -----------------------------------------------------
+		Function search()
+		Input : matakuliah_id
+		Output : true jika telah lulus, false jika belum lulus
+		----------------------------------------------------- */
 		public function search($courseID)
 		{
 			$nrp = $this->session->userdata('username');
@@ -84,20 +97,17 @@
 			return 'false';
 		}
 		
+		/* -----------------------------------------------------
+		Function getSchedule()
+		Input : NRP
+		Output : jadwal kuliah yang akan dilakukan disemester itu
+		----------------------------------------------------- */
 		public function getSchedule($studentID)
 		{
-			$nowSemester = $this->Data_Umum_Model->getSemester();
-			//echo $studentID;
-			//$this->db->select('mata_kuliah.id, mata_kuliah.nama , kelas.hari, kelas.jam_mulai, dosen.nama as dosen, ruangan.nama as ruangan');
-			//$this->db->from('kelas, kelas_mahasiswa');
-			//$this->db->from('kelas, kelas_mahasiswa, dosen, ruangan, mata_kuliah');
-			//$this->db->where('kelas_mahasiswa.kelas_id','kelas.id');
-			//$this->db->where('kelas.id','kelas_mahasiswa.kelas_id');
-			//$this->db->where('kelas.dosen_nip','dosen.nip');
-			//$this->db->where('kelas.ruangan_id','ruangan.id');
-			//$this->db->where('mata_kuliah.id','kelas.mata_kuliah_id');
-			//$this->db->where('kelas_mahasiswa.mahasiswa_nrp',$studentID);
-			//$this->db->like('kelas.tahun_ajaran',$nowSemester);
+			$nowSemester = $this->data_umum_model->getSemester();
+			$studentID = $this->session->userdata('username');
+			$detailStudent = $this->mahasiswa_model->getDetailStudent($studentID);
+			$semester = (+$detailStudent->semester);
 			$this->db->select('mata_kuliah.id,mata_kuliah.berpraktikum, mata_kuliah.nama,kelas.hari, kelas.jam_mulai, dosen.nama as dosen, ruangan.nama as ruangan');
 			$this->db->from('kelas, kelas_mahasiswa, dosen, ruangan, mata_kuliah');
 			$this->db->where('kelas.id = kelas_mahasiswa.kelas_id');
@@ -106,15 +116,9 @@
 			$this->db->where('mata_kuliah.id = kelas.mata_kuliah_id');
 			$this->db->where('kelas_mahasiswa.mahasiswa_nrp',$studentID);
 			$this->db->where('kelas.tahun_ajaran',$nowSemester);
+			$this->db->where('kelas_mahasiswa.semester',$semester);
 			$result = $this->db->get();
 			return $result->result();
-		}
-		
-		public function select($nrp){
-			return $this
-			->db
-			->get_where('kelas_mahasiswa',array('mahasiswa_nrp' => $nrp))
-			->result_array();
 		}
 	}
 ?>

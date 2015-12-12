@@ -56,6 +56,11 @@
 		$this->load->database();
 	}
 	
+	/* -----------------------------------------------------
+	Function insert()
+	Input : NRP
+	Output : nilai_id
+	----------------------------------------------------- */
 	public function insert($studentID)
 	{
 		$id = $this->autogenIDScore($studentID);
@@ -64,13 +69,18 @@
 		return $id;
 	}
 	
+	/* -----------------------------------------------------
+	Function autogenIDScore()
+	Input : NRP
+	Output : nilai_id
+	----------------------------------------------------- */
 	public function autogenIDScore($studentID)
 	{
 		$digitStudentID = substr($studentID,5,4);
 		//$this->db->select("substring(id,6,4) as value");
 		$sql = "SELECT ifnull(max(substring(id, 6, 4)), 0)+1 as value FROM `nilai` WHERE substring(id,2,4) = " . $digitStudentID ;
 		$result = $this->db->query($sql)->row();
-		$id = str_pad($result->value,4,'0', STR_PAD_LEFT);
+		$id = str_pad($result->value,3,'0', STR_PAD_LEFT);
 		return 'N'. $digitStudentID . $id;
 	}
  }
