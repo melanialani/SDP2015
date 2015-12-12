@@ -4,9 +4,6 @@ Nama   				: confirmation_detail_view.php
 Pembuat 			: Nancy Yonata
 Tanggal Pembuatan 	: 16 November 2015
 Edit 				: 27 November 2015
-Version Control		:
-v0.1 - 7 Januari 2015
-	
 ----------------------------------------------------- */
 ?>
 <div class="container">
@@ -22,9 +19,6 @@ v0.1 - 7 Januari 2015
 			echo $this->table->generate();
 		?>
 	  </div>
-
-
-
 	</div>
     <div class="row">
         <div class="col-md-12">
@@ -55,9 +49,8 @@ v0.1 - 7 Januari 2015
         </table>
      </div>
     </div>
-
-
-    <div class="row">
+	
+	<div class="row">
         <div class=" col-md-4 col-sm-4 col-xs-12">
             <div class="panel panel-default">
                 <div class="panel-heading">Summary Kelas</div>
@@ -230,7 +223,7 @@ v0.1 - 7 Januari 2015
                 //Set column definition initialisation properties.
                 "columnDefs": [
                     {
-                        "targets": [ 0], //last column
+                        "targets": [0], //last column
                         "orderable": false, //set not orderable
                     },
                 ],
@@ -268,8 +261,7 @@ v0.1 - 7 Januari 2015
             <h4 class="modal-title" id="managePrint">Atur Cetak</h4>
         </div>
         <div class="modal-body">
-
-            <?php
+			<?php
             echo form_checkbox('uts','uts',true). ' UTS <br>';
             echo form_checkbox('uas','uas',true).' UAS <br>';
             echo form_checkbox('tugas','tugas',true).' Tugas <br>';

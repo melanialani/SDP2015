@@ -1,3 +1,10 @@
+<?php
+/* -------------------------------------------------------------------------------
+Nama   				: portal_printProsentase.php
+Pembuat 			: Nancy Yonata
+Tanggal Pembuatan 	: 7 Desember 2015
+-----------------------------------------------------------------------------------*/
+?>
 <div class="container">
     <div class="row">
         <div class="col-md-12">
@@ -26,24 +33,20 @@
 										</div>
 									</div>
 								</div>
-							
 							</div>
 							<div class="row">
 								<div class="col-md-12">
 									<?php
-										
-										 echo form_submit([
+										echo form_submit([
 										'id' => 'btnView',
 										'name' => 'btnView',
 										'class' => 'btn btn-primary'
 										], 'View Report');
-									
 									?>
 								</div>
 							</div>
 					<?php echo form_close(); ?>
-					
-                </div>
+				</div>
             </div>
 		</div>
 	</div>

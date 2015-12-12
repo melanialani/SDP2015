@@ -1,3 +1,12 @@
+<?php
+/* -----------------------------------------------------
+Nama   				: portal_printProsentase.php
+Pembuat 			: Nancy Yonata
+Tanggal Pembuatan 	: 7 Desember 2015
+Edit 				: 12 Desember 2015 (Melengkapi dokumentasi pada source code) 
+
+----------------------------------------------------- */
+?>
 <div class="container">
     <div class="row">
 		<div class="col-md-12">
@@ -53,7 +62,6 @@
 		var table;
 		$(document).ready(function() {
 		  table = $('#table').DataTable({ 
-			
 			"processing": true, //Feature control the processing indicator.
 			"serverSide": true, //Feature control DataTables' server-side processing mode.
 			"bFilter": false,
