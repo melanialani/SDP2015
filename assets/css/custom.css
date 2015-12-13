@@ -23,12 +23,11 @@ body a{
 	background-image: url(../images/bg.jpg);
 	background-repeat:repeat-x;
 }
-.headerDosen{
-	padding:10px 0;
-	background-image: url(../images/bgdosen.jpg);
-	background-size:100% 130%;
-	background-repeat:repeat-x;
-	
+.headerDosen {
+    padding: 10px 0;
+    background-image: url(../images/bgdosen.jpg);
+    background-size: 100% 130%;
+    background-repeat: repeat-x;
 }
 #nav .current a {
    color:#105b63;
@@ -196,6 +195,7 @@ footer{
  background:#ccc;
  border-radius:4px;
  }
+
  .notification-item2 {
  padding:10px;
  margin:5px;

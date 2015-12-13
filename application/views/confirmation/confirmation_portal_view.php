@@ -4,6 +4,7 @@ Nama   				: confirmation_portal_view.php
 Pembuat 			: Nancy Yonata
 Tanggal Pembuatan 	: 16 November 2015
 Edit 				: 27 November 2015
+Edit 				: 12 Desember 2015 (Melengkapi dokumentasi pada source code) 
 
 Version Control		:
 v0.1 - 7 Januari 2015
@@ -30,9 +31,7 @@ v0.1 - 7 Januari 2015
                          <th>Nama MK</th>
                          <th>Dosen</th>
                           <th width="20">SKS</th>
-
-
-                          <th>Hari, Jam</th>
+						  <th>Hari, Jam</th>
                           <th>Ruang</th>
                           <th>Status</th>
                           <th>Terakhir Update</th>
@@ -65,21 +64,29 @@ v0.1 - 7 Januari 2015
 			//Set column definition initialisation properties.
 			"columnDefs": [
 			{ 
-			  "targets": [-1], //last column
+			/*--------------------------------------------------------
+				set kolom yang fieldnya tidak dapat dilakukan sorting, 
+				-1 berarti dari field paling akhir dri data table
+			---------------------------------------------------------*/	
+			  "targets": [-1], 
 			  "orderable": false //set not orderable
 			},
 			]
 		  });
+		  // akan melakukan reload table jika combobox tahun ajaran diubah-ubah
 		  $('#ddYear').on('change',function (){
 				var end = this.value;
 				reload_table();
 		  });
 		});
-		 function reload_table()
+		/* akan menjalankan function ajax_class pada controller confirmation 
+		   pada saat reload_table
+		*/
+		function reload_table()
 		{
-		table.ajax.url("<?php echo site_url('confirmation/ajax_class/')?>"+"/"+$("#ddYear").val());
-		table.ajax.reload(null,false); //reload datatable ajax
-    }
+			table.ajax.url("<?php echo site_url('confirmation/ajax_class/')?>"+"/"+$("#ddYear").val());
+			table.ajax.reload(null,false); //reload datatable ajax
+		}
 	</script>
 	
 	

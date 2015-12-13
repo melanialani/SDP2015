@@ -72,7 +72,6 @@
 		----------------------------------------------------- */
 		public function getDetailStudent($nrp)
 		{
-			$this->db->select('nama,nrp,sks,ipk');
 			$result = $this->db->get_where('mahasiswa',array('nrp'=>$nrp));
 			return $result->row();
 		}
@@ -135,26 +134,26 @@
 			$result = $this->db->get('mahasiswa')->row();
 			return $result->nip_dosen;
 		}
-		/****
-		Function getStatusPerwalian
-		Digunakan untuk mendapatkan status perwalian dari Table Mahasiswa
-		Input : nrp
-		Output : status_perwalian
-		****/
-		public function getStatusPerwalian($nrp){
-			$this->db->select('status_perwalian');
-			$query = $this->db->get_where('mahasiswa',array('nrp' => $nrp));
-			return $query->row_array();
-		}
-		/****
-		Function getDataMahasiswa
-		Digunakan untuk mendapatkan Informasi Mahasiswa dari Table Mahasiswa
-		Input : nrp
-		Output : Array dari semua field dari table mahasiswa
-		****/
-		public function getDataMahasiswa($nrp){
-			return $this->db->get_where("mahasiswa",array("nrp" => $nrp))->row_array();
-		}
 		
+		/* -----------------------------------------------------
+		Function getIps
+		Digunakan untuk mendapatkan IP semester lalu
+		Input: -
+		Output: ip semester lalu
+		----------------------------------------------------- */
+		public function getIps()
+		{
+			$studentID = $this->session->userdata('username');
+			$detailStudent = $this->getDetailStudent($studentID);
+			$semester = (+$detailStudent->semester) - 1;
+			$this->db->where('mahasiswa_nrp',$studentID);
+			$this->db->where('semester',$semester);
+			$result = $this->db->get('nilai_semester')->row();
+			if($this->db->affected_rows()>0)
+			{
+				return $result->ips;
+			}
+			return false;
+		}
 	}
 ?>

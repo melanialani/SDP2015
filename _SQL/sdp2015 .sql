@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.2.11
+-- version 4.5.2
 -- http://www.phpmyadmin.net
 --
--- Host: 127.0.0.1
--- Generation Time: Dec 10, 2015 at 05:21 AM
--- Server version: 5.6.21
--- PHP Version: 5.6.3
+-- Host: localhost
+-- Generation Time: Dec 10, 2015 at 09:33 PM
+-- Server version: 10.0.17-MariaDB
+-- PHP Version: 5.6.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -14,7 +14,7 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Database: `sdp2015`
@@ -26,7 +26,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `beasiswa`
 --
 
-CREATE TABLE IF NOT EXISTS `beasiswa` (
+CREATE TABLE `beasiswa` (
   `id` varchar(15) NOT NULL,
   `informasi_beasiswa_nama_beasiswa` varchar(30) NOT NULL,
   `mahasiswa_nrp` varchar(9) NOT NULL,
@@ -50,7 +50,7 @@ INSERT INTO `beasiswa` (`id`, `informasi_beasiswa_nama_beasiswa`, `mahasiswa_nrp
 -- Table structure for table `calon_mahasiswa`
 --
 
-CREATE TABLE IF NOT EXISTS `calon_mahasiswa` (
+CREATE TABLE `calon_mahasiswa` (
   `nomor_registrasi_id` varchar(6) NOT NULL,
   `email` varchar(50) NOT NULL,
   `password` varchar(20) NOT NULL,
@@ -68,9 +68,9 @@ CREATE TABLE IF NOT EXISTS `calon_mahasiswa` (
   `nomor_hp` varchar(12) DEFAULT NULL,
   `foto` varchar(100) DEFAULT NULL,
   `rapor` varchar(100) DEFAULT NULL,
-  `nilai_mat` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `nilai_inggris` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `nilai_rata_rata` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `nilai_mat` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+  `nilai_inggris` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+  `nilai_rata_rata` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
   `akte_kelahiran` varchar(100) DEFAULT NULL,
   `kartu_keluarga` varchar(100) DEFAULT NULL,
   `nama_sekolah` varchar(30) DEFAULT NULL,
@@ -143,7 +143,7 @@ INSERT INTO `calon_mahasiswa` (`nomor_registrasi_id`, `email`, `password`, `nama
 -- Table structure for table `data_umum`
 --
 
-CREATE TABLE IF NOT EXISTS `data_umum` (
+CREATE TABLE `data_umum` (
   `index` varchar(50) NOT NULL,
   `value` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -154,7 +154,7 @@ CREATE TABLE IF NOT EXISTS `data_umum` (
 
 INSERT INTO `data_umum` (`index`, `value`) VALUES
 ('lama_sks', '3000'),
-('tahun_ajaran_sekarang', 'GASAL 2014/2015'),
+('tahun_ajaran_sekarang', 'GASAL 2015/2016'),
 ('valnilai_A_to_IPK', '4.00'),
 ('valnilai_B+_to_IPK', '3.75'),
 ('valnilai_B_to_IPK', '3.50'),
@@ -169,10 +169,10 @@ INSERT INTO `data_umum` (`index`, `value`) VALUES
 -- Table structure for table `dispensasi`
 --
 
-CREATE TABLE IF NOT EXISTS `dispensasi` (
+CREATE TABLE `dispensasi` (
   `id` varchar(15) NOT NULL,
   `nama_dispensasi` varchar(30) NOT NULL,
-  `periode_cicilan` tinyint(3) unsigned NOT NULL,
+  `periode_cicilan` tinyint(3) UNSIGNED NOT NULL,
   `tanggal_batas` date NOT NULL,
   `calon_mahasiswa_nomor_registrasi` varchar(6) DEFAULT NULL,
   `mahasiswa_nrp` varchar(9) NOT NULL
@@ -184,7 +184,7 @@ CREATE TABLE IF NOT EXISTS `dispensasi` (
 -- Table structure for table `dkeuangan`
 --
 
-CREATE TABLE IF NOT EXISTS `dkeuangan` (
+CREATE TABLE `dkeuangan` (
   `id` varchar(17) NOT NULL,
   `periode` tinyint(4) NOT NULL,
   `jumlah` int(11) NOT NULL,
@@ -199,13 +199,13 @@ CREATE TABLE IF NOT EXISTS `dkeuangan` (
 -- Table structure for table `dosen`
 --
 
-CREATE TABLE IF NOT EXISTS `dosen` (
+CREATE TABLE `dosen` (
   `nip` varchar(10) NOT NULL,
   `nama` varchar(100) NOT NULL,
   `nomor_telepon` varchar(12) DEFAULT NULL,
   `email` varchar(50) NOT NULL,
   `kepala_jurusan_id` varchar(8) DEFAULT NULL COMMENT 'mereference pada informasi_kurikulum_id ke 0 (belakangnya)',
-  `jumlah_sks_mengajar` int(10) unsigned NOT NULL DEFAULT '0',
+  `jumlah_sks_mengajar` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `status` varchar(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -218,7 +218,8 @@ INSERT INTO `dosen` (`nip`, `nama`, `nomor_telepon`, `email`, `kepala_jurusan_id
 ('DO002', 'Eka Rahayu Setyaningsih ,S.Kom., M.Kom.', '0317673023', 'eka@gmail.com', NULL, 0, '1'),
 ('DO003', 'Jenny Ngo,Dr., M.Sc.Ed.', '031654654', 'jennyngo@gmail.com', NULL, 0, '1'),
 ('DO004', 'Edwin Pramana,Ir., M.AppSc.', '0384752132', 'edwin@stts.edu', 'S1INF150', 0, '1'),
-('DO005', 'Arya Tandy Hermawan,Ir., M.T.', '038539283', 'arya@stts.edu', NULL, 0, '1');
+('DO005', 'Arya Tandy Hermawan,Ir., M.T.', '038539283', 'arya@stts.edu', NULL, 0, '1'),
+('DO006', 'Ferdinandus F.X.', '08885553322', 'ferdinandus@stts.edu', NULL, 0, '1');
 
 -- --------------------------------------------------------
 
@@ -226,12 +227,12 @@ INSERT INTO `dosen` (`nip`, `nama`, `nomor_telepon`, `email`, `kepala_jurusan_id
 -- Table structure for table `drevisi_penilaian`
 --
 
-CREATE TABLE IF NOT EXISTS `drevisi_penilaian` (
+CREATE TABLE `drevisi_penilaian` (
   `id` varchar(10) NOT NULL,
   `hrevisi_penilaian_id` varchar(9) NOT NULL,
   `mahasiswa_nrp` varchar(9) NOT NULL,
-  `nilai_akhir_sebelum` tinyint(3) unsigned NOT NULL,
-  `nilai_akhir_sesudah` tinyint(3) unsigned NOT NULL
+  `nilai_akhir_sebelum` tinyint(3) UNSIGNED NOT NULL,
+  `nilai_akhir_sesudah` tinyint(3) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -251,18 +252,19 @@ INSERT INTO `drevisi_penilaian` (`id`, `hrevisi_penilaian_id`, `mahasiswa_nrp`, 
 --
 -- Stand-in structure for view `getgrade`
 --
-CREATE TABLE IF NOT EXISTS `getgrade` (
+CREATE TABLE `getgrade` (
 `mahasiswa_nrp` varchar(9)
 ,`nama` varchar(50)
 ,`nilai_grade` varchar(2)
 );
+
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `hkeuangan`
 --
 
-CREATE TABLE IF NOT EXISTS `hkeuangan` (
+CREATE TABLE `hkeuangan` (
   `id` varchar(15) NOT NULL,
   `user_id` varchar(9) NOT NULL,
   `jumlah` int(11) NOT NULL,
@@ -276,7 +278,7 @@ CREATE TABLE IF NOT EXISTS `hkeuangan` (
 -- Table structure for table `hrevisi_penilaian`
 --
 
-CREATE TABLE IF NOT EXISTS `hrevisi_penilaian` (
+CREATE TABLE `hrevisi_penilaian` (
   `id` varchar(9) NOT NULL,
   `kelas_id` varchar(6) NOT NULL,
   `catatan` text,
@@ -298,10 +300,10 @@ INSERT INTO `hrevisi_penilaian` (`id`, `kelas_id`, `catatan`, `status_revisi`, `
 -- Table structure for table `informasi_beasiswa`
 --
 
-CREATE TABLE IF NOT EXISTS `informasi_beasiswa` (
+CREATE TABLE `informasi_beasiswa` (
   `nama_beasiswa` varchar(30) NOT NULL,
   `aspek_dipotong` varchar(10) NOT NULL,
-  `berapa_dipotong` tinyint(3) unsigned NOT NULL
+  `berapa_dipotong` tinyint(3) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -321,15 +323,15 @@ INSERT INTO `informasi_beasiswa` (`nama_beasiswa`, `aspek_dipotong`, `berapa_dip
 -- Table structure for table `informasi_kurikulum`
 --
 
-CREATE TABLE IF NOT EXISTS `informasi_kurikulum` (
+CREATE TABLE `informasi_kurikulum` (
   `id` varchar(8) NOT NULL,
   `jurusan` varchar(30) NOT NULL,
   `tahun_angkatan` varchar(9) NOT NULL,
   `kategori` tinyint(4) NOT NULL,
-  `harga_usp` bigint(8) unsigned NOT NULL,
-  `harga_spp` mediumint(8) unsigned NOT NULL,
-  `harga_sks` mediumint(8) unsigned NOT NULL,
-  `sks` tinyint(3) unsigned NOT NULL
+  `harga_usp` bigint(8) UNSIGNED NOT NULL,
+  `harga_spp` mediumint(8) UNSIGNED NOT NULL,
+  `harga_sks` mediumint(8) UNSIGNED NOT NULL,
+  `sks` tinyint(3) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -370,7 +372,7 @@ INSERT INTO `informasi_kurikulum` (`id`, `jurusan`, `tahun_angkatan`, `kategori`
 -- Table structure for table `karyawan`
 --
 
-CREATE TABLE IF NOT EXISTS `karyawan` (
+CREATE TABLE `karyawan` (
   `id` varchar(9) NOT NULL,
   `nama` varchar(50) NOT NULL,
   `jabatan` varchar(50) NOT NULL
@@ -382,7 +384,7 @@ CREATE TABLE IF NOT EXISTS `karyawan` (
 -- Table structure for table `kelas`
 --
 
-CREATE TABLE IF NOT EXISTS `kelas` (
+CREATE TABLE `kelas` (
   `id` varchar(9) NOT NULL,
   `nama` varchar(1) NOT NULL DEFAULT '-',
   `mata_kuliah_id` varchar(6) NOT NULL,
@@ -390,14 +392,14 @@ CREATE TABLE IF NOT EXISTS `kelas` (
   `dosen_nip` varchar(11) DEFAULT NULL,
   `hari` varchar(1) DEFAULT NULL,
   `jam_mulai` time DEFAULT NULL,
-  `persentase_uts` tinyint(3) unsigned NOT NULL DEFAULT '30',
-  `persentase_uas` tinyint(3) unsigned NOT NULL DEFAULT '30',
-  `persentase_tugas` tinyint(3) unsigned NOT NULL DEFAULT '40',
-  `tambahan_grade` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `status_konfirmasi` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `persentase_uts` tinyint(3) UNSIGNED NOT NULL DEFAULT '30',
+  `persentase_uas` tinyint(3) UNSIGNED NOT NULL DEFAULT '30',
+  `persentase_tugas` tinyint(3) UNSIGNED NOT NULL DEFAULT '40',
+  `tambahan_grade` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+  `status_konfirmasi` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
   `komentar_kajur` text NOT NULL,
   `kelas_id` varchar(6) DEFAULT NULL COMMENT 'buat_gabung kelas',
-  `jumlah_mahasiswa` int(3) unsigned NOT NULL,
+  `jumlah_mahasiswa` int(3) UNSIGNED NOT NULL,
   `tahun_ajaran` varchar(20) NOT NULL,
   `tanggal_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `tanggal_update` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -419,9 +421,27 @@ INSERT INTO `kelas` (`id`, `nama`, `mata_kuliah_id`, `ruangan_id`, `dosen_nip`, 
 ('K15008', 'B', 'MK007', 'R0006', 'DO002', '2', '10:30:00', 30, 30, 40, 0, 0, '', NULL, 0, 'GENAP 2014/2015', '2015-11-12 21:59:24', '2015-11-12 21:59:24', 1),
 ('K15009', 'A', 'MK009', 'R0004', 'DO004', '2', '10:30:00', 30, 30, 40, 0, 0, '', NULL, 0, 'GENAP 2014/2015', '2015-11-12 21:59:56', '2015-11-12 21:59:56', 1),
 ('K15010', 'B', 'MK009', 'R0001', 'DO004', '3', '10:30:00', 30, 30, 40, 0, 0, '', NULL, 0, 'GENAP 2014/2015', '2015-11-12 21:59:56', '2015-11-12 21:59:56', 1),
-('K15011', '-', 'MK011', 'R0009', 'DO001', '4', '13:00:00', 30, 30, 40, 0, 0, '', NULL, 0, 'GENAP 2014/2015', '2015-11-12 22:00:53', '2015-11-12 22:00:53', 1),
-('K15012', '-', 'MK011', NULL, NULL, '5', '15:30:00', 30, 30, 40, 0, 0, '', 'K15011', 0, 'GENAP 2014/2015', '2015-11-12 22:00:53', '2015-11-12 22:00:53', 1),
-('K15013', '-', 'MK011', NULL, NULL, '1', '15:30:00', 30, 30, 40, 0, 0, '', 'K15011', 0, 'GENAP 2014/2015', '2015-11-12 22:01:10', '2015-11-12 22:01:10', 1);
+  ('K15011', '-', 'MK011', 'R0009', 'DO002', '4', '13:00:00', 30, 30, 40, 0, 0, '', NULL, 30, 'GENAP 2014/2015', '2015-11-12 22:00:53', '2015-11-12 22:00:53', 1),
+  ('K15012', '-', 'MK012', 'R0008', 'DO001', '5', '15:30:00', 30, 30, 40, 0, 0, '', NULL, 30, 'GENAP 2014/2015', '2015-11-12 22:00:53', '2015-11-12 22:00:53', 1),
+  ('K15013', '-', 'MK013', 'R0005', 'DO002', '1', '15:30:00', 30, 30, 40, 0, 0, '', NULL, 30, 'GENAP 2014/2015', '2015-11-12 22:01:10', '2015-11-12 22:01:10', 1),
+  ('K15014', '', 'MK014', 'R0002', 'DO002', '2', '10:30:00', 30, 30, 40, 0, 0, '', NULL, 30, 'GASAL 2015/2016', '2015-11-27 15:09:56', '2015-11-27 15:09:56', 1),
+  ('K15015', '', 'MK015', 'R0001', 'DO001', '4', '08:00:00', 30, 30, 40, 0, 0, '', NULL, 30, 'GASAL 2015/2016', '2015-11-27 15:09:56', '2015-11-27 15:09:56', 1),
+  ('K15016', '', 'MK016', 'R0002', 'DO003', '5', '15:30:00', 30, 30, 40, 0, 0, '', NULL, 30, 'GASAL 2015/2016', '2015-11-27 15:09:56', '2015-11-27 15:09:56', 1),
+  ('K15017', '', 'MK017', 'R0003', 'DO002', '1', '18:00:00', 30, 30, 40, 0, 0, '', NULL, 30, 'GASAL 2015/2016', '2015-11-27 15:09:56', '2015-11-27 15:09:56', 1),
+  ('K15018', '', 'MK018', 'R0004', 'DO002', '4', '13:00:00', 30, 30, 40, 0, 0, '', NULL, 30, 'GASAL 2015/2016', '2015-11-27 15:09:56', '2015-11-27 15:09:56', 1),
+  ('K15019', '', 'MK019', 'R0004', 'DO001', '5', '10:30:00', 30, 30, 40, 0, 0, '', NULL, 30, 'GASAL 2015/2016', '2015-11-27 15:09:56', '2015-11-27 15:09:56', 1),
+  ('K15020', '', 'MK020', 'R0008', 'DO002', '1', '08:00:00', 30, 30, 40, 0, 0, '', NULL, 30, 'GASAL 2015/2016', '2015-11-27 15:09:56', '2015-11-27 15:09:56', 1),
+  ('K15021', '', 'MK021', 'R0006', 'DO001', '3', '13:00:00', 30, 30, 40, 0, 0, '', NULL, 30, 'GASAL 2015/2016', '2015-11-27 15:09:56', '2015-11-27 15:09:56', 1),
+  ('K15022', '', 'MK021', 'R0003', 'DO003', '2', '15:30:00', 30, 30, 40, 0, 0, '', NULL, 30, 'GASAL 2015/2016', '2015-11-27 15:09:56', '2015-11-27 15:09:56', 1),
+  ('K15023', '', 'MK027', 'R0004', 'DO003', '4', '10:30:00', 30, 30, 40, 0, 0, '', NULL, 30, 'GASAL 2015/2016', '2015-11-27 15:09:56', '2015-11-27 15:09:56', 1),
+  ('K15024', '', 'MK028', 'R0008', 'DO003', '5', '13:00:00', 30, 30, 40, 0, 0, '', NULL, 30, 'GASAL 2015/2016', '2015-11-27 15:09:56', '2015-11-27 15:09:56', 1),
+  ('K15025', 'A', 'MK001', 'R0004', 'DO001', '3', '08:00:00', 30, 30, 40, 0, 0, '', NULL, 30, 'GASAL 2015/2016', '2015-11-27 15:09:56', '2015-11-27 15:09:56', 1),
+  ('K15026', '-', 'MK002', 'R0004', 'DO001', '3', '08:00:00', 30, 30, 40, 0, 0, '', NULL, 30, 'GASAL 2015/2016', '2015-11-27 15:09:56', '2015-11-27 15:09:56', 1),
+  ('K15027', '-', 'MK030', 'R0003', 'DO001', '1', '08:00:00', 30, 30, 40, 0, 0, '', NULL, 30, 'GASAL 2015/2016', '2015-11-12 21:56:10', '2015-11-12 21:56:10', 1),
+  ('K15028', '-', 'MK031', 'R0003', 'DO002', '1', '10:30:00', 30, 30, 40, 0, 0, '', NULL, 30, 'GASAL 2015/2016', '2015-11-12 21:56:58', '2015-11-12 21:56:58', 1),
+  ('K15029', '-', 'MK033', 'R0008', 'DO003', '2', '13:00:00', 30, 30, 40, 0, 2, '', NULL, 30, 'GASAL 2015/2016', '2015-11-12 21:57:39', '2015-11-12 21:57:39', 1),
+  ('K15030', '-', 'MK034', 'R0004', 'DO001', '3', '08:00:00', 30, 30, 40, 0, 0, '', NULL, 30, 'GASAL 2015/2016', '2015-11-27 15:09:56', '2015-11-27 15:09:56', 1),
+  ('K15099', '', 'MK029', 'R0004', 'DO001', '3', '08:00:00', 30, 30, 40, 0, 0, '', NULL, 30, 'GASAL 2015/2016', '2015-11-27 15:09:56', '2015-11-27 15:09:56', 1);
 
 -- --------------------------------------------------------
 
@@ -429,12 +449,12 @@ INSERT INTO `kelas` (`id`, `nama`, `mata_kuliah_id`, `ruangan_id`, `dosen_nip`, 
 -- Table structure for table `kelas_mahasiswa`
 --
 
-CREATE TABLE IF NOT EXISTS `kelas_mahasiswa` (
+CREATE TABLE `kelas_mahasiswa` (
   `mahasiswa_nrp` varchar(9) NOT NULL COMMENT 'NYY',
   `kelas_id` varchar(9) NOT NULL,
   `mata_kuliah_id` varchar(6) NOT NULL,
   `status_ambil` varchar(10) NOT NULL,
-  `semester` tinyint(2) unsigned NOT NULL,
+  `semester` tinyint(2) UNSIGNED NOT NULL,
   `nilai_id` varchar(9) DEFAULT NULL COMMENT 'nilai sebenarnya'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='mahasiswa mengambil kelas';
 
@@ -460,22 +480,40 @@ INSERT INTO `kelas_mahasiswa` (`mahasiswa_nrp`, `kelas_id`, `mata_kuliah_id`, `s
 ('213116230', 'K15001', 'MK001', 'A', 1, 'N6230001'),
 ('213116230', 'K15005', 'MK005', 'A', 1, 'N6230002'),
 ('213116241', 'K15001', 'MK001', 'A', 1, 'N6241001'),
+  ('213116241', 'K15002', 'MK003', 'A', 1, 'N6241002'),
 ('213116241', 'K15005', 'MK005', 'A', 1, 'N6241002'),
-('213116249', 'K15004', 'MK003', 'A', 1, 'N6249001'),
-('213116249', 'K15006', 'MK005', 'A', 1, 'N6249002'),
-('213116256', 'K15004', 'MK003', 'A', 1, 'N6256001'),
-('213116256', 'K15006', 'MK005', 'A', 1, 'N6256002'),
-('213116261', 'K15004', 'MK003', 'd', 1, 'N6261001'),
-('213116261', 'K15006', 'MK005', 'A', 1, 'N6261002'),
-('213116267', 'K15004', 'MK003', 'A', 1, 'N6267001'),
-('213116267', 'K15006', 'MK005', 'A', 1, 'N6267002'),
-('213116268', 'K15004', 'MK003', 'A', 1, 'N6268001'),
-('213116268', 'K15006', 'MK005', 'A', 1, 'N6268002'),
-('213116270', 'K15004', 'MK003', 'A', 1, 'N6270001'),
-('213116270', 'K15006', 'MK005', 'A', 1, 'N6270002'),
-('213116278', 'K15004', 'MK003', 'A', 1, 'N6278001'),
-('213116278', 'K15006', 'MK005', 'A', 1, 'N6278002'),
-('213180292', 'K15006', 'MK005', 'A', 1, 'N0292001');
+  ('213116241', 'K15004', 'MK004', 'A', 1, 'N6241001'),
+  ('213116241', 'K15006', 'MK005', 'A', 1, 'N6241005'),
+  ('213116241', 'K15009', 'MK009', 'A', 1, 'N6241004'),
+  ('213116241', 'K15011', 'MK011', 'A', 1, 'N6241001'),
+  ('213116241', 'K15012', 'MK012', 'A', 1, 'N6241004'),
+  ('213116241', 'K15013', 'MK013', 'A', 1, 'N6241001'),
+  ('213116241', 'K15014', 'MK014', 'A', 1, 'N6241004'),
+  ('213116241', 'K15015', 'MK015', 'A', 1, 'N6241004'),
+  ('213116241', 'K15016', 'MK016', 'A', 1, 'N6241004'),
+  ('213116241', 'K15017', 'MK017', 'A', 1, 'N6241004'),
+  ('213116241', 'K15018', 'MK018', 'A', 1, 'N6241004'),
+  ('213116241', 'K15019', 'MK019', 'A', 1, 'N6241004'),
+  ('213116241', 'K15020', 'MK020', 'A', 1, 'N6241004'),
+  ('213116241', 'K15021', 'MK021', 'A', 1, 'N6241004'),
+  ('213116241', 'K15025', 'MK001', 'A', 1, 'N6241003'),
+  ('213116241', 'K15026', 'MK002', 'A', 1, 'N6241004'),
+  ('213116249', 'K15004', 'MK003', 'A', 1, 'N6249001'),
+  ('213116249', 'K15006', 'MK005', 'A', 1, 'N6249002'),
+  ('213116256', 'K15004', 'MK003', 'A', 1, 'N6256001'),
+  ('213116256', 'K15006', 'MK005', 'A', 1, 'N6256002'),
+  ('213116261', 'K15004', 'MK003', 'd', 1, 'N6261001'),
+  ('213116261', 'K15006', 'MK005', 'A', 1, 'N6261002'),
+  ('213116267', 'K15004', 'MK003', 'A', 1, 'N6267001'),
+  ('213116267', 'K15006', 'MK005', 'A', 1, 'N6267002'),
+  ('213116268', 'K15004', 'MK003', 'A', 1, 'N6268001'),
+  ('213116268', 'K15006', 'MK005', 'A', 1, 'N6268002'),
+  ('213116270', 'K15004', 'MK003', 'A', 1, 'N6270001'),
+  ('213116270', 'K15006', 'MK005', 'A', 1, 'N6270002'),
+  ('213116278', 'K15004', 'MK003', 'A', 1, 'N6278001'),
+  ('213116278', 'K15006', 'MK005', 'A', 1, 'N6278002'),
+  ('213180292', 'K15006', 'MK005', 'A', 1, 'N0292001');
+
 
 -- --------------------------------------------------------
 
@@ -483,7 +521,7 @@ INSERT INTO `kelas_mahasiswa` (`mahasiswa_nrp`, `kelas_id`, `mata_kuliah_id`, `s
 -- Table structure for table `kode_verifikasi`
 --
 
-CREATE TABLE IF NOT EXISTS `kode_verifikasi` (
+CREATE TABLE `kode_verifikasi` (
   `id` varchar(6) NOT NULL COMMENT '6 digit angka kode verifikasi',
   `nomor_registrasi_id` varchar(6) NOT NULL,
   `email` varchar(50) NOT NULL,
@@ -503,7 +541,7 @@ INSERT INTO `kode_verifikasi` (`id`, `nomor_registrasi_id`, `email`, `tanggal_cr
 -- Table structure for table `kota`
 --
 
-CREATE TABLE IF NOT EXISTS `kota` (
+CREATE TABLE `kota` (
   `id` varchar(6) NOT NULL,
   `provinsi_id` varchar(5) NOT NULL,
   `nama` varchar(50) NOT NULL
@@ -620,7 +658,7 @@ INSERT INTO `kota` (`id`, `provinsi_id`, `nama`) VALUES
 -- Table structure for table `log_penilaian`
 --
 
-CREATE TABLE IF NOT EXISTS `log_penilaian` (
+CREATE TABLE `log_penilaian` (
   `id` varchar(11) NOT NULL,
   `keterangan` text,
   `tanggal_create` datetime NOT NULL,
@@ -640,7 +678,7 @@ INSERT INTO `log_penilaian` (`id`, `keterangan`, `tanggal_create`, `kelas_id`) V
 -- Table structure for table `log_penilaian_nilai`
 --
 
-CREATE TABLE IF NOT EXISTS `log_penilaian_nilai` (
+CREATE TABLE `log_penilaian_nilai` (
   `nilai_id` varchar(9) NOT NULL,
   `log_penilaian_id` varchar(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -664,7 +702,7 @@ INSERT INTO `log_penilaian_nilai` (`nilai_id`, `log_penilaian_id`) VALUES
 -- Table structure for table `mahasiswa`
 --
 
-CREATE TABLE IF NOT EXISTS `mahasiswa` (
+CREATE TABLE `mahasiswa` (
   `nrp` varchar(9) NOT NULL,
   `nomor_registrasi_id` varchar(6) NOT NULL,
   `nip_dosen` varchar(10) NOT NULL,
@@ -689,9 +727,9 @@ CREATE TABLE IF NOT EXISTS `mahasiswa` (
   `nomor_telp_wali` varchar(12) NOT NULL,
   `pekerjaan_wali` varchar(30) NOT NULL,
   `status_perwalian` varchar(1) NOT NULL DEFAULT '0',
-  `sks` smallint(3) unsigned NOT NULL DEFAULT '0',
+  `sks` smallint(3) UNSIGNED NOT NULL DEFAULT '0',
   `ipk` varchar(5) NOT NULL DEFAULT '0',
-  `semester` tinyint(2) unsigned NOT NULL DEFAULT '0',
+  `semester` tinyint(2) UNSIGNED NOT NULL DEFAULT '0',
   `informasi_kurikulum_id` varchar(8) DEFAULT NULL,
   `dosen_nip` varchar(5) NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '1'
@@ -705,7 +743,7 @@ INSERT INTO `mahasiswa` (`nrp`, `nomor_registrasi_id`, `nip_dosen`, `email`, `na
 ('213116176', 'fdse45', '', 'chinam@gmail.com', 'Chinam', 'L', 'Surabaya', '0000-00-00', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '0', 0, '1', 5, 'S1INF131', '', 1),
 ('213116178', 'wertiu', '', 'andregozzidhy@gmail.com', 'Andre Gozzidhy', 'L', 'Surabaya', '0000-00-00', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '0', 0, '2', 5, 'S1INF131', '', 1),
 ('213116181', 'kikio0', '', 'angelineizumi@gmail.com', 'Angeline Izumi', 'P', 'Surabaya', '0000-00-00', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '0', 0, '0.5', 5, 'S1INF131', '', 1),
-('213116193', 'qw5678', '', 'christianlimanto@gmail.com', 'Christian Limanto', 'L', 'Surabaya', '0000-00-00', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '0', 0, '2', 5, 'S1INF131', '', 1),
+('213116193', 'qw5678', '', 'christianlimanto@gmail.com', 'Christian Limanto', 'L', 'Surabaya', '0000-00-00', 'WNI', 'Single', 'Kristen', 'Jalan Oro Oro Ombo 123', 'jawa timur', 'surabaya', '65525', '08155293322', '', 'Lee Kum Kee', 'Jalan Merdeka 55', 'aceh', 'banda', '08123544422', 'Swasta', '0', 0, '2', 5, 'S1INF131', '', 1),
 ('213116195', 'fe56ty', '', 'cynthiawangsawinata@gmail.com', 'Cynthia Wangsawinata', 'P', 'Surabaya', '0000-00-00', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '0', 0, '2', 5, 'S1INF131', '', 1),
 ('213116196', 'wqw123', '', 'danielstelar@gmail.com', 'Daniel Stelar', 'L', 'Surabaya', '0000-00-00', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '0', 0, '2', 5, 'S1INF131', '', 1),
 ('213116200', 'zx45mn', '', 'daniel@gmail.com', 'Daniel', 'L', 'Surabaya', '0000-00-00', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '0', 0, '1.5', 5, 'S1INF131', '', 1),
@@ -726,12 +764,12 @@ INSERT INTO `mahasiswa` (`nrp`, `nomor_registrasi_id`, `nip_dosen`, `email`, `na
 -- Table structure for table `mata_kuliah`
 --
 
-CREATE TABLE IF NOT EXISTS `mata_kuliah` (
+CREATE TABLE `mata_kuliah` (
   `id` varchar(5) NOT NULL,
   `nama` varchar(50) NOT NULL,
   `deskripsi` text,
-  `semester` tinyint(2) unsigned NOT NULL,
-  `jumlah_sks` tinyint(2) unsigned NOT NULL,
+  `semester` tinyint(2) UNSIGNED NOT NULL,
+  `jumlah_sks` tinyint(2) UNSIGNED NOT NULL,
   `informasi_kurikulum_id` varchar(8) DEFAULT NULL,
   `lulus_minimal` varchar(2) NOT NULL,
   `berpraktikum` tinyint(1) NOT NULL,
@@ -744,25 +782,49 @@ CREATE TABLE IF NOT EXISTS `mata_kuliah` (
 --
 
 INSERT INTO `mata_kuliah` (`id`, `nama`, `deskripsi`, `semester`, `jumlah_sks`, `informasi_kurikulum_id`, `lulus_minimal`, `berpraktikum`, `major`, `status`) VALUES
-('MK001', 'Algoritma dan Programming', 'Alpro 1', 1, 3, 'S1INF131', 'C', 0, '', 1),
-('MK002', 'Intro to Programming', 'ITP', 1, 3, 'S1INF131', 'C', 1, '', 1),
-('MK003', 'Internet dan World Wide Web', 'IWWW', 1, 3, 'S1INF131', 'C', 0, '', 1),
-('MK004', 'Intro to Information Technology', 'IIT', 1, 3, 'S1INF131', 'C', 0, '', 1),
-('MK005', 'Religion', 'Agama', 1, 3, 'S1INF131', 'C', 0, '', 1),
-('MK006', 'Indonesian Language', 'BI', 1, 3, 'S1INF131', 'D', 0, '', 1),
-('MK007', 'Algoritma dan Programming 2', 'Alpro 2', 2, 3, 'S1INF131', 'C', 0, '', 1),
-('MK008', 'Pemrograman Visual', 'PV', 2, 3, 'S1INF131', 'C', 1, '', 1),
-('MK009', 'Database', 'db', 2, 3, 'S1INF131', 'C', 1, '', 1),
-('MK010', 'Computer Network', 'Jarkom', 2, 3, 'S1INF131', 'D', 0, '', 1),
-('MK011', 'English', 'English', 2, 2, 'S1INF131', 'D', 0, '', 1),
-('MK012', 'Logic Mathematics', 'LogMat', 2, 2, 'S1INF131', 'D', 0, '', 1),
-('MK013', 'Mathematics', 'Mat', 2, 2, 'S1INF131', 'D', 0, '', 1),
-('MK014', 'ICT Global Trend', NULL, 1, 3, 'S1SIB131', 'C', 0, '', 1),
-('MK015', 'Matematika Bisnis', NULL, 1, 3, 'S1SIB131', 'D', 0, '', 1),
-('MK016', 'Analisa dan Desain Sistem', 'ADS', 3, 3, 'S1INF131', 'C', 0, '', 1),
-('MK017', 'Interaksi Manusia dan Komputer', 'IMK', 5, 3, 'S1INF131', 'D', 0, '', 1),
-('MK018', 'Struktur Data', 'Strukdat', 3, 3, 'S1INF131', 'C', 0, '', 1),
-('MK019', 'Framework Aplikasi Internet', 'FAI', 5, 3, 'S1INF131', 'C', 1, '', 1);
+  ('MK001', 'Algoritma dan Programming', 'Alpro 1', 1, 3, 'S1INF131', 'C', 0, '', 1),
+  ('MK002', 'Intro to Prgoramming', 'ITP', 1, 3, 'S1INF131', 'C', 1, '', 1),
+  ('MK003', 'Internet dan World Wide Web', 'IWWW', 1, 3, 'S1INF131', 'C', 0, '', 1),
+  ('MK004', 'Intro to Information Technology', 'IIT', 1, 3, 'S1INF131', 'C', 0, '', 1),
+  ('MK005', 'Religion', 'Agama', 1, 3, 'S1INF131', 'C', 0, '', 1),
+  ('MK006', 'Indonesian Language', 'BI', 1, 3, 'S1INF131', 'D', 0, '', 1),
+  ('MK007', 'Algoritma dan Programming 2', 'Alpro 2', 2, 3, 'S1INF131', 'C', 0, '', 1),
+  ('MK008', 'Pemrograman Visual', 'PV', 2, 3, 'S1INF131', 'C', 1, '', 1),
+  ('MK009', 'Database', 'db', 2, 3, 'S1INF131', 'C', 1, '', 1),
+  ('MK010', 'Computer Network', 'Jarkom', 2, 3, 'S1INF131', 'D', 0, '', 1),
+  ('MK011', 'English', 'English', 2, 2, 'S1INF131', 'D', 0, '', 1),
+  ('MK012', 'Logic Mathematics', 'LogMat', 2, 2, 'S1INF131', 'D', 0, '', 1),
+  ('MK013', 'Mathematics', 'Mat', 2, 2, 'S1INF131', 'D', 0, '', 1),
+  ('MK014', 'Data Structures', 'Strukdat', 3, 3, 'S1INF131', 'C', 0, '', 1),
+  ('MK015', 'Internet Application Development', 'Aplin', 3, 3, 'S1INF131', 'C', 1, '', 1),
+  ('MK016', 'System Analysis and Design', 'ADS', 3, 3, 'S1INF131', 'C', 0, '', 1),
+  ('MK017', 'Object-Oriented Programming', 'OOP', 3, 3, 'S1INF131', 'C', 1, '', 1),
+  ('MK018', 'Graph Theory', 'Teori Graph', 3, 2, 'S1INF131', 'C', 0, '', 1),
+  ('MK019', 'Mathematics 2', 'Mat 2', 3, 2, 'S1INF131', 'C', 0, '', 1),
+  ('MK020', 'Client Server Programming', 'ADS', 3, 4, 'S1INF131', 'C', 1, '', 1),
+  ('MK021', 'Object-Oriented Analysis and Design', 'adbo', 4, 3, 'S1INF131', 'C', 0, '', 1),
+  ('MK022', 'National Ideology', 'PKN', 4, 2, 'S1INF131', 'C', 0, '', 1),
+  ('MK023', 'Digital Circuits', 'RDIG', 4, 3, 'S1INF131', 'C', 1, '', 1),
+  ('MK024', 'Advanced Data Structures', 'Struktur Data Lanjut', 4, 3, 'S1INF131', 'C', 0, '', 1),
+  ('MK025', 'Digital Image Processing', 'PCD', 4, 3, 'S1INF131', 'C', 0, '', 1),
+  ('MK026', 'Human Computer Interaction', 'HCI', 5, 3, 'S1INF131', 'C', 0, '', 1),
+  ('MK027', 'Internet Application Framework', 'FAI', 5, 3, 'S1INF131', 'C', 1, '', 1),
+  ('MK028', 'Operating System', 'Sisop', 5, 3, 'S1INF131', 'C', 0, '', 1),
+  ('MK029', 'Artificial Intelligence', 'AI', 5, 3, 'S1INF131', 'C', 0, '', 1),
+  ('MK030', 'Computer Graphics', 'Grafkom', 5, 3, 'S1INF131', 'C', 0, '', 1),
+  ('MK031', 'Computer Organization', 'Orkom', 5, 3, 'S1INF131', 'C', 0, '', 1),
+  ('MK032', 'Software Engineering', 'SE', 6, 3, 'S1INF131', 'C', 0, '', 1),
+  ('MK033', 'Multimedia', 'MMI', 6, 3, 'S1INF131', 'C', 1, '', 1),
+  ('MK034', 'Technopreneurship', 'KWU', 6, 2, 'S1INF131', 'C', 0, '', 1),
+  ('MK035', 'Ethics and Profession', 'Etika', 6, 2, 'S1INF131', 'D', 0, '', 1),
+  ('MK036', 'Intership', '', 6, 2, 'S1INF131', 'C', 0, '', 1),
+  ('MK037', 'Soft Computing', 'SC', 6, 3, 'S1INF131', 'C', 0, '', 1),
+  ('MK038', 'Select Topics in IT', '', 6, 3, 'S1INF131', 'C', 0, '', 1),
+  ('MK039', 'Software Development Project', 'SDP', 7, 3, 'S1INF131', 'C', 0, '', 1),
+  ('MK040', 'Embedded Systems', 'ES', 7, 3, 'S1INF131', 'C', 0, '', 1),
+  ('MK041', 'Electives', '', 7, 12, 'S1INF131', 'C', 0, '', 1),
+  ('MK042', 'Undergraduate Thesis', 'TA', 7, 3, 'S1INF131', 'C', 0, '', 1),
+  ('MK043', 'Electives', 'HCI', 7, 3, 'S1INF131', 'C', 0, '', 1);
 
 -- --------------------------------------------------------
 
@@ -770,15 +832,15 @@ INSERT INTO `mata_kuliah` (`id`, `nama`, `deskripsi`, `semester`, `jumlah_sks`, 
 -- Table structure for table `nilai`
 --
 
-CREATE TABLE IF NOT EXISTS `nilai` (
+CREATE TABLE `nilai` (
   `id` varchar(9) NOT NULL,
-  `uts` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `uas` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `tugas` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `nilai_akhir` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `nilai_akhir_grade` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `uts` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+  `uas` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+  `tugas` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+  `nilai_akhir` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+  `nilai_akhir_grade` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
   `nilai_grade` varchar(2) NOT NULL DEFAULT 'E',
-  `value_nilai_grade` tinyint(2) unsigned NOT NULL DEFAULT '0'
+  `value_nilai_grade` tinyint(2) UNSIGNED NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -861,9 +923,9 @@ INSERT INTO `nilai` (`id`, `uts`, `uas`, `tugas`, `nilai_akhir`, `nilai_akhir_gr
 -- Table structure for table `nilai_semester`
 --
 
-CREATE TABLE IF NOT EXISTS `nilai_semester` (
+CREATE TABLE `nilai_semester` (
   `mahasiswa_nrp` varchar(9) NOT NULL,
-  `semester` tinyint(2) unsigned NOT NULL,
+  `semester` tinyint(2) UNSIGNED NOT NULL,
   `ips` varchar(4) NOT NULL,
   `tahun_ajaran` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -873,15 +935,15 @@ CREATE TABLE IF NOT EXISTS `nilai_semester` (
 --
 
 INSERT INTO `nilai_semester` (`mahasiswa_nrp`, `semester`, `ips`, `tahun_ajaran`) VALUES
-('213116176', 1, '1', 'GASAL 2014/2015'),
-('213116178', 1, '2', 'GASAL 2014/2015'),
-('213116181', 1, '0.5', 'GASAL 2014/2015'),
-('213116193', 1, '2', 'GASAL 2014/2015'),
-('213116195', 1, '2', 'GASAL 2014/2015'),
-('213116196', 1, '2', 'GASAL 2014/2015'),
-('213116200', 1, '1.5', 'GASAL 2014/2015'),
-('213116230', 1, '2', 'GASAL 2014/2015'),
-('213116241', 1, '2', 'GASAL 2014/2015');
+  ('213116176', 4, '1', 'GASAL 2014/2015'),
+  ('213116178', 4, '2', 'GASAL 2014/2015'),
+  ('213116181', 4, '0.5', 'GASAL 2014/2015'),
+  ('213116193', 4, '2', 'GASAL 2014/2015'),
+  ('213116195', 4, '2', 'GASAL 2014/2015'),
+  ('213116196', 4, '2', 'GASAL 2014/2015'),
+  ('213116200', 4, '1.5', 'GASAL 2014/2015'),
+  ('213116230', 4, '1', 'GASAL 2014/2015'),
+  ('213116241', 4, '2', 'GASAL 2014/2015');
 
 -- --------------------------------------------------------
 
@@ -889,7 +951,7 @@ INSERT INTO `nilai_semester` (`mahasiswa_nrp`, `semester`, `ips`, `tahun_ajaran`
 -- Table structure for table `nomor_registrasi`
 --
 
-CREATE TABLE IF NOT EXISTS `nomor_registrasi` (
+CREATE TABLE `nomor_registrasi` (
   `id` varchar(6) NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0 = belum terpakai, 1 = sudah terpakai untuk registrasi'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -945,15 +1007,15 @@ INSERT INTO `nomor_registrasi` (`id`, `status`) VALUES
 -- Table structure for table `notifikasi`
 --
 
-CREATE TABLE IF NOT EXISTS `notifikasi` (
-`id` int(11) NOT NULL,
+CREATE TABLE `notifikasi` (
+  `id` int(11) NOT NULL,
   `dari` varchar(9) DEFAULT NULL,
   `tujuan` varchar(9) DEFAULT NULL,
   `judul` varchar(255) NOT NULL,
   `isi` text,
   `tanggal_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `status_baca` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `notifikasi`
@@ -967,7 +1029,8 @@ INSERT INTO `notifikasi` (`id`, `dari`, `tujuan`, `judul`, `isi`, `tanggal_creat
 (5, 'DO001', 'DO004', 'Jaya Pranata,S.Kom telah menyelesaikan penilaian Religion / -', NULL, '2015-12-08 20:24:41', 0),
 (6, 'DO001', 'DO004', 'Jaya Pranata,S.Kom telah menyelesaikan penilaian Religion / -', NULL, '2015-12-08 20:26:03', 0),
 (7, 'DO004', 'DO001', 'Kajur tidak setuju atas penilaian Religion / -', NULL, '2015-12-08 20:36:15', 0),
-(8, 'DO004', 'DO001', 'Revisi untuk Penilaian Algoritma dan Programming / A diterima.', NULL, '2015-12-08 20:40:59', 0);
+(8, 'DO004', 'DO001', 'Revisi untuk Penilaian Algoritma dan Programming / A diterima.', NULL, '2015-12-08 20:40:59', 0),
+(9, 'DO001', '213116241', 'Pemberitahuan Perwalian', 'Perwalian anda ditolak, harap menemui Saya secepatnya', '2015-11-29 16:40:39', 1);
 
 -- --------------------------------------------------------
 
@@ -975,7 +1038,7 @@ INSERT INTO `notifikasi` (`id`, `dari`, `tujuan`, `judul`, `isi`, `tanggal_creat
 -- Table structure for table `provinsi`
 --
 
-CREATE TABLE IF NOT EXISTS `provinsi` (
+CREATE TABLE `provinsi` (
   `id` varchar(5) NOT NULL,
   `nama` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -1026,7 +1089,7 @@ INSERT INTO `provinsi` (`id`, `nama`) VALUES
 -- Table structure for table `ruangan`
 --
 
-CREATE TABLE IF NOT EXISTS `ruangan` (
+CREATE TABLE `ruangan` (
   `id` varchar(5) NOT NULL,
   `nama` varchar(30) NOT NULL,
   `kapasitas` int(3) DEFAULT '0',
@@ -1054,7 +1117,7 @@ INSERT INTO `ruangan` (`id`, `nama`, `kapasitas`, `status`) VALUES
 -- Table structure for table `syarat_matakuliah`
 --
 
-CREATE TABLE IF NOT EXISTS `syarat_matakuliah` (
+CREATE TABLE `syarat_matakuliah` (
   `id_matakuliah` varchar(5) NOT NULL,
   `id_syarat_matakuliah` varchar(5) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -1089,7 +1152,7 @@ INSERT INTO `syarat_matakuliah` (`id_matakuliah`, `id_syarat_matakuliah`) VALUES
 -- Table structure for table `user`
 --
 
-CREATE TABLE IF NOT EXISTS `user` (
+CREATE TABLE `user` (
   `id` varchar(9) NOT NULL DEFAULT '',
   `password` varchar(20) DEFAULT NULL,
   `peran` varchar(20) DEFAULT NULL
@@ -1122,7 +1185,8 @@ INSERT INTO `user` (`id`, `password`, `peran`) VALUES
 ('DO001', 'budibudi', 'dosen'),
 ('DO002', 'steste', 'dosen'),
 ('DO003', 'jngojngo', 'dosen_ketuabau'),
-('DO004', 'edwin', 'dosen');
+('DO004', 'edwin', 'dosen'),
+('DO006', 'ferdinandus', 'dosen_pimpinanpmb');
 
 -- --------------------------------------------------------
 
@@ -1131,7 +1195,7 @@ INSERT INTO `user` (`id`, `password`, `peran`) VALUES
 --
 DROP TABLE IF EXISTS `getgrade`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `getgrade` AS select `kelas_mahasiswa`.`mahasiswa_nrp` AS `mahasiswa_nrp`,`mata_kuliah`.`nama` AS `nama`,`nilai`.`nilai_grade` AS `nilai_grade` from ((`nilai` join `kelas_mahasiswa`) join `mata_kuliah`) where ((`kelas_mahasiswa`.`nilai_id` = `nilai`.`id`) and (`kelas_mahasiswa`.`mata_kuliah_id` = `mata_kuliah`.`id`));
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `getgrade`  AS  select `kelas_mahasiswa`.`mahasiswa_nrp` AS `mahasiswa_nrp`,`mata_kuliah`.`nama` AS `nama`,`nilai`.`nilai_grade` AS `nilai_grade` from ((`nilai` join `kelas_mahasiswa`) join `mata_kuliah`) where ((`kelas_mahasiswa`.`nilai_id` = `nilai`.`id`) and (`kelas_mahasiswa`.`mata_kuliah_id` = `mata_kuliah`.`id`)) ;
 
 --
 -- Indexes for dumped tables
@@ -1141,145 +1205,170 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- Indexes for table `beasiswa`
 --
 ALTER TABLE `beasiswa`
- ADD PRIMARY KEY (`id`), ADD KEY `fk_beasiswa_informasi_beasiswa` (`informasi_beasiswa_nama_beasiswa`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_beasiswa_informasi_beasiswa` (`informasi_beasiswa_nama_beasiswa`);
 
 --
 -- Indexes for table `calon_mahasiswa`
 --
 ALTER TABLE `calon_mahasiswa`
- ADD PRIMARY KEY (`nomor_registrasi_id`), ADD KEY `informasi_kurikulum_id` (`informasi_kurikulum_id`), ADD KEY `nomor_registrasi_id` (`nomor_registrasi_id`) USING BTREE;
+  ADD PRIMARY KEY (`nomor_registrasi_id`),
+  ADD KEY `informasi_kurikulum_id` (`informasi_kurikulum_id`),
+  ADD KEY `nomor_registrasi_id` (`nomor_registrasi_id`) USING BTREE;
 
 --
 -- Indexes for table `data_umum`
 --
 ALTER TABLE `data_umum`
- ADD PRIMARY KEY (`index`);
+  ADD PRIMARY KEY (`index`);
 
 --
 -- Indexes for table `dispensasi`
 --
 ALTER TABLE `dispensasi`
- ADD UNIQUE KEY `id` (`id`);
+  ADD UNIQUE KEY `id` (`id`);
 
 --
 -- Indexes for table `dkeuangan`
 --
 ALTER TABLE `dkeuangan`
- ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `dosen`
 --
 ALTER TABLE `dosen`
- ADD PRIMARY KEY (`nip`);
+  ADD PRIMARY KEY (`nip`);
 
 --
 -- Indexes for table `drevisi_penilaian`
 --
 ALTER TABLE `drevisi_penilaian`
- ADD PRIMARY KEY (`id`), ADD KEY `fk_hrevisi_drevisi` (`hrevisi_penilaian_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_hrevisi_drevisi` (`hrevisi_penilaian_id`);
 
 --
 -- Indexes for table `hkeuangan`
 --
 ALTER TABLE `hkeuangan`
- ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `hrevisi_penilaian`
 --
 ALTER TABLE `hrevisi_penilaian`
- ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `informasi_beasiswa`
 --
 ALTER TABLE `informasi_beasiswa`
- ADD PRIMARY KEY (`nama_beasiswa`);
+  ADD PRIMARY KEY (`nama_beasiswa`);
 
 --
 -- Indexes for table `informasi_kurikulum`
 --
 ALTER TABLE `informasi_kurikulum`
- ADD PRIMARY KEY (`id`), ADD KEY `id` (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id` (`id`);
 
 --
 -- Indexes for table `karyawan`
 --
 ALTER TABLE `karyawan`
- ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `kelas`
 --
 ALTER TABLE `kelas`
- ADD PRIMARY KEY (`id`), ADD KEY `fk_kelas_mata_kuliah` (`mata_kuliah_id`), ADD KEY `fk_kelas_ruangan` (`ruangan_id`), ADD KEY `fk_dosen_kelas` (`dosen_nip`), ADD KEY `fk_kelas_kelas` (`kelas_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_kelas_mata_kuliah` (`mata_kuliah_id`),
+  ADD KEY `fk_kelas_ruangan` (`ruangan_id`),
+  ADD KEY `fk_dosen_kelas` (`dosen_nip`),
+  ADD KEY `fk_kelas_kelas` (`kelas_id`);
 
 --
 -- Indexes for table `kelas_mahasiswa`
 --
 ALTER TABLE `kelas_mahasiswa`
- ADD PRIMARY KEY (`mahasiswa_nrp`,`kelas_id`), ADD KEY `kelas_id` (`kelas_id`), ADD KEY `fk_kelas_mahasiswa_mata_kuliah` (`mata_kuliah_id`), ADD KEY `fk_kelas_mahasiswa_nilai` (`nilai_id`);
+  ADD PRIMARY KEY (`mahasiswa_nrp`,`kelas_id`),
+  ADD KEY `kelas_id` (`kelas_id`),
+  ADD KEY `fk_kelas_mahasiswa_mata_kuliah` (`mata_kuliah_id`),
+  ADD KEY `fk_kelas_mahasiswa_nilai` (`nilai_id`);
 
 --
 -- Indexes for table `kode_verifikasi`
 --
 ALTER TABLE `kode_verifikasi`
- ADD PRIMARY KEY (`id`), ADD KEY `nomor_registrasi_id` (`nomor_registrasi_id`) USING BTREE;
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `nomor_registrasi_id` (`nomor_registrasi_id`) USING BTREE;
 
 --
 -- Indexes for table `kota`
 --
 ALTER TABLE `kota`
- ADD PRIMARY KEY (`id`), ADD KEY `provinsi_id` (`provinsi_id`) USING BTREE;
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `provinsi_id` (`provinsi_id`) USING BTREE;
 
 --
 -- Indexes for table `log_penilaian`
 --
 ALTER TABLE `log_penilaian`
- ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `log_penilaian_nilai`
 --
 ALTER TABLE `log_penilaian_nilai`
- ADD PRIMARY KEY (`nilai_id`,`log_penilaian_id`), ADD KEY `log_penilaian_id` (`log_penilaian_id`);
+  ADD PRIMARY KEY (`nilai_id`,`log_penilaian_id`),
+  ADD KEY `log_penilaian_id` (`log_penilaian_id`);
 
 --
 -- Indexes for table `mahasiswa`
 --
 ALTER TABLE `mahasiswa`
- ADD PRIMARY KEY (`nrp`), ADD UNIQUE KEY `nomor_registrasi_id_2` (`nomor_registrasi_id`), ADD UNIQUE KEY `email` (`email`), ADD KEY `nomor_registrasi_id` (`nomor_registrasi_id`), ADD KEY `informasi_kurikulum_id` (`informasi_kurikulum_id`);
+  ADD PRIMARY KEY (`nrp`),
+  ADD UNIQUE KEY `nomor_registrasi_id_2` (`nomor_registrasi_id`),
+  ADD UNIQUE KEY `email` (`email`),
+  ADD KEY `nomor_registrasi_id` (`nomor_registrasi_id`),
+  ADD KEY `informasi_kurikulum_id` (`informasi_kurikulum_id`);
 
 --
 -- Indexes for table `mata_kuliah`
 --
 ALTER TABLE `mata_kuliah`
- ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `nilai`
 --
 ALTER TABLE `nilai`
- ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `nilai_semester`
 --
 ALTER TABLE `nilai_semester`
- ADD PRIMARY KEY (`mahasiswa_nrp`,`semester`);
+  ADD PRIMARY KEY (`mahasiswa_nrp`,`semester`);
 
 --
 -- Indexes for table `nomor_registrasi`
 --
 ALTER TABLE `nomor_registrasi`
- ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `notifikasi`
 --
 ALTER TABLE `notifikasi`
- ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -1289,7 +1378,7 @@ ALTER TABLE `notifikasi`
 -- AUTO_INCREMENT for table `notifikasi`
 --
 ALTER TABLE `notifikasi`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

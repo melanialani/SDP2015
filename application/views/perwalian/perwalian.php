@@ -1,4 +1,4 @@
-<?php echo form_open('perwalian/mahasiswa');?>
+<?=form_open('perwalian/frs')?>
 <!--CONTENT-->
 	
 	<h2 class="text-center"><?php echo $nowSemester;?></h2>
@@ -14,7 +14,8 @@
 						echo '<tbody><tr><td class="span5">Nama:</td><td>' . $mahasiswa->nama . '</td></tr>';
 						echo '<tr><td class="col-md-2">NRP:</td><td>' . $mahasiswa->nrp . '</td></tr>';
 						echo '<tr><td class="col-md-2">Semester:</td><td>' . $smtr . '</td></tr>';
-						echo '<tr><td class="col-md-2">IP semester lalu:</td><td>' . '' . '</td></tr>';
+						$ips=$this->mahasiswa_model->getIps();
+						echo '<tr><td class="col-md-2">IP semester lalu:</td><td>' . $ips . '</td></tr>';
 						echo '<tr><td class="col-md-2">IPK:</td><td>' . $mahasiswa->ipk . '</td></tr>';
 						echo '<tr><td class="col-md-2">Total SKS:</td><td>' . $mahasiswa->sks . '</td></tr>';
 						echo '</table></div>';
@@ -133,4 +134,4 @@
 	$(document).ready(function(){
 	});
 </script>
-<?php echo form_close(); ?>
+<?=form_close()?>
