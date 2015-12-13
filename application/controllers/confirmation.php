@@ -4,9 +4,11 @@ Nama   				: confirmation.php
 Pembuat 			: Nancy Yonata
 Tanggal Pembuatan 	: 16 November 2015
 Edit 				: 27 November 2015
+Edit 				: 5 Desember 2015
+Edit 				: 7 Desember 2015
+Edit 				: 12 Desember 2015 (Melengkapi dokumentasi pada source code) 
 
-Version Control		:
-v0.1 - 7 Januari 2015
+
 ----------------------------------------------------- */
 class Confirmation extends CI_Controller {
 
@@ -24,7 +26,10 @@ class Confirmation extends CI_Controller {
 	public function index(){
 		redirect('confirmation/all');
     }
-	
+	/*===================================
+	function page_prosentase untuk meload
+	portal_printProsentase 	
+	=====================================*/
 	public function page_prosentase(){
 		$data['pilihan'] = ['Prosentase Nilai Setiap Dosen', 'Prosentase Nilai Semua Mata Kuliah'];
 		$data['ddYear'] = $this->class_model->getComboBoxAllYear();
@@ -35,17 +40,35 @@ class Confirmation extends CI_Controller {
 		$this->load->view('includes/footer');
 
 	}
+	/* =====================================================
+	function ajax_class : 
+	untuk mengambil data kelas yang ada beserta nama dosen pengajar
+    bedasarkan tahun ajaran dan menampilkannya dengan data table
+    pada page confirmation_portal_view	
+	=======================================================*/
     public function ajax_class($yearNow =null)
     {
-		
 		if ($yearNow == null){
+			/* ----------------------------------------------------------
+			   Jika tidak dilakukan pemilhan pada combobox tahun ajaran maka 
+			   akan mengambil tahun ajaran saat ini dari table data_umum
+			------------------------------------------------------------- */
 			$yearNow  = $this->data_umum_model->getSemester();
 		}
 		else {
+			/* ------------------------------------------------------------
+			   jika tahun ajaran pada combox di pilih maka akan dilakukan 
+			   replace karakter pada tahun ajaran tersebut
+			---------------------------------------------------------------*/
 			$yearNow  = str_replace('_',' ',$yearNow);
 			$yearNow  = str_replace('-','/',$yearNow);
 		}
-		// Load Data Kelas
+		
+		
+		/*------------------------------------------------------------ 
+		mengatur kolom apa saja yang akan ditampilkan pada data table,
+		serta menyimpan urutannya ascending/descending   
+		--------------------------------------------------------------*/
 		if(isset($_POST['order'])){
 			$column = ["nama_mk","nama_dosen", "sks", "hari", "nama_ruang", "status_k", "tanggal_update"];
 			$orders = array ($column[$_POST['order']['0']['column']] => $_POST['order']['0']['dir']);
@@ -56,6 +79,13 @@ class Confirmation extends CI_Controller {
 		
 		$limit = $this->input->post('length');
 		$start = $this->input->post('start');
+		
+				
+		/*---------------------------------------------------------
+	 	mengambil semua data data kelas yang ada
+		beserta prosentase nilai grade(A,B, C, D, E) kelas tersebut
+		bedasarkan id dosen dan tahun ajaran
+		------------------------------------------------------------*/
 		$classes = $this->confirmation_model->getDataTableByLecturer($orders, $yearNow,$limit,$start);
 		
         $output = array("recordsTotal" => $this->confirmation_model->countAll($yearNow), 
@@ -65,11 +95,23 @@ class Confirmation extends CI_Controller {
         // Print Output Berupa JSON
         echo json_encode($output);
     }
+	/*==============================================
+	function ajax_prosentaseDosen :
+	untuk mengambil prosentase nilai dari
+	setiap kelas berdasarkan id dosen yang dipassingkan
+	dari combobox yang berisi nama dosen  	
+	=================================================*/
 	public function ajax_prosentaseDosen($idDosen){
-		//$this->session->set_userdata('namaDosen', $ddDosen);
+		/*------------------------------------------------- 
+		   mengambil tahun ajaran yang telah dipilih pada
+		   combobox tahun ajaran pada portal_printProsentase
+		----------------------------------------------------*/
 		$yearNow = $this->session->userdata('year');
 		
-		// Load Data Kelas
+		/*------------------------------------------------- 
+		mengatur kolom apa saja yang akan ditampilkan pada data table,
+		serta menyimpan urutannya ascending/descending   
+		---------------------------------------------------*/
 		if(isset($_POST['order'])){
 			$column = ["kode_mk","sks","nama_mk", "A", "B", "C", "D", "E"];
 			$orders = array ($column[$_POST['order']['0']['column']] => $_POST['order']['0']['dir']);
@@ -78,22 +120,42 @@ class Confirmation extends CI_Controller {
 			$orders = null;
 		}
 		
+		/*-----------------------------------------------
+	 	mengambil semua data data kelas yang diajar oleh dosen 
+		beserta prosentase nilai grade(A,B, C, D, E) kelas tersebut
+		bedasarkan id dosen dan tahun ajaran yang telah dipilih
+		-------------------------------------------------*/
 		$classes = $this->confirmation_model->getDataTableReportByLecturer($idDosen, $orders, $yearNow );
 		
-		// sampai sini benar
+		/*------------------------------------------------- 
+		menampung hasil yang akan dioutputkan dengan json ke dalam variable  $output
+		--------------------------------------------------*/
 		$output = array("recordsTotal" => $this->class_model->countAll($idDosen), 
 						"recordsFiltered" => $this->class_model->countFiltered($idDosen, $orders , $yearNow),
 						"data" => $classes);
 		
         // Print Output Berupa JSON
         echo json_encode($output);		
-		
 	}
 	
+	/*========================================================
+	function ajax_prosentaseMatkul:
+	untuk menngambil data semua kelas yang ada berserta dengan
+	prosentase nilai grade (A, B, C, D, E) untuk masing-masing
+	kelas berdasarkan tahun ajaran yang telah dipilih pada 
+	portal_printProsentase  
+	==========================================================*/
 	public function ajax_prosentaseMatkul()
     {
+		/*------------------------------------------------- 
+		   mengambil tahun ajaran yang telah dipilih pada
+		   combobox tahun ajaran pada portal_printProsentase
+		----------------------------------------------------*/
 		$yearNow = $this->session->userdata('year');
-		// Load Data Kelas
+		/*------------------------------------------------- 
+		mengatur kolom apa saja yang akan ditampilkan pada data table, 
+		dan serta menyimpan urutannya ascending/descending   
+		---------------------------------------------------*/
 		if(isset($_POST['order'])){
 			$column = ["kode_mk","sks","nama_mk", "A", "B", "C", "D", "E"];
 			$orders = array ($column[$_POST['order']['0']['column']] => $_POST['order']['0']['dir']);
@@ -101,6 +163,12 @@ class Confirmation extends CI_Controller {
 		else {
 			$orders = null;
 		}
+		
+		/*-----------------------------------------------
+	 	mengambil semua data data kelas beserta prosentase nilai 
+		grade(A,B, C, D, E) kelas tersebut bedasarkan tahun ajaran 
+		yang telah dipilih
+		-------------------------------------------------*/
 		$classes = $this->confirmation_model->getDataTableForAllMatkul($orders, $yearNow);
 		
 		$output = array("recordsTotal" => $this->confirmation_model->countAll($yearNow), 
@@ -110,10 +178,15 @@ class Confirmation extends CI_Controller {
         // Print Output Berupa JSON
         echo json_encode($output);
     }
-	
-	
+	/* --------------------------------------------------------------
+	function ajax_score($classId):
+	untuk mengambil data nilai untuk semua anak yang ada pada suatu kelas
+	berdasarkan id kelas
+	-------------------------------------------------------------------*/
     public function ajax_score($classId){
-		// Load Data Kelas
+		/* ----------------------------------------------------------------------
+		 Menentukan field apa saja yang ingin ditampilkan pada data table nilai
+		 -----------------------------------------------------------------------*/
         if(isset($_POST['order'])){
             $column = ["nrp","nrp","nama","uts","uas","tugas","nilai_akhir","nilai_akhir_grade","nilai_grade"];
             $orders = array ($column[$_POST['order']['0']['column']] => $_POST['order']['0']['dir']);
@@ -124,8 +197,7 @@ class Confirmation extends CI_Controller {
         $this->load->model('grade_model');
         
 		$students = $this->grade_model->getDatatableScoreOfClass($classId,$orders);
-        
-		$output = array("recordsTotal" => $this->grade_model->countAllStudentInClass($classId),
+        $output = array("recordsTotal" => $this->grade_model->countAllStudentInClass($classId),
             "recordsFiltered" => $this->grade_model->countAllStudentInClass($classId),
             "data" => $students);
 
@@ -134,10 +206,11 @@ class Confirmation extends CI_Controller {
     }
 	
 	
-    /**
-     * Function : all()
-     * Mengeload Halaman Mata Kuliah Yang Diajar milik Dosen
-     */
+    /*====================================================
+      Function all :
+      menampilkan data tabel yang berisi semua mata kuliah
+	  yang ada berserta status penilaian dari masing-masing kelas yang ada
+     =====================================================*/
     public function all(){
 		$data['title'] = "Konfirmasi Penilaian";
 		$this->load->helper('form');
@@ -148,22 +221,30 @@ class Confirmation extends CI_Controller {
 		$this->load->view('includes/footer');
 	}
 	
-    /**
-     * Function : view()
-     * Mengeload Halaman Detail Kelas Yang Diajar
-     * @param $class_id (string) ID dari Kelas yang ingin dilihat.
-     */
+    /*------------------------------------------------------
+       Function : view()
+       Mengeload Halaman Detail Kelas berdasarkan id kelas
+	   dan id dosen dari kelas tersebut 
+     -------------------------------------------------------*/
     public function view($class_id, $lecturer_login){
 		$this->load->helper('form');
 		$this->load->library('table');
-
+		/*------------------------------------------------
+		 Memeriksa apakah kelas dengan kelas id tersebut ada
+		 atau tidak	
+		-------------------------------------------------*/
         if (!$this->class_model->isClassExist($class_id)){
             $this->session->set_flashdata('alert_level','danger');
             $this->session->set_flashdata('alert','Tidak ditemukan kelas dengan ID tersebut!');
             redirect('confirmation/all');
         }
 
+		/*-------------------------------------------------
+		Mengambil data detail dari kelas berdasarkan 
+		id kelas, dan id dosen
+		-------------------------------------------------*/
 		$class = $this->class_model->getClassInfoById($class_id, $lecturer_login);
+		
 		$data['title'] = "Konfirmasi Nilai ".$class[0];
 		$data['class'] = $class;
         $this->load->model('revision_model');
@@ -173,9 +254,8 @@ class Confirmation extends CI_Controller {
         }
         $data['classId'] = $class_id;
 		$data['tahun_ajaran'] = $class[11];
-		// untuk isi tabel data mata kuliah
-
-        if ($this->input->post('btnAcceptRevision')){
+		
+		if ($this->input->post('btnAcceptRevision')){
             $this->confirmation_model->approveRevision($this->input->post('revision_id'), $class_id);
             $this->confirmation_model->IPSCounting($class_id, $class[11]);
             $this->confirmation_model->IPKCounting($class_id);
@@ -195,6 +275,15 @@ class Confirmation extends CI_Controller {
             $this->notifikasi_model->sendNotification($this->session->userdata('username'),$nip, "Revisi untuk Penilaian ".$class[0].' / '.$class[3]." ditolak.");
             redirect('confirmation/view/'.$class_id.'/'.$lecturer_login);
         }
+		/*--------------------------------------------
+		Membuat tabel yang berisi detail dari kelas
+		yang akan ditampilkan pada bagian atas dari
+        page confirmation_detail_view
+ 		confirmation_detail_view akan ditampilkan 
+		pada saat kita melakukan klik pada button view detail
+		pada page confirmation_portal_view
+		-----------------------------------------------*/
+		
 		$this->table->add_row('Mata Kuliah / Kelas / SKS :&nbsp;&nbsp;',':',$class[0].' / '.$class[3].' / '. $class[8].' SKS');
         $this->table->add_row('Jurusan / Semester &nbsp;&nbsp;',':', $class[1].' / '. $class[9]);
         $this->table->add_row('Ruang / Hari, Jam  ',':', $class[5].' / '.$class[4]);
@@ -206,26 +295,39 @@ class Confirmation extends CI_Controller {
 		$this->load->view('confirmation/confirmation_detail_view', $data);
 		$this->load->view('includes/footer');
 	}
-	
+	/*==================================================
+	function sendComment :
+	untuk mengirim notifikasi serta menyimpan komentar kajur
+    ke table kelas.	
+	====================================================*/
 	public function sendComment(){
-		/*
-		kalau klik button konfirmasi:
-		update di table kelas status_conf, komen_kajur
-		status : 0 not complete
-				 1 waiting
-				 2 need revision	: jika kajur tidak setuju dengan nilai mata kuliah tersebut
-				 3 complete  		: jika kajur sudah konfirmasi nilai mata kuliah tersebut
-		*/
+		
 		$comments =  $this->input->post('comment_kajur');
 		$classID = $this->input->post('hidden_classId');
 		$termYear = $this->input->post('hidden_tahunAjaran');
 		
+		
 		if($this->input->post('btnKonfirmasi') == true){
+			/*--------------------------------------------
+			 Merubah status penilaian kelas menjadi complete
+			----------------------------------------------*/
 			$statusConf = 3;
+			
+			/* -----------------------------------------------
+			 melakukan perhitungan nilai IPS untuk semua anak
+			 yang ada pada kelas yang nilainya telah dikonfirmasi oleh kajur
+			-------------------------------------------------*/
 			$this->confirmation_model->IPSCounting($classID, $termYear);
+			
+			/* -----------------------------------------------
+			 melakukan perhitungan nilai IPK untuk semua anak
+			 yang ada pada kelas yang nilainya telah dikonfirmasi oleh kajur
+			-------------------------------------------------*/
 			$this->confirmation_model->IPKCounting($classID);
             $nip = $this->class_model->getLecturerIdByClass($classID);
+			
             $class = $this->class_model->getClassInfoById($classID, $nip);
+			// mengirim notifikasi ke dosen pengajar bahwa nilai sudah di setujui oleh kajur 
             $this->notifikasi_model->sendNotification($this->session->userdata('username'),$nip, "Penilaian ".$class[0].' / '.$class[3]." telah terkonfirmasi.");
 		}
 		else if($this->input->post('btnTidakSetuju') == true){
@@ -240,53 +342,78 @@ class Confirmation extends CI_Controller {
 		// kembali ke page confirmation_portal_view
 		redirect('confirmation/index');
 	}
+	/*============================================================
+	 function reportProsentase:
+	 dijalankan pada saat user menekan button view report
+     pada page portal_printProsentase	 
+	 
+	- jika pada combobox pilihan dipilih 'Prosentase Nilai Setiap Dosen'
+	 akan meload page reportProsentaseDosen_view 
 	
+	- jika pada combobox pilihan dipilih 'Prosentase Nilai Semua Mata Kuliah'
+	 akan meload reportProsentaseMatkul_view
+	
+	=============================================================*/
 	public function reportProsentase(){
-		//echo $this->input->post('pilihan');
-		
 		if($this->input->post('pilihan') == "0"){
 			$year  = str_replace('_',' ',$this->input->post('ddYear'));
 			$yearNow  = str_replace('-','/',$year);
 			$this->session->set_userdata('year', $yearNow);
 			
 			$arrDosen = [];
+			/* mengambil semua nama dosen yang ada di tabel dosen disimpan 
+			   ke associative array berdasarkan id dosen
+			*/
 			$allDosen = $this->confirmation_model->allDosen();
 			foreach($allDosen as $row){
 				$arrDosen [$row['nip']] = $row['nama'];
 			}
 			
-			//coba kluarkan isi data
-			//$this->ajax_prosentaseDosen($arrDosen[]);
-			
 			$data['Dosen'] = $arrDosen;
 			$data['selectedDosen'] = '';
+			
+		    // load page reportProsentaseDosen_view
 			$this->load->view('includes/header', $data);
 			$this->load->view('report/reportProsentaseDosen_view', $data);
 			$this->load->view('includes/footer');
-			
 		}
 		else if($this->input->post('pilihan') == "1"){ 
 			// prosentase semua nilai matkul
+			// replace karakter yang ada pada tahun ajaran
 			$year  = str_replace('_',' ',$this->input->post('ddYear'));
 			$yearNow  = str_replace('-','/',$year);
-			$this->session->set_userdata('year', $yearNow);
 			
+			// menyimpan tahun ajaran yang dipilih dari combobox kedalam session
+			$this->session->set_userdata('year', $yearNow);
+			// load page reportProsentaseMatkul_view
 			$this->load->view('includes/header');
 			$this->load->view('report/reportProsentaseMatkul_view');
 			$this->load->view('includes/footer');
 			
 		}
-		
-		
 	}
+	
+	/*=============================================================
+	 function printToPDFPercentageDosen:
+	 untuk mencetak data prosentase nilai dari seorang dosen 
+	 kedalam bentuk PDF 
+	===============================================================*/
+	
 	public function printToPDFPercentageDosen(){
 		
 		$idDosen = $this->input->post('ddDosen');
+		// set title dari file pdf
 		$data['title'] = "Report Prosentase Penilaian Dosen";
+		// set nama dosen yang akan ditampilkan di file pdf
 		$data['namaDosen'] = $this->confirmation_model->getNamaDosen($this->input->post('ddDosen'));
+		// set tahun ajaran yang akan ditampilkan di file pdf
 		$data['year'] = $this->session->userdata('year');
 		
-		// Load Data Kelas
+		/*--------------------------------------------------------------
+		  membuat data table dan menentukan field apa saja yg ingin 
+		  ditampilkan pada data table
+		----------------------------------------------------------------*/
+		
 		if(isset($_POST['order'])){
 			$column = ["kode_mk","sks","nama_mk", "A", "B", "C", "D", "E"];
 			$orders = array ($column[$_POST['order']['0']['column']] => $_POST['order']['0']['dir']);
@@ -295,6 +422,9 @@ class Confirmation extends CI_Controller {
 			$orders = null;
 		}
 		$allDataTable =  $this->confirmation_model->getDataTableReportByLecturer($idDosen, $orders, $data['year']);
+		
+		
+		// membuat table yang akan di tampilkan pada file pdf 
 		$table = "<table autosize='1.6' border='1' cellspacing='0' width='100%' cellpadding='5'>";
 		$table.= "<thead>
 					<tr style='background:yellow'>
@@ -308,6 +438,12 @@ class Confirmation extends CI_Controller {
 						<td>E</td>
 					</tr>
 				  </thead>";
+				  
+		/* ----------------------------------------------------
+			menambahkan baris pada table yang dibuat, data setiap
+            baris yang ada di ambil dari data table 
+		-------------------------------------------------------*/
+		
 		foreach($allDataTable as $row){
 			$table .= "<tr>";
 			$table .= "<td>".$row[0]."</td>";
@@ -323,9 +459,10 @@ class Confirmation extends CI_Controller {
 		$table .= "</table>";
 		
 		$data['dataTable'] = $table;
+		// set tulisan yang muncul pada saat file pdf digenerate 
 		$pdfFilePath = "print_report_prosentase_nilai_dosen.pdf";
+		// load library pdf
 		$this->load->library('m_pdf');
-	
 		$pdf = $this->m_pdf->load();
 
 		//generate the PDF!
@@ -334,11 +471,22 @@ class Confirmation extends CI_Controller {
 		$pdf->WriteHTML($header.$html);
 		$pdf->Output($pdfFilePath, "I");
 	}
+	
+	/*=============================================================
+	 function printToPDF_PercentageMatkul:
+	 untuk mencetak data prosentase nilai dari semua mata kuliah yang ada
+	 pada tahun ajaran tersebut kedalam bentuk PDF 
+	===============================================================*/
 	public function printToPDF_PercentageMatkul(){
 		$yearNow = $this->session->userdata('year');
 		$data['title'] = "Report Prosentase Nilai Mata Kuliah";
 		$data['year'] = $yearNow;
-		// Load Data Kelas
+		
+			
+		/*--------------------------------------------------------------
+		  membuat data table dan menentukan field apa saja yg ingin 
+		  ditampilkan pada data table
+		----------------------------------------------------------------*/
 		if(isset($_POST['order'])){
 			$column = ["kode_mk","sks","nama_mk", "A", "B", "C", "D", "E"];
 			$orders = array ($column[$_POST['order']['0']['column']] => $_POST['order']['0']['dir']);
@@ -346,8 +494,9 @@ class Confirmation extends CI_Controller {
 		else {
 			$orders = null;
 		}
-		
 		$allDataTable = $this->confirmation_model->getDataTableForAllMatkul($orders, $yearNow);
+		
+		// membuat table yang akan di tampilkan pada file pdf 
 		$table = "<table autosize='1.6' border='1' cellspacing='0' width='100%' cellpadding='5'>";
 		$table.= "<thead>
 					<tr style='background:yellow'>
@@ -361,6 +510,10 @@ class Confirmation extends CI_Controller {
 						<td>E</td>
 					</tr>
 				  </thead>";
+		/* ----------------------------------------------------
+			menambahkan baris pada table yang dibuat, data setiap
+            baris yang ada di ambil dari data table 
+		-------------------------------------------------------*/		  
 		foreach($allDataTable as $row){
 			$table .= "<tr>";
 			$table .= "<td>".$row[0]."</td>";
@@ -376,9 +529,10 @@ class Confirmation extends CI_Controller {
 		$table .= "</table>";
 		
 		$data['dataTable'] = $table;
+		// set tulisan yang muncul pada saat file pdf digenerate 
 		$pdfFilePath = "print_report_prosentase_nilai_matkul.pdf";
+		// load library pdf
 		$this->load->library('m_pdf');
-	
 		$pdf = $this->m_pdf->load();
 
 		//generate the PDF!
