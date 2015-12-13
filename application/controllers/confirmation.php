@@ -28,7 +28,7 @@ class Confirmation extends CI_Controller {
 	public function page_prosentase(){
 		$data['pilihan'] = ['Prosentase Nilai Setiap Dosen', 'Prosentase Nilai Semua Mata Kuliah'];
 		$data['ddYear'] = $this->class_model->getComboBoxAllYear();
-		$data['selectedDdYear'] = str_replace('/','-',str_replace(' ','_',$this->class_model->getActiveTermYear()));
+		$data['selectedDdYear'] = str_replace('/','-',str_replace(' ','_',$this->data_umum_model->getSemester()));
         
 		$this->load->view('includes/header', $data);
 		$this->load->view('report/portal_printProsentase', $data);
@@ -39,7 +39,7 @@ class Confirmation extends CI_Controller {
     {
 		
 		if ($yearNow == null){
-			$yearNow  = $this->class_model->getActiveTermYear();
+			$yearNow  = $this->data_umum_model->getSemester();
 		}
 		else {
 			$yearNow  = str_replace('_',' ',$yearNow);

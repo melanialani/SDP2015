@@ -123,7 +123,7 @@ $autoload['model'] = array('matakuliah_model','mahasiswa_model','dosen_model','n
 							'model_kelas',
 							'model_kelas_mahasiswa',
 							'model_mata_kuliah',
-                            'model_notifikasi');
+                            'model_notifikasi','user_model');
 
 /* End of file autoload.php */
 /* Location: ./application/config/autoload.php */
