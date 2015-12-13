@@ -46,9 +46,9 @@
                              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Plotting <span class="caret"></span></a>
                              <ul class="dropdown-menu">
                                  <li><?= anchor('/','Plotting Dosen');?></li>
-                                 <li><?= anchor('/','Buka Tutup Kelas');?></li>
-                                 <li><?= anchor('/','Gabung Kelas');?></li>
-                                 <li><?= anchor('/','Pisah Kelas');?></li>
+                                 <li><?= anchor('/plottingdosen/bukakelas','Buka Tutup Kelas');?></li>
+                                 <li><?= anchor('/plottingdosen/gabungkelas','Gabung Kelas');?></li>
+                                 <li><?= anchor('/plottingdosen/pisahkelas','Pisah Kelas');?></li>
                              </ul>
                          </li>
                          <li class="dropdown">
