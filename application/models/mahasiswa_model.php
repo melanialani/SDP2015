@@ -72,7 +72,6 @@
 		----------------------------------------------------- */
 		public function getDetailStudent($nrp)
 		{
-			$this->db->select('nama,nrp,sks,ipk');
 			$result = $this->db->get_where('mahasiswa',array('nrp'=>$nrp));
 			return $result->row();
 		}
@@ -135,151 +134,26 @@
 			$result = $this->db->get('mahasiswa')->row();
 			return $result->nip_dosen;
 		}
-
-		/****
-		Function getStatusPerwalian
-		Digunakan untuk mendapatkan status perwalian dari Table Mahasiswa
-		Input : nrp
-		Output : status_perwalian
-		****/
-		public function getStatusPerwalian($nrp){
-			$this->db->select('status_perwalian');
-			$query = $this->db->get_where('mahasiswa',array('nrp' => $nrp));
-			return $query->row_array();
-		}
-		/****
-		Function getDataMahasiswa
-		Digunakan untuk mendapatkan Informasi Mahasiswa dari Table Mahasiswa
-		Input : nrp
-		Output : Array dari semua field dari table mahasiswa
-		****/
-		public function getDataMahasiswa($nrp){
-			return $this->db->get_where("mahasiswa",array("nrp" => $nrp))->row_array();
-		}
 		
-
-		
-		//KEPERLUAN PMB
-		function getDataMahasiswaByNRP($nrp)
+		/* -----------------------------------------------------
+		Function getIps
+		Digunakan untuk mendapatkan IP semester lalu
+		Input: -
+		Output: ip semester lalu
+		----------------------------------------------------- */
+		public function getIps()
 		{
-			$this->db->select('m.nomor_registrasi_id, m.nrp, m.nama, m.sks, m.semester, i.jurusan, i.kategori, i.harga_usp');
-			$this->db->from('mahasiswa m, informasi_kurikulum i');
-			$this->db->where('m.nrp', $nrp);
-			$this->db->where('i.id = m.informasi_kurikulum_id');
-			return $this->db->get()->result();
-		}
-		
-		function getDataCalonMahasiswaByEmail($email)
-		{
-			$this->db->select('c.nomor_registrasi_id, c.nama, c.informasi_kurikulum_id, i.jurusan, i.kategori, i.harga_usp, c.status');
-			$this->db->from('calon_mahasiswa c, informasi_kurikulum i');
-			$this->db->where('c.email', $email);
-			$this->db->where('i.id = c.informasi_kurikulum_id');
-			return $this->db->get()->result();
-		}
-		
-		function getDataMahasiswaByEmail($email)
-		{
-			$this->db->select('m.nrp, m.nama, i.jurusan, i.kategori, i.harga_usp, m.sks');
-			$this->db->from('mahasiswa m, informasi_kurikulum i');
-			$this->db->where('m.email', $email);
-			$this->db->where('i.id = m.informasi_kurikulum_id');
-			
-			return $this->db->get()->result();
-		}
-		
-		function getFullDataCalonMahasiswaByNomorRegistrasi($nomor_registrasi)
-		{
-			$this->db->select('c.nama, i.jurusan, i.kategori, c.jenis_kelamin, c.tempat_lahir, c.tanggal_lahir,
-					c.kewarganegaraan, c.status_sosial, c.agama, c.alamat, c.provinsi, c.kota, c.kodepos, c.nomor_hp, c.email,
-					c.nama_wali, c.alamat_wali, c.provinsi_wali, c.kota_wali, c.nomor_telp_wali, c.pekerjaan_wali
-			');
-			$this->db->from('calon_mahasiswa c, informasi_kurikulum i');
-			$this->db->where('c.nomor_registrasi_id', $nomor_registrasi);
-			$this->db->where('i.id = c.informasi_kurikulum_id');
-			
-			return $this->db->get()->result();
-		}
-		
-		function getFullDataMahasiswaByNRP($nrp)
-		{
-			$this->db->select('m.nrp, m.nama, i.jurusan, i.kategori, m.jenis_kelamin, m.tempat_lahir, m.tanggal_lahir,
-					m.kewarganegaraan, m.status_sosial, m.agama, m.alamat, m.provinsi, m.kota, m.kodepos, m.nomor_hp, m.email,
-					m.nama_wali, m.alamat_wali, m.provinsi_wali, m.kota_wali, m.nomor_telp_wali, m.pekerjaan_wali
-			');
-			$this->db->from('mahasiswa m, informasi_kurikulum i');
-			$this->db->where('m.nrp', $nrp);
-			$this->db->where('i.id = m.informasi_kurikulum_id');
-			
-			return $this->db->get()->result();
-		}
-		
-		function updateCalonMahasiswa($data)
-		{
-			$updateData = array(
-				'nama' => $data['nama'],
-				'kewarganegaraan' => $data['kewarganegaraan'],
-				'status_sosial' => $data['status_sosial'],
-				'agama' => $data['agama'],
-				'alamat' => $data['alamat'],
-				'provinsi' => $data['provinsi'],
-				'kota' => $data['kota'],
-				'kodepos' => $data['kodepos'],
-				'nomor_hp' => $data['nomor_hp'],
-				'email' => $data['email'],
-				'nama_wali' => $data['nama_wali'],
-				'alamat_wali' => $data['alamat_wali'],
-				'provinsi_wali' => $data['provinsi_wali'],
-				'kota_wali' => $data['kota_wali'],
-				'nomor_telp_wali' => $data['nomor_telp_wali'],
-				'pekerjaan_wali' => $data['pekerjaan_wali']
-			);
-			$this->db->where('nomor_registrasi_id', $data['nomor_registrasi']);
-			$this->db->update('calon_mahasiswa', $updateData);
-		}
-		
-		function updateMahasiswa($data)
-		{
-			$updateData = array(
-				'nama' => $data['nama'],
-				'kewarganegaraan' => $data['kewarganegaraan'],
-				'status_sosial' => $data['status_sosial'],
-				'agama' => $data['agama'],
-				'alamat' => $data['alamat'],
-				'provinsi' => $data['provinsi'],
-				'kota' => $data['kota'],
-				'kodepos' => $data['kodepos'],
-				'nomor_hp' => $data['nomor_hp'],
-				'email' => $data['email'],
-				'nama_wali' => $data['nama_wali'],
-				'alamat_wali' => $data['alamat_wali'],
-				'provinsi_wali' => $data['provinsi_wali'],
-				'kota_wali' => $data['kota_wali'],
-				'nomor_telp_wali' => $data['nomor_telp_wali'],
-				'pekerjaan_wali' => $data['pekerjaan_wali']
-			);
-			$this->db->where('nrp', $data['nrp']);
-			$this->db->update('mahasiswa', $updateData);
-		}
-		
-		function getTagihan($nrp, $semester)
-		{/*
-			$this->db->select('*');
-			$this->db->from('pembayaran');
-			$this->db->where('mahasiswa_nrp', $nrp);
+			$studentID = $this->session->userdata('username');
+			$detailStudent = $this->getDetailStudent($studentID);
+			$semester = (+$detailStudent->semester) - 1;
+			$this->db->where('mahasiswa_nrp',$studentID);
 			$this->db->where('semester',$semester);
-			return $this->db->get()->result();*/
+			$result = $this->db->get('nilai_semester')->row();
+			if($this->db->affected_rows()>0)
+			{
+				return $result->ips;
+			}
+			return false;
 		}
-		
-		function getAllPembayaran($nrp,$semester)
-		{/*
-			$this->db->select('*');
-			$this->db->from('pembayaran');
-			$this->db->where('mahasiswa_nrp', $nrp);
-			$this->db->where('semester =',$semester);
-			$this->db->where('status !=','0');
-			return $this->db->get()->result();*/
-		}
-		// END OF KEPERLUAN PMB
 	}
 ?>
