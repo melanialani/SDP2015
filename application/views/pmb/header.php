@@ -1,21 +1,16 @@
 <html>
 <!--JUDUL DAN ICON UNTUK WEB STTS-->
 	<head>
-		<meta charset="utf-8">
+        <meta charset="utf-8">
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="<?php echo base_url('assets/bootstrap/css/bootstrap.min.css')?>" rel="stylesheet">
-        <link href="<?php echo base_url('assets/datatables/css/dataTables.bootstrap.css')?>" rel="stylesheet">
-        <link href="<?php echo base_url('assets/css/custom.css')?>" rel="stylesheet">
-        <link href="<?php echo base_url('assets/css/style.css')?>" rel="stylesheet">
-        <!-- JavaScripts -->
-        <script src="<?php echo base_url('assets/jquery/jquery-2.1.4.min.js')?>"></script>
-        <script src="<?php echo base_url('assets/bootstrap/js/bootstrap.min.js')?>"></script>
-        <script src="<?php echo base_url('assets/datatables/js/jquery.dataTables.min.js')?>"></script>
-        <script src="<?php echo base_url('assets/datatables/js/dataTables.bootstrap.js')?>"></script>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<!--JUDUL DAN ICON UNTUK WEB STTS-->
+		<link rel="stylesheet" href="<?php echo base_url("assets/css/custom.css");?>">
 		<script src="<?php echo base_url("assets/bootstrap/js/respon.js");?>"></script>
-		<title> <?php echo $title;?> </title>
+		<link rel="icon" href="<?php echo base_url("assets/images/icon.png");?>">
+
 		<link rel="icon" href="<?php echo base_url("assets/images/icon.ico");?>">
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -37,5 +32,7 @@
         <div class="headerDosen">
             <a href="<?php echo site_url('/');?>"></a><img src="<?php echo base_url("assets/images/logodosen.png");?>"/></a>
         </div>
-    <?php } $this->load->view('nav/navbar');?>
+    <?php } 
+		$this->load->view('pmb/navbar');
+	?>
 

@@ -310,7 +310,7 @@ class Grade extends CI_Controller {
         // Cek Berdasarkan session
 		$lecturer_login = $this->class_model->getLecturerIdByClass($classId);
 		$class = $this->class_model->getClassInfoById($classId, $lecturer_login);
-		$data['title'] = "Penilaian ".$class[0].' / '.$class[3];
+		$data['title'] = "Daftar Penilaian ".$class[0].' / '.$class[3];
 		$data['class'] = $class;
 		//this data will be passed on to the view
         $this->table->add_row('Mata Kuliah / Kelas / SKS :&nbsp;&nbsp;',':',$class[0].' / '.$class[3].' / '. $class[8].' SKS');

@@ -53,8 +53,7 @@ class Model_informasi_kurikulum extends CI_Model {
 			'kategori' =>  $data['kategori'],
 			'harga_usp' =>  str_replace('.', '', $data['usp']),
 			'harga_spp' =>  str_replace('.', '', $data['spp']),
-			'harga_sks' =>  str_replace('.', '', $data['sks']),
-			'tanggal_created' => date('Y').'-'.date('M').'-'.date('d')
+			'harga_sks' =>  str_replace('.', '', $data['sks'])
 		);
 		$this->db->where('id', $id);
 		$this->db->update('informasi_kurikulum', $arrUpdate);
@@ -81,8 +80,7 @@ class Model_informasi_kurikulum extends CI_Model {
 			'kategori' =>  $data['kategori'],
 			'harga_usp' =>  str_replace('.', '', $data['usp']),
 			'harga_spp' =>  str_replace('.', '', $data['spp']),
-			'harga_sks' =>  str_replace('.', '', $data['sks']),
-			'tanggal_created' => strtotime(date('Y').'-'.date('M').'-'.date('d'))
+			'harga_sks' =>  str_replace('.', '', $data['sks'])
 		);
 		$this->db->insert('informasi_kurikulum', $arrInsert);
 	}

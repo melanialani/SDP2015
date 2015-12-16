@@ -55,7 +55,7 @@
 					</div>
 		</center>
         	<center>
-      <div class="panel-heading">Daftar Kelas</div>
+      <div class="panel-heading"><b>Daftar Kelas</b></div>
       <table style='width:60%', class="table table-striped">
 				<tr align='left'>
 					<td align='center'>

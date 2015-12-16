@@ -46,26 +46,26 @@
 			return $query->result();
 		}
 
-		function getClassForOpenClass($value){
-			$sql = 'SELECT k.id AS idKelas, m.id AS idMataKuliah, m.nama AS namaMataKuliah, m.jumlah_sks, k.nama AS namaKelas, k.hari, k.jumlah_mahasiswa, k.jam_mulai, r.nama AS namaRuangan, d.nama AS namaDosen FROM mata_kuliah m, kelas k, ruangan r, dosen d WHERE m.id = k.mata_kuliah_id AND d.nip = k.dosen_nip AND k.status = "1" AND r.id = k.ruangan_id AND LEFT(m.informasi_kurikulum_id, 5) = "'.$value.'"ORDER BY k.id ASC;';
+		function getClassForOpenClass($value, $value2){
+			$sql = 'SELECT k.id AS idKelas, m.id AS idMataKuliah, m.nama AS namaMataKuliah, m.jumlah_sks, k.nama AS namaKelas, k.hari, k.jumlah_mahasiswa, k.jam_mulai, r.nama AS namaRuangan, d.nip AS idDosen, d.nama AS namaDosen FROM mata_kuliah m, kelas k, ruangan r, dosen d WHERE m.id = k.mata_kuliah_id AND d.nip = k.dosen_nip AND k.status = "1" AND k.tahun_ajaran = "'.$value2.'" AND r.id = k.ruangan_id AND LEFT(m.informasi_kurikulum_id, 5) = "'.$value.'"ORDER BY k.id ASC;';
 			$query = $this->db->query($sql);
 			return $query->result();
 		}
 
 		function getSortedClassForOpenClass($value, $value2, $value3){
-			$sql = 'SELECT k.id AS idKelas, m.id AS idMataKuliah, m.nama AS namaMataKuliah, m.jumlah_sks, k.nama AS namaKelas, k.hari, k.jumlah_mahasiswa, k.jam_mulai, r.nama AS namaRuangan, d.nama AS namaDosen FROM mata_kuliah m, kelas k, ruangan r, dosen d WHERE m.id = k.mata_kuliah_id AND d.nip = k.dosen_nip AND k.status = "1" AND r.id = k.ruangan_id AND LEFT(m.informasi_kurikulum_id, 5) = "'.$value.'"ORDER BY '.$value2.' '.$value3.';';
+			$sql = 'SELECT k.id AS idKelas, m.id AS idMataKuliah, m.nama AS namaMataKuliah, m.jumlah_sks, k.nama AS namaKelas, k.hari, k.jumlah_mahasiswa, k.jam_mulai, r.nama AS namaRuangan, d.nip AS idDosen, d.nama AS namaDosen FROM mata_kuliah m, kelas k, ruangan r, dosen d WHERE m.id = k.mata_kuliah_id AND d.nip = k.dosen_nip AND k.status = "1" AND r.id = k.ruangan_id AND LEFT(m.informasi_kurikulum_id, 5) = "'.$value.'"ORDER BY '.$value2.' '.$value3.';';
 			$query = $this->db->query($sql);
 			return $query->result();
 		}
 
-		function getSameClassList($value, $value2){
-			$sql = 'SELECT k.id AS idKelas, m.id AS idMataKuliah, m.nama AS namaMataKuliah, m.jumlah_sks, k.nama AS namaKelas, k.hari, k.jumlah_mahasiswa, k.jam_mulai, r.nama AS namaRuangan, d.nama AS namaDosen FROM mata_kuliah m, kelas k, ruangan r, dosen d WHERE m.id = k.mata_kuliah_id AND d.nip = k.dosen_nip AND k.status = "1" AND r.id = k.ruangan_id AND k.id != "'.$value2.'" AND k.mata_kuliah_id = "'.substr($value2,2,5).'" AND LEFT(m.informasi_kurikulum_id, 5) = "'.$value.'"ORDER BY k.id ASC;';
+		function getSameClassList($value, $value2, $value3){
+			$sql = 'SELECT k.id AS idKelas, m.id AS idMataKuliah, m.nama AS namaMataKuliah, m.jumlah_sks, k.nama AS namaKelas, k.hari, k.jumlah_mahasiswa, k.jam_mulai, r.nama AS namaRuangan, d.nip AS idDosen, d.nama AS namaDosen FROM mata_kuliah m, kelas k, ruangan r, dosen d WHERE m.id = k.mata_kuliah_id AND d.nip = k.dosen_nip AND k.status = "1" AND k.tahun_ajaran = "'.$value3.'"  AND r.id = k.ruangan_id AND k.id != "'.$value2.'" AND k.mata_kuliah_id = "'.substr($value2,3,5).'" AND LEFT(m.informasi_kurikulum_id, 5) = "'.$value.'"ORDER BY k.id ASC;';
 			$query = $this->db->query($sql);
 			return $query->result();
 		}
 
 		function getCurrentClass($value, $value2){
-			$sql = 'SELECT k.id AS idKelas, m.id AS idMataKuliah, m.nama AS namaMataKuliah, m.jumlah_sks, k.nama AS namaKelas, k.hari, k.jumlah_mahasiswa, k.jam_mulai, r.nama AS namaRuangan, d.nama AS namaDosen FROM mata_kuliah m, kelas k, ruangan r, dosen d WHERE m.id = k.mata_kuliah_id AND d.nip = k.dosen_nip AND k.status = "1" AND r.id = k.ruangan_id AND k.id = "'.$value2.'" AND LEFT(m.informasi_kurikulum_id, 5) = "'.$value.'";';
+			$sql = 'SELECT k.id AS idKelas, m.id AS idMataKuliah, m.nama AS namaMataKuliah, m.jumlah_sks, k.nama AS namaKelas, k.hari, k.jumlah_mahasiswa, k.jam_mulai, r.nama AS namaRuangan, d.nip AS idDosen, d.nama AS namaDosen FROM mata_kuliah m, kelas k, ruangan r, dosen d WHERE m.id = k.mata_kuliah_id AND d.nip = k.dosen_nip AND k.status = "1" AND r.id = k.ruangan_id AND k.id = "'.$value2.'" AND LEFT(m.informasi_kurikulum_id, 5) = "'.$value.'";';
 			//$fuc = "SELECT babi from kewan where {$babi} = {$array['nama1']}";
 			$query = $this->db->query($sql);
 			return $query->row();
@@ -97,12 +97,24 @@
 		}		
 
 		function updateClassStatus($value){
-			$sql = 'UPDATE kelas SET status = "0" WHERE id = "'.$value.'";';
-			$query = $this->db->query($sql);	
+			$data = array(
+				'status' => "0",
+				'dosen_nip' => NULL,
+				'ruangan_id' => NULL
+			);	
+			$this->db->where('id', $value);
+			$this->db->update('kelas', $data);
 		}
 
 		function insertNewClass($courseID, $nip, $courseYear, $day, $room, $time){
 			$firstDigit = Date('Y');
+
+			if(substr($courseYear['value'],0,5) == "GASAL"){
+				$semester = "1";
+			}
+			else{
+				$semester = "0";
+			}
 
 			$this->db->select_max('nama');
 			$this->db->from('kelas');
@@ -117,7 +129,7 @@
 
 			$newClassName = chr($asciiName);
 
-			$classID = substr($firstDigit,2,2).$courseID.$newClassName;
+			$classID = substr($firstDigit,2,2).$semester.$courseID.$newClassName;
 			$insertClass = array(
 				'id' => $classID,
 				'mata_kuliah_id' => $courseID,
@@ -130,16 +142,29 @@
 			);
 
 			$this->db->insert('kelas', $insertClass);
+
+			return $classID;
 		}
 		
 		function updateGabungKelas($mainClassID, $mainClassName, $joinClassID){
 			$updateNewClass = array(
 				'kelas_id' => $mainClassID,
-				'status' => '0'
+				'status' => '0',
+				'dosen_nip' => NULL,
+				'ruangan_id' => NULL
 			);
 
 			$this->db->where('id', $joinClassID);
 			$this->db->update('kelas', $updateNewClass);
+		}
+
+		function updateGabungMurid($mainClassID, $nrp){
+			$updateNewClass = array(
+				'kelas_id' => $mainClassID
+			);
+
+			$this->db->where('mahasiswa_nrp', $nrp);
+			$this->db->update('kelas_mahasiswa', $updateNewClass);
 		}
 
 		function countStudents($classID){
@@ -181,8 +206,8 @@
 			$this->db->update('kelas', $studentsNumber);			
 		}
 
-		function updateSeparatingClass($classID){
-		
+		function updateSeparatingClass($courseID, $nip, $courseYear, $day, $room, $time){
+			
 		}
 
 		function getSemester(){
@@ -197,6 +222,22 @@
 			$this->db->select('kepala_jurusan_id');
 			$this->db->from('dosen');
 			$this->db->where('nip', $value);
+			$query = $this->db->get()->row_array();
+			return $query;
+		}
+
+		function getStudents($value){
+			$this->db->select();
+			$this->db->from('kelas_mahasiswa');
+			$this->db->where('kelas_id', $value);
+			$query = $this->db->get()->result_array();
+			return $query;
+		}
+
+		function getSKS($value){
+			$this->db->select('jumlah_sks');
+			$this->db->from('mata_kuliah');
+			$this->db->where('id', $value);
 			$query = $this->db->get()->row_array();
 			return $query;
 		}

@@ -2,10 +2,11 @@
 <head>
 <?php
 	require_once("header-pmb.php");
-	require_once("header.php");
+	require_once("header_.php");
 ?>
-<title>PMB STTS | Verifikasi</title>
+<title>PMB STTS | Register</title>
 <style>
+
 	body {
 		font-family: 'Open Sans', sans-serif;
 		min-height: 100vh;
@@ -27,7 +28,7 @@
 		margin: 0 auto;
 	}
 	
-	h1 {
+	h1{
 		text-align:center;
 		color: #3873ae;
 	}
@@ -37,12 +38,22 @@
 		height: 5px;
 	}
 	
-	#left{
+	#log{
 		color: grey;
 		float: left;
 		border-right: 5px solid #3873ae;
 		width: 400px;
-		padding: 30px 0px 30px 40px;
+		padding: 30px 0px 45px 60px;
+	}
+	
+	#login{
+		border: none;
+		background-color: transparent;
+		color: #3873ae;
+	}
+	
+	#login:hover {
+		color: #2b5987;
 	}
 	
 	#reg{
@@ -51,7 +62,7 @@
 		margin: 0px 50px 0px 0px;
 	}
 	
-	#verifikasi_text {
+	#register_text {
 		color: #3873ae;
 		text-align: center;
 	}
@@ -60,8 +71,8 @@
 		height: 10px;
 	}
 	
-	#kode_text {
-		width: 70px;
+	#no_registrasi_text, #email_text {
+		width: 110px;
 		color: #2b5987;
 	}
 	
@@ -73,27 +84,15 @@
 		height: 30px;
 	}
 	
-	#kirimUlang, #login {
-		border: none;
-		background-color: transparent;
-		color: #3873ae;
-		padding: 0;
-		margin: 0px 0px 3px 5px;
-		font-size: 12pt;
-	}
-	
-	#kirimUlang:hover, #login:hover {
-		color: #2b5987;
-	}
-	
-	#verify {
+	#submit {
 		width: 100%;
 		margin-top: 5px;
+		font-size: 10pt;
 		background-color: #3873ae;
 		border: none;
 	}
 	
-	#verify:hover {
+	#submit:hover {
 		background-color: #2b5987;
 	}
 	
@@ -107,35 +106,24 @@
 <div id="container">
 <?php
 	echo "<h1>Selamat Datang<br>Calon Mahasiswa</h1><hr>";
-	echo "<div id='left'>";
-	echo form_open('registration/resend');
-	echo "<div id='ket'>";
-	echo "Tidak menerima kode verifikasi? ";
-	echo form_submit('submit','Kirim ulang',"id='kirimUlang'");
-	echo form_hidden('noRegis',$noReg);
-	echo form_hidden('Email',$email);
-	echo "</div>";
-	echo "<br><br>";
-	echo form_close();
 	echo form_open('registration/toLogin');
 	echo "<div id='log'>";
-	echo "Kembali ke halaman ";
+	echo "No Registrasi dapat dilihat pada formulir<br>pendaftaran.<br><br><br>Sudah melakukan register?";
 	echo form_submit('submit','Login',"id='login'");
 	echo "</div>";
 	echo form_close();
-	echo "</div>";
 	echo "<div id='reg'>";
-	echo form_open('registration/regis');
-	echo "<h3 id='verifikasi_text'>Verifikasi</h3>";
+	echo form_open('registration/verif',"id='regisForm'");
+	echo "<h3 id='register_text'>Register</h3>";
 	echo "<table width='100%'>";
-	echo "<tr><td><label id='kode_text'>Kode</label></td><td><label id='titikDua'>:</label></td><td>".form_input('verif', '', 'class="form-control"')."</td></tr>";
-	echo "<tr><td align='left' colspan='3' id='error_text'>".form_error('verif')."</td></tr>";
+	echo "<tr><td><label id='no_registrasi_text'>No Registrasi</label></td><td><label id='titikDua'>:</label></td><td> ".form_input('noreg','',"class='form-control'")."</td></tr>";
+	echo "<tr><td align='right' colspan='3' id='error_text'>".form_error('noreg')."</td></tr>";
+	echo "<tr><td><label id='email_text'>Email</label></td><td><label id='titikDua'>:</label></td><td>".form_input('email','',"class='form-control'")."</td></tr>";
+	echo "<tr><td align='right' colspan='3' id='error_text'>".form_error('email')."</td></tr>";
 	echo "</table>";
-	echo form_submit('submit','VERIFIKASI',"id='verify' class='btn btn-danger'");
-	echo form_hidden('noRegis',$noReg);
-	echo form_hidden('Email',$email);
-	echo "</div>";
+	echo form_submit('submit','REGISTER',"id='submit' class='btn btn-danger'");
 	echo form_close();
+	echo "</div>";
 ?>
 </div>
 </body>

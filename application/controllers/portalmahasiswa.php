@@ -22,6 +22,9 @@ class Portalmahasiswa extends CI_Controller {
 		redirect('portalmahasiswa/home');
 	}
 	
+	/*
+		home
+	*/
 	public function home()
 	{
 		$nrp = "";
@@ -31,25 +34,22 @@ class Portalmahasiswa extends CI_Controller {
 		$login = false;
 		$mahasiswa = false;
 		
-		if ($this->session->userdata('email'))
-		{
-			$data = $this->mahasiswa_model->getDataCalonMahasiswaByEmail($this->session->userdata('email'));
-			if ($data[0]->informasi_kurikulum_id == "")
-			{
-				redirect("/pendaftaran", "refresh");
-			}
-			else
-			{
-				$nomor_registrasi = $data[0]->nomor_registrasi_id;
-				$login = true;
-				if ($data[0]->status == "0")
-				{
-					if($this->session->userdata('user_role') != 'mahasiswa'){
-						redirect('/');
-					}
-				}
-			}
-		}
+		/* --PENGECEKAN AWAL--
+		
+			cek apakah ada session email (session email dibuat ketika calon mahasiswa login dari halaman login calon mahasiswa).
+			Jika ada, 
+				maka akan dicek di database table calon_mahasiswa, apakah sudah ada jurusannya (jurusan didapat jika sudah melakukan pendaftaran),
+				dicek juga apakah calon mahasiswa tsb sudah menjadi mahasiswa (status = 0 berarti mahasiswa),
+				jika ya,
+					dicek apakah ada session user_role (session tsb didapat setelah berhasil login dari halaman login utama)
+					jika ya,
+						jika bukan user_role nya bukan mahasiswa, redirect ke halaman login utama					
+				
+			cek apakah session user_role ada dan isinya adalah "mahasiswa",
+				jika ya, berarti memang mahasiswa
+				jika tidak, redirect ke halaman login utama
+		*/
+		
 		if($this->session->userdata('user_role') == 'mahasiswa'){
             $data = $this->mahasiswa_model->getDataMahasiswaByNRP($this->session->userdata('username'));
 			$nrp = $data[0]->nrp;
@@ -58,7 +58,29 @@ class Portalmahasiswa extends CI_Controller {
         }
 		else
 		{
-			redirect("/");
+			if ($this->session->userdata('email'))
+			{
+				$data = $this->mahasiswa_model->getDataCalonMahasiswaByEmail($this->session->userdata('email'));
+				if ($data[0]->informasi_kurikulum_id == "")
+				{
+					redirect("/pendaftaran", "refresh");
+				}
+				else
+				{
+					$nomor_registrasi = $data[0]->nomor_registrasi_id;
+					$login = true;
+					if ($data[0]->status == "0")
+					{
+						if($this->session->userdata('user_role') != 'mahasiswa'){
+							redirect('/');
+						}
+					}
+				}
+			}
+			else
+			{
+				redirect('/');
+			}
 		}
 		
 		if ($login)
@@ -71,7 +93,9 @@ class Portalmahasiswa extends CI_Controller {
 			
 			if ($data[0]->kategori == "0")
 			{
-				$this->load->view('portalmahasiswa_pending');
+				$paramHeader['countNewNotif'] = "";
+				$this->load->view('pmb/header', $paramHeader);
+				$this->load->view('pmb/portalmahasiswa_pending');
 			}
 			else
 			{
@@ -114,12 +138,13 @@ class Portalmahasiswa extends CI_Controller {
 				$param['persen'] = ($progress * 25) . "%";
 				
 				$paramHeader['countNewNotif'] = "";
-				$this->load->view('includes/header', $paramHeader);
-				$this->load->view('portalmahasiswa_home', $param);
+				$this->load->view('pmb/header', $paramHeader);
+				$this->load->view('pmb/portalmahasiswa_home', $param);
 			}
 		}
 		
 	}
+	
 	
 	public function profile()
 	{
@@ -129,25 +154,10 @@ class Portalmahasiswa extends CI_Controller {
 		$login = false;
 		$mahasiswa = false;
 		
-		if ($this->session->userdata('email'))
-		{
-			$data = $this->mahasiswa_model->getFullDataCalonMahasiswaByEmail($this->session->userdata('email'));
-			if ($data[0]->informasi_kurikulum_id == "")
-			{
-				redirect("/pendaftaran", "refresh");
-			}
-			else
-			{
-				$nomor_registrasi = $data[0]->nomor_registrasi_id;
-				$login = true;
-				if ($data[0]->status == "0")
-				{
-					if($this->session->userdata('user_role') != 'mahasiswa'){
-						redirect('/');
-					}
-				}
-			}
-		}
+		/*
+			--PENGECEKAN AWAL--
+			sama seperti pada function home
+		*/
 		if($this->session->userdata('user_role') == 'mahasiswa'){
             $data = $this->mahasiswa_model->getFullDataMahasiswaByNRP($this->session->userdata('username'));
 			$nrp = $data[0]->nrp;
@@ -156,14 +166,39 @@ class Portalmahasiswa extends CI_Controller {
         }
 		else
 		{
-			redirect("/");
+			if ($this->session->userdata('email'))
+			{
+				$data = $this->mahasiswa_model->getFullDataCalonMahasiswaByEmail($this->session->userdata('email'));
+				if ($data[0]->informasi_kurikulum_id == "")
+				{
+					redirect("/pendaftaran", "refresh");
+				}
+				else
+				{
+					$nomor_registrasi = $data[0]->nomor_registrasi_id;
+					$login = true;
+					if ($data[0]->status == "0")
+					{
+						if($this->session->userdata('user_role') != 'mahasiswa'){
+							redirect('/');
+						}
+					}
+				}
+			}
+			else
+			{
+				redirect("/");
+			}
 		}
+			
+		
 		
 		if ($login)
 		{
 			$param["queryKota"] = $this->kota_model->selectKota();
 			$param["queryProvinsi"] = $this->provinsi_model->selectProvinsi();
 			
+			//jika button save ditekan, akan masuk ke sini
 			if ($this->input->post() == true)
 			{
 				$data = "";
@@ -204,6 +239,8 @@ class Portalmahasiswa extends CI_Controller {
 				$data['nomor_telp_wali'] = $this->input->post('nomor_telp_wali');
 				$data['pekerjaan_wali'] = $this->input->post('pekerjaan_wali');
 				
+				//$nrp kosong berarti bukan mahasiswa, berarti yg diupdate adalah table calon_mahasiswa
+				//$nrp ada isinya berarti mahasiswa, berarti yg diupdate adalah table mahasiswa
 				if ($nrp == "")
 				{
 					$this->mahasiswa_model->updateCalonMahasiswa($data);
@@ -261,8 +298,8 @@ class Portalmahasiswa extends CI_Controller {
 			$param['pekerjaan_wali'] = $data[0]->pekerjaan_wali;
 			
 			$paramHeader['countNewNotif'] = "";
-			$this->load->view('includes/header', $paramHeader);
-			$this->load->view('portalmahasiswa_profile', $param);
+			$this->load->view('pmb/header', $paramHeader);
+			$this->load->view('pmb/portalmahasiswa_profile', $param);
 		}
 	}
 	

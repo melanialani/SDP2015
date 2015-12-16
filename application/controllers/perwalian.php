@@ -251,69 +251,72 @@
      */
 		function createTableCourse($semester){
 			$matkul = $this->matakuliah_model->createFRS($this->session->userdata('username'));
-			$tmpl = array ( 'table_open'  => '<table class="table table-condensed" >');
-			$this->table->set_template($tmpl);
-			$this->table->set_heading('Nama Matkul','SKS','Grade','Ambil');
-			$semesterNow = $this->data_umum_model->getSemester();
-			foreach($matkul as $row)
-			{
-				$hari='-';
-				if($row->semester == $semester && $row->hari <> '' && $row->status == '1' && $row->tahun_ajaran == $semesterNow)
+			if($this->db->affected_rows()>0){
+				$tmpl = array ( 'table_open'  => '<table class="table table-condensed" >');
+				$this->table->set_template($tmpl);
+				$this->table->set_heading('Nama Matkul','SKS','Grade','Ambil');
+				$semesterNow = $this->data_umum_model->getSemester();
+				foreach($matkul as $row)
 				{
-					$class='info';
-					if($row->hari == "1")
+					$hari='-';
+					if($row->semester == $semester && $row->hari <> '' && $row->status == '1' && $row->tahun_ajaran == $semesterNow)
 					{
-						$hari='Senin';
-					}
-					else if($row->hari == "2")
-					{
-						$hari='Selasa';
-					}
-					else if($row->hari == "3")
-					{
-						$hari='Rabu';
-					}
-					else if($row->hari == "4")
-					{
-						$hari='Kamis';
-					}
-					else if($row->hari == "5")
-					{
-						$hari="Jum'at";
-					}
-					else
-					{
-						$class='';
-					}
-					$checkbox = form_checkbox(array('class'=>'checkbox','value'=>$row->nama,'name'=>'cbx'));
-					
-					if($this->session->userdata('getCourseNow'))
-					{
-						$array = $this->session->userdata('getCourseNow');
-						if(in_array($row->nama,$array))
+						$class='info';
+						if($row->hari == "1")
 						{
-							$checkbox = form_checkbox(array('class'=>'checkbox','value'=>$row->nama,'name'=>'cbx', 'checked'=>'true'));
+							$hari='Senin';
 						}
-					}
-					$score = $row->nilai_grade;
-					if($row->nilai_grade=='A' || $this->isPass($row->id) == 'false')
-					{
-						$class='active';
-						$checkbox = '<fieldset disabled>' .  form_checkbox(array('class'=>'checkbox','value'=>$row->nama,'name'=>'cbx')) .  '</fieldset>';
-					}
-					if($score == "T"){
-						$score="";
-					}
-					$rowData = array('<a class="hovertabel" href="#" title="Informasi" data-trigger="hover" data-html="true" data-toggle="popover" data-content="Hari: '.$hari.'<br />Jam: '.substr($row->jam_mulai,0,5) .'">'.$row->nama .'</a>',$row->jumlah_sks,$score, $checkbox);
-					if($row->berpraktikum == 1)
-					{
+						else if($row->hari == "2")
+						{
+							$hari='Selasa';
+						}
+						else if($row->hari == "3")
+						{
+							$hari='Rabu';
+						}
+						else if($row->hari == "4")
+						{
+							$hari='Kamis';
+						}
+						else if($row->hari == "5")
+						{
+							$hari="Jum'at";
+						}
+						else
+						{
+							$class='';
+						}
+						$checkbox = form_checkbox(array('class'=>'checkbox','value'=>$row->nama,'name'=>'cbx'));
 						
-						$rowData = array('<b><a class="hovertabel" href="#" title="Informasi" data-trigger="hover" data-html="true" data-toggle="popover" data-content="Hari: '.$hari.'<br />Jam: '.substr($row->jam_mulai,0,5) .'">'.$row->nama .'</a></b>' , '<b>'.$row->jumlah_sks .'</b>', '<b>'. $row->nilai_grade .'</b>', $checkbox);	
+						if($this->session->userdata('getCourseNow'))
+						{
+							$array = $this->session->userdata('getCourseNow');
+							if(in_array($row->nama,$array))
+							{
+								$checkbox = form_checkbox(array('class'=>'checkbox','value'=>$row->nama,'name'=>'cbx', 'checked'=>'true'));
+							}
+						}
+						$score = $row->nilai_grade;
+						if($row->nilai_grade=='A' || $this->isPass($row->id) == 'false')
+						{
+							$class='active';
+							$checkbox = '<fieldset disabled>' .  form_checkbox(array('class'=>'checkbox','value'=>$row->nama,'name'=>'cbx')) .  '</fieldset>';
+						}
+						if($score == "T"){
+							$score="";
+						}
+						$rowData = array('<a class="hovertabel" href="#" title="Informasi" data-trigger="hover" data-html="true" data-toggle="popover" data-content="Hari: '.$hari.'<br />Jam: '.substr($row->jam_mulai,0,5) .'">'.$row->nama .'</a>',$row->jumlah_sks,$score, $checkbox);
+						if($row->berpraktikum == 1)
+						{
+							
+							$rowData = array('<b><a class="hovertabel" href="#" title="Informasi" data-trigger="hover" data-html="true" data-toggle="popover" data-content="Hari: '.$hari.'<br />Jam: '.substr($row->jam_mulai,0,5) .'">'.$row->nama .'</a></b>' , '<b>'.$row->jumlah_sks .'</b>', '<b>'. $row->nilai_grade .'</b>', $checkbox);	
+						}
+						$this->table->add_row(array('data'=>$rowData,'class'=>$class,'data-toogle'=>'popover','data-trigger'=>'hover', 'title'=>$hari, 'data-content'=>'some' ));
 					}
-					$this->table->add_row(array('data'=>$rowData,'class'=>$class,'data-toogle'=>'popover','data-trigger'=>'hover', 'title'=>$hari, 'data-content'=>'some' ));
 				}
+				return $this->table->generate();
 			}
-			return $this->table->generate();
+			return false;
 		}
 	/**
      * Function : getSemesterStudent()

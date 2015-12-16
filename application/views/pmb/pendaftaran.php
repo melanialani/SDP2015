@@ -3,7 +3,7 @@
 <head>
 <?php
 	require_once('header-pmb.php'); 
-	include_once('header.php');
+	include_once('header_.php');
 ?>
 <title>PMB STTS | Form Pendaftaran</title>
 

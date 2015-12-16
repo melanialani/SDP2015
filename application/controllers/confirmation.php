@@ -306,7 +306,7 @@ class Confirmation extends CI_Controller {
 		$classID = $this->input->post('hidden_classId');
 		$termYear = $this->input->post('hidden_tahunAjaran');
 		
-		
+		//echo "year: ".$termYear;
 		if($this->input->post('btnKonfirmasi') == true){
 			/*--------------------------------------------
 			 Merubah status penilaian kelas menjadi complete
@@ -336,11 +336,12 @@ class Confirmation extends CI_Controller {
             $class = $this->class_model->getClassInfoById($classID, $nip);
             $this->notifikasi_model->sendNotification($this->session->userdata('username'),$nip, "Kajur tidak setuju atas penilaian ".$class[0].' / '.$class[3]);
 		}
-		//menyimpan commentar kajur ke database
+		////menyimpan commentar kajur ke database
 		$this->confirmation_model->sendComment($classID, $comments, $statusConf);
 		
 		// kembali ke page confirmation_portal_view
 		redirect('confirmation/index');
+		
 	}
 	/*============================================================
 	 function reportProsentase:

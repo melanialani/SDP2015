@@ -287,9 +287,9 @@ class Modelnya extends CI_Model
 	function NotifToBAU($noreg, $kategori)
 	{
 		$data = array(
-				'id' => "BAU" . $noreg,
-				'judul' => "Kategori Mahasiswa",
-				'isi' => $kategori
+				'dari' => "PMB",
+				'tujuan' => "BAU",
+				'judul' => $noreg
 					);
 		
 		$this->db->insert('notifikasi',$data);

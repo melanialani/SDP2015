@@ -163,10 +163,13 @@ class Home extends CI_Controller
     public function logout(){
         $this->session->unset_userdata('username');
         $this->session->unset_userdata('user_role');
+		$this->session->sess_destroy();
         if(get_cookie('sdp_username')){
             delete_cookie('sdp_username');
             delete_cookie('sdp_user_role');
         }
+		$this->load->model('modeldata');
+		$this->modeldata->triggerkonfirmasi();
         redirect('/');
     }
 

@@ -21,7 +21,7 @@
 			<ul class="nav navbar-nav navbar-right">
 				<li>
 					<?php
-					echo anchor('login/userLogout', '<span class="glyphicon glyphicon-log-out"></span> Logout', '');
+					echo anchor('bau/userLogout', '<span class="glyphicon glyphicon-log-out"></span> Logout', '');
 					?>
 				</li>
 			</ul>

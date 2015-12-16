@@ -33,7 +33,7 @@
 		
 		public function createFRS($studentID)
 		{
-			$this->db->select('mata_kuliah.id, mata_kuliah.nama, mata_kuliah.semester,mata_kuliah.jumlah_sks,kelas.hari, kelas.jam_mulai, getgrade.nilai_grade, kelas.status,mata_kuliah.berpraktikum,kelas.tahun_ajaran');
+			$this->db->select('kelas.id,mata_kuliah.id, mata_kuliah.nama, mata_kuliah.semester,mata_kuliah.jumlah_sks,kelas.hari, kelas.jam_mulai, getgrade.nilai_grade, kelas.status,mata_kuliah.berpraktikum,kelas.tahun_ajaran');
 			$this->db->from('mata_kuliah');
 			$this->db->join('kelas', 'mata_kuliah.id = kelas.mata_kuliah_id', 'left');
 			$this->db->join('getgrade','mata_kuliah.nama = getgrade.nama and getgrade.mahasiswa_nrp = ' . $studentID,'left');
@@ -166,6 +166,28 @@
 				
 			);
 			$this->db->insert_batch('kelas',$data);
+		}
+		/****
+		Function selectStatus
+		Mengambil data mata_kuliah yang sedang dibuka (Statusnya adalah 1)
+		Input : Status = 1 
+		Output : Result Array of Mata_Kuliah
+		****/
+		public function selectStatus($status = 1){
+			return $this
+			->db
+			->get_where('mata_kuliah',array('status' => $status))
+			->result_array();
+		}
+		
+		/****
+		Function selectMataKuliah
+		Mengambil data mata_kuliah Berdasarkan Kode Mata Kuliahnya
+		Input : ID_Mata_Kuliah
+		Output : Result Array of Mata_Kuliah
+		****/
+		public function selectMataKuliah($ID_Mata_Kuliah){
+			return $this->db->get_where('mata_kuliah', array('id' => $ID_Mata_Kuliah))->result_array();
 		}
 	}
 ?>

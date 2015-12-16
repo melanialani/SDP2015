@@ -27,20 +27,20 @@
 			}
 			
 			
-			$this->load->view('login');
+			$this->load->view('pmb/login');
 		}
 		public function toLogin()
 		{
 			$this->load->helper('form');
 			$this->load->helper('url');
-			$this->load->view('login');
+			$this->load->view('pmb/login');
 		}
 		public function toRegister()
 		{
 			$this->load->helper('url');
 			$this->load->helper('form');
 			$this->load->model('Model_registration');
-			$this->load->view('register');
+			$this->load->view('pmb/register');
 		}
 		public function cekEmail($email)
 		{
@@ -147,7 +147,7 @@
 			}
 			else{
 				echo "<script>alert('".$message."');</script>";
-				$this->load->view('login');
+				$this->load->view('pmb/login');
 			}
 			
 		}
@@ -183,7 +183,7 @@
 				
 				$this->Model_registration->updateKodeVerif($data['noReg'],$kode);
 				
-				$this->load->view('verifikasi',$data);
+				$this->load->view('pmb/verifikasi',$data);
 				echo "<script>alert('Kode Verifikasi telah dikirim, Silahkan periksa email anda.');</script>";
 			}
 			else{
@@ -248,7 +248,7 @@
 					else{
 						$this->Model_registration->insertKodeVerif($kode,$noreg,$email);
 					}
-					$this->load->view('verifikasi',$data);
+					$this->load->view('pmb/verifikasi',$data);
 					echo "<script>alert('Kode Verifikasi telah dikirim, Silahkan periksa email anda.');</script>";
 				}
 				else{
@@ -256,7 +256,7 @@
 				}
 			}
 			else{
-				$this->load->view('register');
+				$this->load->view('pmb/register');
 			}
 		}
 		public function regis()
@@ -298,7 +298,7 @@
 					$this->Model_registration->updateNoReg($data['noReg']);
 					$this->Model_registration->deleteVerif($data['noReg']);
 					
-					$this->load->view('login');
+					$this->load->view('pmb/login');
 					echo "<script>alert('Password telah dikirim, Silahkan periksa email anda.');</script>";
 				}
 				else{
@@ -306,7 +306,7 @@
 				}
 			}
 			else{
-				$this->load->view('verifikasi',$data);
+				$this->load->view('pmb/verifikasi',$data);
 			}
 		}
 	}

@@ -12,9 +12,9 @@ class Model_notifikasi extends CI_Model {
 	public function countNewMatriculant(){
         $select = $this->db->select('id')
                            ->from('notifikasi')
-                           ->like('id', 'BAU')
-                           ->where('status_baca', '1')
-                           ->where('mahasiswa_nrp is null')
+                           ->where('dari', 'PMB')
+                           ->where('tujuan', 'BAU')
+                           ->where('status_baca', '0')
                            ->get()->result();
         return count($select);
     }
@@ -22,22 +22,22 @@ class Model_notifikasi extends CI_Model {
     public function countNewStudent(){
         $select = $this->db->select('id')
                            ->from('notifikasi')
-                           ->like('id', 'BAUUPP')
-                           ->where('status_baca', '1')
+                           ->where('tujuan', 'MHSBAU')
+                           ->where('status_baca', '0')
                            ->get()->result();
         return count($select);
     }
 	
     public function getNewMatriculant(){
         $arrReturn = [];
-        $select = $this->db->select('id')
+        $select = $this->db->select('judul')
                            ->from('notifikasi')
-                           ->like('id','BAU')
-                           ->where('status_baca', '1')
-                           ->where('mahasiswa_nrp is null')
+                           ->where('dari', 'PMB')
+                           ->where('tujuan', 'BAU')
+                           ->where('status_baca', '0')
                            ->get()->result();
         foreach($select as $r){
-            $arrReturn[] = substr($r->id, 3);
+            $arrReturn[] = $r->judul;
         }
         return $arrReturn;
     }
@@ -45,22 +45,22 @@ class Model_notifikasi extends CI_Model {
     public function getNotifMatriculant(){
         $select = $this->db->select('id')
                            ->from('notifikasi')
-                           ->like('id','BAU')
-                           ->where('status_baca', '1')
-                           ->where('mahasiswa_nrp is null')
+                           ->where('dari', 'PMB')
+                           ->where('tujuan', 'BAU')
+                           ->where('status_baca', '0')
                            ->get()->result_array();
         return $select;
     }
     
     public function getNewStudent(){
         $arrReturn = [];
-        $select = $this->db->select('mahasiswa_nrp')
+        $select = $this->db->select('dari')
                            ->from('notifikasi')
-                           ->like('id','BAUUPP')
-                           ->where('status_baca', '1')
+                           ->where('tujuan', 'MHSBAU')
+                           ->where('status_baca', '0')
                            ->get()->result();
         foreach($select as $r){
-            $arrReturn[] = $r->mahasiswa_nrp;
+            $arrReturn[] = $r->dari;
         }
         return $arrReturn;
     }
@@ -68,8 +68,8 @@ class Model_notifikasi extends CI_Model {
     public function getNotifStudent(){
         $select = $this->db->select('id')
                            ->from('notifikasi')
-                           ->like('id','BAUUPP')
-                           ->where('status_baca', '1')
+                           ->where('tujuan', 'MHSBAU')
+                           ->where('status_baca', '0')
                            ->get()->result_array();
         return $select;
     }
@@ -77,8 +77,29 @@ class Model_notifikasi extends CI_Model {
     public function setReadStatus($arr){
         $this->db->where_in('id', $arr);
         $arrUpdate = array(
-            'status_baca' => '0'
+            'status_baca' => '1'
         );
         $this->db->update('notifikasi', $arrUpdate);
     }
+    
+    public function generateNotifUPP()
+    {
+        $listStudent = [];
+        $tempStudent = $this->model_mahasiswa->getStudentIds();
+        foreach($tempStudent as $r){
+            $listStudent[] = $r['nrp'];
+        }
+        for($a = 0; $a < count($listStudent); $a++){
+            $arr = array(
+                'dari' => $listStudent[$a],
+                'tujuan' => 'MHSBAU',
+                'judul' => 'Generate Notif UPP',
+                'isi' => 'Generate NOTIF UPP',
+                'tanggal_create' => date('Y').date('m').date('d'),
+                'status_baca' => 0
+            );
+            $this->db->insert('notifikasi', $arr);
+        }
+    }
 }
+
