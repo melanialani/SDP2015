@@ -285,6 +285,7 @@ class Class_Model extends CI_Model {
 
 
     /**
+     * Mengambil kelas mata kuliah berdasarkan nama mata kuliah
      * @param $name
      * @return mixed
      */
@@ -301,6 +302,7 @@ class Class_Model extends CI_Model {
 	}
 
     /**
+     * Mengambil jumlah mahasiswa pada suatu kelas dan mata kuliah
      * @param $classID
      * @param $courseID
      * @return int|string
@@ -311,7 +313,7 @@ class Class_Model extends CI_Model {
 		$this->db->where('kelas_id',$classID);
 		$this->db->where('mata_kuliah_id',$courseID);
 		$this->db->where('status_ambil','A');
-		$this->db->or_where('status_ambil','a');
+		$this->db->or_where('status_ambil','d');
 		return $this->db->count_all_results();
 	}
 

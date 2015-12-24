@@ -56,11 +56,12 @@
                              <ul class="dropdown-menu">
                                  <li><?= anchor('/','Ruangan');?></li>
                                  <li><?= anchor('/','Mata Kuliah');?></li>
-                                 <li><?= anchor('/','Jadwal Ruangan');?></li>
+                                 <li><?= anchor('/master/masterJadwalKelas','Jadwal Kelas');?></li>
                                  <li><?= anchor('/','Dosen');?></li>
                              </ul>
                          </li>
-                         <li><?= anchor('/','Daftar Mahasiswa');?></li>
+                         <li><?= anchor('lihatMahasiswa/daftarMahasiswa','Daftar Mahasiswa');?></li>
+						 <li><?= anchor('lihatAbsensi/daftarKelas','Daftar Absensi');?></li>
                          <li><?= anchor('confirmation/all','Daftar Kelas');?></li>
 						  <li><?= anchor('confirmation/page_prosentase','Report Prosentase Nilai');?></li>
                     <?php } 
@@ -71,7 +72,16 @@
 
                 <!--- Navbar Umum-->
 				<ul class="nav navbar-nav navbar-right">
-					<li><a id="notif" data-toggle="dropdown" data-target="#" href="#"><span class="glyphicon glyphicon-bell"></span> Notification  </a>
+					<li><a id="notif" data-toggle="dropdown" data-target="#" href="#"><span class="glyphicon glyphicon-bell"></span> Notification
+                            <?php
+                            if($this->session->userdata('count_new_notification') && $this->session->userdata('count_new_notification') != ""){?>
+                                <span class="label label-primary"><?php echo $this->session->userdata('count_new_notification');?></span>
+                            <?php }
+                            else { ?>
+                                <span class="label label-default">0</span>
+                            <?php }
+                            ?>
+                        </a>
                             <ul class="dropdown-menu notifications" role="menu" aria-labelledby="notif">
                                 <div class="notifications-wrapper" id="notifikasi">
                                 </div>
@@ -111,6 +121,11 @@
 			{
 			}
 		})
+        $.post('<?php echo site_url('notification/open');?>');
+        label = $('a#notif span.label');
+        label.removeClass('label-primary');
+        label.addClass('label-default');
+        label.html('0');
 	});
     limit = 5;
     start = 0;

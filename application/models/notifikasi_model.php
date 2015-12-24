@@ -12,7 +12,7 @@
 		public function getNotification($limit, $start)
 		{
 			$name = $this->session->userdata('username');
-            $this->db->select('n.dari,n.tujuan,n.judul,d.nama as nama_asal, n.tanggal_create');
+            $this->db->select('n.dari,n.tujuan,n.judul,d.nama as nama_asal, n.tanggal_create, n.isi, n.status_baca');
             $this->db->from('notifikasi n, dosen d');
             $this->db->where('d.nip = n.dari');
             $this->db->where('n.tujuan',$name);
@@ -39,8 +39,11 @@
 			$this->db->insert('notifikasi',$data);
 		}
 
-        public function sendNotification($asal, $tujuan, $message){
-            $data = ['dari' => $asal, 'tujuan' => $tujuan,'judul' => $message];
+        public function sendNotification($asal, $tujuan, $message, $link =null){
+            $data = ['dari' => $asal, 'tujuan' => $tujuan,'judul' => $message,'status_baca'=>'0'];
+            if ($link != null){
+                $this->db->set('isi',$link);
+            }
             $this->db->set('tanggal_create','now()',false);
             $this->db->insert('notifikasi', $data);
             return $this->db->affected_rows();
