@@ -3,6 +3,7 @@
 <?php
 	require_once('header-pmb.php');
 ?>
+<title>Portal Mahasiswa | Biodata</title>
 <style>
 <?php require_once('portalmahasiswa_profile.css'); ?>
 </style>
@@ -119,7 +120,6 @@
 
 $(document).ready(function()
 {
-	$(".dropdown-toggle").dropdown();
 <?php 
 if ($kategori != "0")
 {

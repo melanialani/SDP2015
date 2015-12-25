@@ -4,6 +4,7 @@
 <?php
 	require_once('header-pmb.php');
 ?>
+<title>Portal Mahasiswa | Home</title>
 <style>
 <?php require_once('portalmahasiswa_home.css'); ?>	
 </style>
@@ -191,9 +192,7 @@
 </body>
 <script>
 $(document).ready(function(event) {
-	
-    $(".dropdown-toggle").dropdown();
-	
+		
 	var progressbar_height = $("#progressbar").css('height');
 	
 	var sudah_height = $("#sudah_notification").css('height');

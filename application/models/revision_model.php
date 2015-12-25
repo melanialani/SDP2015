@@ -37,7 +37,9 @@ Class Revision_model extends CI_Model {
 	public function __construct(){
         parent::__construct();
         $this->load->database();
-        $this->load->model('Class_model');
+        
+        $this->load->model('class_model');
+        $this->load->model('grade_model');
     }
     
     /**
@@ -48,7 +50,6 @@ Class Revision_model extends CI_Model {
 	* @return
 	*/
     public function getComboBoxStudents($class_id){
-        $this->load->model('grade_model');
         $results = $this->grade_model->getAllGradeOfClass($class_id, NULL);
 		
 		return $results;

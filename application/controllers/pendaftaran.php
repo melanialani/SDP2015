@@ -250,12 +250,12 @@ class Pendaftaran extends CI_Controller
 				}
 				else
 				{
-					$this->load->view('pendaftaran', $data);
+					$this->load->view('pmb/pendaftaran', $data);
 				}
 			}
 			else
 			{
-				$this->load->view('pendaftaran', $data);
+				$this->load->view('pmb/pendaftaran', $data);
 			}
 		}
     }

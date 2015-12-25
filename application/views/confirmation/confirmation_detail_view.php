@@ -242,6 +242,7 @@ Edit 				: 27 November 2015
                 $('.percentC').html(arrPercent[2]+"%");
                 $('.percentD').html(arrPercent[3]+"%");
                 $('.percentE').html(arrPercent[4]+"%");
+                $('.ipdosen').html(arrPercent[5])
             });
 			
         });

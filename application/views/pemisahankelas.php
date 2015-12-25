@@ -7,7 +7,7 @@
 	</style>	
 </head>
 <?php
-	echo form_open('plottingdosen/pisahkelas'); ?>
+	echo form_open('plottingdosen/pemisahankelas'); ?>
 	<center>
   <div class="row">
           <div class="panel-body">
@@ -26,6 +26,7 @@
             <p>
             <?php echo form_hidden('mainClassID', $selectedClass->idKelas); ?>
             <?php echo form_hidden('mainClassName', $selectedClass->namaKelas); ?>
+            <?php echo form_hidden('idCourses', $selectedClass->idMataKuliah); ?>
             Mata Kuliah : <?php echo $selectedClass->namaMataKuliah ?><br>
             Kelas : <?php echo $selectedClass->namaKelas ?><br>
             Waktu : <?php if($selectedClass->hari == "1"){
@@ -58,9 +59,6 @@
     <center>
     <table style='width:60%', class="table table-striped">
         <tr>
-          <td align='center'>
-              Nama Mata Kuliah :
-            </td>
             <td align='center'>
               Dosen : 
             </td>
@@ -78,9 +76,6 @@
           </tr>
           <tr>
           <?php echo"
-          <td align='center'>
-              "; echo form_dropdown('coursesName', $coursesName); echo "  
-            </td>
             <td align='center'>
                   "; echo form_dropdown('lecturersName', $lecturersName); echo "
             </td>
@@ -92,15 +87,12 @@
             "; echo form_dropdown('days', $days); echo "
             </td>
             <td align='center'>
-              "; echo form_dropdown('time', $time); echo "
-            </td>
-            <td align='center'>
-              "; echo form_submit('SplitClass', 'Pisah');
-              echo form_submit('cancel', 'Cancel');
-            echo "</td>"
+              "; echo form_dropdown('time', $time);
             ?>
           </tr>
         </table>
+        <?php  echo form_submit('SplitClass', 'Pisah');
+              echo form_submit('cancel', 'Cancel'); ?>
         </div>
         </center>
         <br><hr class="endHeaderTable"></hr><br>

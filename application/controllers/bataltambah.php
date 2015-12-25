@@ -14,35 +14,42 @@ Deskripsi Program 	:
 class Bataltambah extends CI_Controller{
 	public function __construct(){
 		parent::__construct();
-		$this->load->helper('form');
-		$this->load->library('form_validation');
-		$this->load->helper('url');
-		$this->load->library('session');
-		$this->load->helper('cookie');
-		$this->load->library('table');
-		$this->load->model('Kelas_Mahasiswa_Model','',true);
 	}
 	
 	public function index(){
 		//Ambil NRP Mahasiswa yang Login.
 		$nrp = $this->session->userdata("username");
 		//Cek Status Perwalian. Jika sudah perwalian/Batal Tambah Drop, redirect ke Page Message Success
-		$cekPerwalian = $this->Kelas_Mahasiswa_Model->getStatusPerwalianFromMahasiswa($nrp)["status_perwalian"];
+		$cekPerwalian = $this->mahasiswa_model->getStatusPerwalian($nrp)["status_perwalian"];
+		
 		if($cekPerwalian == 1){
 		redirect('bataltambah/success','refresh');
 		};
 		$dataform = [];
-		$dataform["activeBatalTambah"] = "active";
-		$dataform["activeDrop"] = "";
+		$dataform["title"] = "Batal Tambah Drop Mahasiswa";
+		//$dataform["activeBatalTambah"] = "active";
+		//$dataform["activeDrop"] = "";
+		/****
+		Ambil Data Informasi mahasiswa dari table mahasiswa
+		****/
+		$dataform["data_mahasiswa"] = $this->mahasiswa_model->getDataMahasiswa($nrp);
+		
+		//Ambil Jurusan dari table informasi_kurikulum
+		$informasi_kurikulum_mahasiswa = $this->informasi_kurikulum_model->getDataKurikulum($dataform["data_mahasiswa"]["informasi_kurikulum_id"]);
+		$dataform["data_mahasiswa"]["informasi_kurikulum_mahasiswa"] = $informasi_kurikulum_mahasiswa;
+		
 		/****
 		Ambil Data Untuk pembuatan table view dari Kelas_Mahasiswa
 		berdasarkan NRP Mahasiswa yang login
 		****/
-		$dataform["dataTable"] = $this->Kelas_Mahasiswa_Model->getTableForBatalTambahMhs($nrp);
+		//Ambil Data Mata kuliah yang diambil mahasiswa dari kelas_mahasiswa berdasarkan input NRP
+		$arrDataTable = $this->kelas_mahasiswa_model->select($nrp);
+		$dataform["dataTable"] = $this->createTableBatalTambah($arrDataTable);
 		$stringTable = "";
 		/****
 		Ubah Hasil return dalam bentuk Array ke bentuk String.
 		Batasnya '|' (Pipeline) dan '_' (UnderScore)
+		Sekalian juga menghitung SKS total
 		****/
 		foreach($dataform["dataTable"] as $data){
 		$stringTable.=$data["data"]."|".$data["nama"]."|".$data["jumlah_sks"]."|".$data["bg_color"]."_";
@@ -63,7 +70,7 @@ class Bataltambah extends CI_Controller{
 		Valuenya adalah Kode_Matakuliah-Nama_Matakuliah-Jumlah_SKS
 		Keynya adalah Kode_Matakuliah
 		****/
-		$dataform["dataComboBox"] = $this->Kelas_Mahasiswa_Model->getDataForComboBoxFromKelas($nrp);
+		$dataform["dataComboBox"] = $this->createComboBoxBatal($nrp);
 		/****
 		2. Yang kedua adalah data untuk ComboBox FORM TAMBAH.
 		Isinya adalah data yang diambil adalah informasi Mata Kuliah dari table Mata_Kuliah 
@@ -71,7 +78,7 @@ class Bataltambah extends CI_Controller{
 		Valuenya adalah Kode_Matakuliah-Nama_Matakuliah-Jumlah_SKS
 		Keynya adalah Kode_Matakuliah
 		****/
-		$dataform["dataComboBoxTambah"] = $this->Kelas_Mahasiswa_Model->getDataForComboBoxFromKelas_Tambah($nrp);
+		$dataform["dataComboBoxTambah"] = $this->createComboBoxTambah($nrp);
 		/****
 		Jika Button Clear ditekan Maka Data perwalian yang sudah diisi oleh Mahasiswa akan
 		dikembalikan ke Keadaan sebelum perwalian. Data akan diambil ulang dari Database kelas_mahasiswa
@@ -83,7 +90,8 @@ class Bataltambah extends CI_Controller{
 		****/
 		$this->session->unset_userdata('table_session');	
 		//Ambil Data lama dari database yang dikembalikan dalam bentuk Array
-		$dataform["dataTable"] = $this->Kelas_Mahasiswa_Model->getTableForBatalTambahMhs($nrp);
+		$arrDataTable = $this->kelas_mahasiswa_model->select($nrp);
+		$dataform["dataTable"] = $this->createTableBatalTambah($arrDataTable);
 		//Jadikan data tersebut ke dalam bentuk String
 		foreach($dataform["dataTable"] as $data){
 		$stringTable.=$data["data"]."|".$data["nama"]."|".$data["jumlah_sks"]."|".$data["bg_color"]."_";
@@ -96,7 +104,6 @@ class Bataltambah extends CI_Controller{
 		
 		if($this->input->post('btnSubmitBatal') == true){
 			$temp = $this->input->post('makul',true);
-			echo $temp;
 			if($this->session->userdata('table_session') != ""){
 				$stringTable = $this->session->userdata('table_session');
 			}
@@ -108,7 +115,6 @@ class Bataltambah extends CI_Controller{
 				3. Explode kedua untuk mengambil isi dari array data
 				4. Setelah diganti warnanya, Pakai Implode di concate dengan '_'
 				***/
-				echo "lalaal";
 				$explode1 = explode("_",$stringTable);
 				for($i = 0 ; $i < count($explode1)-1; $i++){
 					//Explode kedua
@@ -133,7 +139,7 @@ class Bataltambah extends CI_Controller{
 				$stringTable = $this->session->userdata('table_session');
 			}
 			if($temp != "null"){
-				$arrTampung = $this->Kelas_Mahasiswa_Model->selectFromMataKuliah($temp)[0];
+				$arrTampung = $this->matakuliah_model->selectMataKuliah($temp)[0];
 				//Tambah Matakuliah ke String
 				//Urutan String : ID_MATA_KULIAH-NAMA_MATKUL-JUMLAH_SKS-WARNA
 				//Cek apakah data kembar / tidak
@@ -163,28 +169,32 @@ class Bataltambah extends CI_Controller{
 				$isiData = explode("|",$data[$i]);
 				if($isiData[3] == "#00CCFF"){
 					//Update data Status jadi Tambah
-					$this->Kelas_Mahasiswa_Model->updateStatusKelas_Mahasiswa($nrp,$isiData[0],"tambah");
+					$this->kelas_mahasiswa_model->updateStatus($nrp,$isiData[0],"tambah");
 				}
 				else if($isiData[3] == "#FF6633"){
 					//Update data Status jadi Batal
-					$this->Kelas_Mahasiswa_Model->updateStatusKelas_Mahasiswa($nrp,$isiData[0],"batal");
+					$this->kelas_mahasiswa_model->updateStatus($nrp,$isiData[0],"batal");
+				}
+				else if($isiData[3] == "#FF8833"){
+					//Update data Status jadi Drop
+					$this->kelas_mahasiswa_model->updateStatus($nrp,$isiData[0],"drop");
 				}
 			}
 			//Kirimkan Notifikasi ke dosen wali mahasiswa
-			$this->Kelas_Mahasiswa_Model->kirimNotifikasi($nrp);
+			//$this->Kelas_Mahasiswa_Model->kirimNotifikasi($nrp);
 		}
+		//Hitung Jumlah SKS Yang akan diambil mahasiswa Setelah Batal / Tambah
+		$dataform["jumlah_sks_baru"] = $this->generateJumlahSKS($this->session->userdata("table_session"));
 		$this->load->view('includes/header');
-		$this->load->view('nav/navbarmahasiswa',array('nameStudent' => $this->Mahasiswa_Model->getNameStudent($this->session->userdata("username"))));
-		$this->load->view('bataltambahdrop',$dataform);
+		$this->load->view('perwalian/bataltambahdrop',$dataform);
 		$this->load->view('includes/footer');
 	
 	}
 	public function drop(){
 		$nrp = $this->session->userdata("username");
 		$dataform = [];
-		$dataform["activeBatalTambah"] = "";
-		$dataform["activeDrop"] = "active";
-		$dataform["dataTable"] = $this->Kelas_Mahasiswa_Model->getTableForBatalTambahMhs($nrp);
+		$arrDataTable = $this->kelas_mahasiswa_model->select($nrp);
+		$dataform["dataTable"] = $this->createTableBatalTambah($arrDataTable);
 		$stringTable = "";
 		//Ubah Array ke bentuk String. Batasnya '|' dan '_'
 		foreach($dataform["dataTable"] as $data){
@@ -195,18 +205,21 @@ class Bataltambah extends CI_Controller{
 			//$dataform["dataTable"] = $this->session->userdata('table_session');
 			$stringTable = $this->session->userdata('table_session');
 		}
-		$dataform["dataComboBox"] = $this->Kelas_Mahasiswa_Model->getDataForComboBoxFromKelas($nrp);
+		$dataform["dataComboBox"] = $this->createComboBoxBatal($nrp);
 		if($this->input->post('btnClear') == true){
 		$stringTable = "";
 		$this->session->unset_userdata('table_session');	
 		//Ambil Data untuk Table
-		$dataform["dataTable"] = $this->Kelas_Mahasiswa_Model->getTableForBatalTambahMhs($nrp);
+		$dataform["dataTable"] = $this->createTableBatalTambah($arrDataTable);
 		
-		//Jadikan ke bentuk String
+		//Jadikan ke bentuk String + HItung jumlah SKSnya
+		$jumSks = 0;
 		foreach($dataform["dataTable"] as $data){
 		$stringTable.=$data["data"]."|".$data["nama"]."|".$data["jumlah_sks"]."|".$data["bg_color"]."_";
+		$jumSks = $jumSks + intval($data["jumlah_sks"]);
 		}
 		$dataform["dataTable2"] = $stringTable; 
+		$dataform["jumlah_sks_baru"] = $jumSks;
 		//Masukkan ke dalam Session table_session
 		$this->session->set_userdata('table_session', $stringTable);		
 		}
@@ -245,22 +258,28 @@ class Bataltambah extends CI_Controller{
 				$isiData = explode("|",$data[$i]);
 				if($isiData[3] == "#FF8833"){
 					//Update data Status jadi Drop
-					$this->Kelas_Mahasiswa_Model->updateStatusKelas_Mahasiswa($nrp,$isiData[0],"drop");
+					$this->kelas_mahasiswa_model->updateStatus($nrp,$isiData[0],"drop");
 				}
 				
 			}
 		}
+		/****
+		Ambil Data Informasi mahasiswa dari table mahasiswa
+		****/
+		$dataform["data_mahasiswa"] = $this->mahasiswa_model->getDataMahasiswa($nrp);
+		
+		//Ambil Jurusan dari table informasi_kurikulum
+		$informasi_kurikulum_mahasiswa = $this->informasi_kurikulum_model->getDataKurikulum($dataform["data_mahasiswa"]["informasi_kurikulum_id"]);
+		$dataform["data_mahasiswa"]["informasi_kurikulum_mahasiswa"] = $informasi_kurikulum_mahasiswa;
+		$dataform["jumlah_sks_baru"] = $this->generateJumlahSKS($this->session->userdata("table_session"));
+		
 		$this->load->view('includes/header');
-		$this->load->view('nav/navbarmahasiswa',array('nameStudent' => $this->Mahasiswa_Model->getNameStudent($this->session->userdata("username"))));
-		$this->load->view('bataltambahdrop',$dataform);
+		$this->load->view('perwalian/bataltambahdrop',$dataform);
 		$this->load->view('includes/footer');
 	}
 	public function cekKembar($arrData, $stringData){
-		echo "Data yang akan ditambah: <br>";
-		print_r($arrData);
 		$explodeData = explode("_",$stringData);
 		array_pop($explodeData);
-		print_r($explodeData);
 		foreach($explodeData as $data){
 			$explodeData2 = explode("|",$data);
 			if($explodeData2[0] == $arrData["id"]){return 0;}
@@ -269,6 +288,123 @@ class Bataltambah extends CI_Controller{
 	}
 	public function success(){	
 		echo "Anda sudah Melakukan Batal/Tambah Atau Drop";
+	}
+	/****
+	Function createTableBatalTambah
+	Digunakan untuk mengenerate array untuk tampilan Table pada view
+	Input : Array hasil query kelas_mahasiswa berdasarkan nrp
+	Output : Array berupa id_mata_kuliah, nama_matakuliah, jumlah_sks, dan warna dari table.
+		Keterangan Warna yang di generate : 
+		-> #FF6633 untuk Batal
+		-> #00CCFF untuk Tambah
+		-> #FF8833 untuk Drop
+	****/
+	function createTableBatalTambah($arrDataTable){
+		//Untuk Setiap Hasil Query, cari data kelas dari mata_kuliah_id
+		foreach($arrDataTable as $data){
+			//Buat Row Tabel untuk masing-masing data mata_kuliah
+			$temp = $this->matakuliah_model->selectMataKuliah($data["mata_kuliah_id"])[0];
+			//Memberikan warna background Merah jika status_ambil adalah 'b' (Batal)
+			if($data["status_ambil"] == "b"){
+				$arrHasil[] = array(
+				'data'=> $temp["id"],
+				'nama' => $temp["nama"],
+				'jumlah_sks' => $temp["jumlah_sks"],
+				'bg_color' => "#FF6633");
+			}
+			//Memberikan warna background Biru jika status_ambil adalah 't' (Tambah)
+			else if($data["status_ambil"] == "t"){
+				$arrHasil[] = array(
+				'data'=> $temp["id"],
+				'nama' => $temp["nama"],
+				'jumlah_sks' => $temp["jumlah_sks"],
+				'bg_color' => "#00CCFF"
+				);
+			}
+			//Memberikan warna background Putih pada status_ambil yang lain
+			else
+			{
+				$arrHasil[] = array(
+				'data'=> $temp["id"],
+				'nama' => $temp["nama"],
+				'jumlah_sks' => $temp["jumlah_sks"],
+				'bg_color' => "none"
+				);
+			}
+		}
+		return $arrHasil;
+	}
+	/****
+	Function createComboBoxBatal
+	Digunakan untuk mengisi combobox pada form batal.
+	Input : nrp mahasiswa
+	Output : Array untuk combobox yang sudah jadi
+	****/
+	function createComboBoxBatal($nrp){
+		//Ambil data dari kelas_mahasiswa_model berdasarkan NRP mahasiswa
+		$arrData = $this->kelas_mahasiswa_model->select($nrp);
+		$arrHasil = [];
+		$arrHasil += array("null" => "Pilih Mata Kuliah");
+		//Untuk Setiap Hasil Query, cari data kelas dari mata_kuliah_id
+		foreach($arrData  as $data){
+			/****
+			Untuk Setiap Data Mata Kuliah yang diambil Mahasiswa di kelas_mahasiswa
+			Ambil informasi dari matakuliah_model berupa id, nama dan jumlah_sks lalu disusun menjadi
+			1 string dengan format id-nama-jumlah_sks dengan Key id
+			****/
+			$temp = $this->matakuliah_model->selectMataKuliah($data["mata_kuliah_id"])[0];
+			$arrHasil += array($temp["id"] => $temp["id"]."-".$temp["nama"]."-".$temp["jumlah_sks"]);
+		}
+		return $arrHasil;
+	}
+	/****
+	Function createComboBoxTambah
+	Digunakan untuk mengisi combobox pada form Tambah. 
+	Input : nrp
+	Output : Array of Data Mata Kuliah buat Combobox
+	****/
+	function createComboBoxTambah($nrp){
+		//Ambil Data dari mata_kuliah berdasarkan Status Aktif (1)
+		$arrHasilMataKuliah = $this->matakuliah_model->selectStatus(1);
+		//Ambil Data Matakuliah yang diambil mahasiswa yang sekarang sedang diambil
+		$arrMatkulAktif = $this->kelas_mahasiswa_model->select($nrp);
+		$arrHasil = [];
+		$arrHasil += array("null" => "Pilih Mata Kuliah");
+		$cekKembar = true;
+		foreach($arrHasilMataKuliah as $hasilMataKuliah){
+			foreach($arrMatkulAktif as $hasilAktif){
+			//Cek setiap matakuliah yang akan dimasukkan combobox. Jika mahasiswa sedang mengambil matakuliah tersebut, maka tidak usah dimasukkan
+			if($hasilAktif["mata_kuliah_id"] == $hasilMataKuliah["id"]){$cekKembar = false;}
+			}
+			if($cekKembar == true){
+			//Jika cek kembar sukses
+			$arrHasil += array($hasilMataKuliah["id"] => $hasilMataKuliah["id"]."-".$hasilMataKuliah["nama"]."-".$hasilMataKuliah["jumlah_sks"]);
+			}
+		$cekKembar = true;
+		}
+		return $arrHasil;
+	}
+	/****
+	Function generateJumlahSKS
+	Untuk menghitung jumlah SKS setelah Mahasiswa melakukan batal / tambah / drop
+	Input : String data batal/tambah/drop
+	Output : Jumlah SKS yang baru
+	****/
+	function generateJumlahSKS($stringData){
+		$jumlahSksBaru = 0;
+		//Explode Pertama untuk memisah Tiap Data
+		$explodeData1 = explode("_",$stringData);
+		//Membuang Array kosongan paling belakang
+		array_pop($explodeData1);
+		//Untuk setiap Array, Explode sekali lagi, dan ambil jumlah sksnya;
+		foreach($explodeData1 as $data){
+			$explodeData2 = explode("|",$data);
+			//Jika Warna (index ke 4 dari explode Data 2) adalah #FF6633 atau #FF8833 maka Tidak usah dihitung SKSnya 
+			if($explodeData2[3] == "none" || $explodeData2[3] == "#00CCFF"){
+				$jumlahSksBaru += intval($explodeData2[2]);
+			}
+		}
+		return $jumlahSksBaru;
 	}
 }
 

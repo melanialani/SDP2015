@@ -43,12 +43,11 @@ class Grade extends CI_Controller {
 		$this->load->helper('url');
 		$this->load->library('session');
 
+	}
+    public function index(){
         if($this->session->userdata('user_role') != 'dosen' && $this->session->userdata('user_role') != 'kajur'){
             redirect('/');
         }
-
-	}
-    public function index(){
         redirect('grade/all');
     }
     /**
@@ -60,6 +59,9 @@ class Grade extends CI_Controller {
      * @return JSON
      */
     public function ajax_totalSKS($yearNow=null){
+        if($this->session->userdata('user_role') != 'dosen' && $this->session->userdata('user_role') != 'kajur'){
+            redirect('/');
+        }
         //Mengambil Lecturer Login dari Session yang Ada sekaligus pengecekan
         $lecturer_login = $this->session->userdata('username');
 
@@ -80,6 +82,9 @@ class Grade extends CI_Controller {
      */
     public function ajax_class($yearNow =null)
     {
+        if($this->session->userdata('user_role') != 'dosen' && $this->session->userdata('user_role') != 'kajur'){
+            redirect('/');
+        }
 		// Mengambil Lecturer Login dari Session Yang Ada
         $lecturer_login = $this->session->userdata('username');
 		if ($yearNow == null){
@@ -111,6 +116,9 @@ class Grade extends CI_Controller {
      * @param $classId kelas_id dari kelas tersebut
      */
     public function ajax_percentage($classId){
+        if($this->session->userdata('user_role') != 'dosen' && $this->session->userdata('user_role') != 'kajur'){
+            redirect('/');
+        }
         $percentage =$this->grade_model->getPercentageClass($classId);
         echo $percentage["A"].' '.$percentage["B"].' '.$percentage["C"].' '.$percentage["D"].' '.$percentage["E"].' '.$percentage["IP Dosen"];
     }
@@ -121,7 +129,9 @@ class Grade extends CI_Controller {
      * @param $classId kelas_id dari kelas yang ingin diketahuo
      */
     public function ajax_grade($classId){
-
+        if($this->session->userdata('user_role') != 'dosen' && $this->session->userdata('user_role') != 'kajur'){
+            redirect('/');
+        }
         // Load Data Kelas
         if(isset($_POST['order'])){
             $column = ["nrp","nrp","nama","uts","tugas","uas","nilai_akhir","nilai_akhir_grade","nilai_grade"];
@@ -146,6 +156,9 @@ class Grade extends CI_Controller {
      * nrp, uts, uas, tugas, log
      */
     public function saveAllGrade(){
+        if($this->session->userdata('user_role') != 'dosen' && $this->session->userdata('user_role') != 'kajur'){
+            redirect('/');
+        }
         if ($this->input->post('nrp')) {
             $midTerm = $this->input->post('uts');
             $finalTerm = $this->input->post('uas');
@@ -171,6 +184,9 @@ class Grade extends CI_Controller {
      * menerima parameter post berupa nrp, uts, uas tugas, log
      */
     public function saveGrade(){
+        if($this->session->userdata('user_role') != 'dosen' && $this->session->userdata('user_role') != 'kajur'){
+            redirect('/');
+        }
         if($this->input->post('nrp')) {
             $log = $this->input->post('log');
             $log = $this->grade_model->updateStudentGrade($this->input->post('class_id'),
@@ -188,6 +204,9 @@ class Grade extends CI_Controller {
      * Mengeload Halaman Mata Kuliah Yang Diajar milik Dosen
      */
     public function all(){
+        if($this->session->userdata('user_role') != 'dosen' && $this->session->userdata('user_role') != 'kajur'){
+            redirect('/');
+        }
 		$data['title'] = "Mata Kuliah yang Diajar";
 		$this->load->helper('form');
 		$data['ddYear'] = $this->class_model->getComboBoxAllYear();
@@ -203,7 +222,9 @@ class Grade extends CI_Controller {
      * @param $classId (string) ID dari Kelas yang ingin dilihat.
      */
     public function view($classId){
-
+        if($this->session->userdata('user_role') != 'dosen' && $this->session->userdata('user_role') != 'kajur'){
+            redirect('/');
+        }
 		$this->load->helper('form');
 		$this->load->library('table');
 		
@@ -229,7 +250,7 @@ class Grade extends CI_Controller {
                 $this->session->set_flashdata('alert_level', 'success');
                 $this->session->set_flashdata('alert', 'Berhasil Mengirim Data Nilai ke kajur!');
                 $kajur_id = $this->dosen_model->getKajurId($classId);
-                $this->notifikasi_model->sendNotification($this->session->userdata('username'),$kajur_id, $class[7]." telah menyelesaikan penilaian ".$class[0].' / '.$class[3]);
+                $this->notifikasi_model->sendNotification($this->session->userdata('username'),$kajur_id, "Penilaian ".$class[0].' / '.$class[3].' menunggu konfirmasi.');
                 redirect('grade/view/'.$classId);
             }
             else {
@@ -306,11 +327,14 @@ class Grade extends CI_Controller {
      * @param $classId kelas_id
      */
     public function printPdf($classId){
+        if($this->session->userdata('user_role') != 'dosen' && $this->session->userdata('user_role') != 'kajur'){
+            redirect('/');
+        }
 		$this->load->library('table');
         // Cek Berdasarkan session
 		$lecturer_login = $this->class_model->getLecturerIdByClass($classId);
 		$class = $this->class_model->getClassInfoById($classId, $lecturer_login);
-		$data['title'] = "Penilaian ".$class[0].' / '.$class[3];
+		$data['title'] = "Daftar Penilaian ".$class[0].' / '.$class[3];
 		$data['class'] = $class;
 		//this data will be passed on to the view
         $this->table->add_row('Mata Kuliah / Kelas / SKS :&nbsp;&nbsp;',':',$class[0].' / '.$class[3].' / '. $class[8].' SKS');
@@ -353,7 +377,7 @@ class Grade extends CI_Controller {
 		$this->load->library('m_pdf');
 		//actually, you can pass mPDF parameter on this load() function
 		$pdf = $this->m_pdf->load();
-		$header =$this->load->view('report/includes/headerReport',$data,true);
+		$header = $this->load->view('report/includes/headerReport',$data,true);
 		//generate the PDF!
 		$pdf->WriteHTML($header.$html);
 		$pdf->Output($pdfFilePath, "I");

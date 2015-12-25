@@ -59,10 +59,10 @@ class Masterbau extends CI_Controller {
 		// current tab.
 		$data['currentTab'] = '';
 		// load view.
-		$this->load->view('includes/header_bau', $data);
+		$this->load->view('includes/header', $data);
 		$this->load->view('nav/navbar_laporan', $data);
 		$this->load->view('laporan_placeholder');
-		$this->load->view('includes/footer_bau', $data);
+		$this->load->view('includes/footer', $data);
 	}
 	
 	public function master_biaya(){
@@ -71,8 +71,7 @@ class Masterbau extends CI_Controller {
 		// ambil value untuk variable view, parameter 1 footerfixed, parameter 2 overflowhidden.
 		$data = $this->getVariable(false, false);
 		// table untuk tampilin kurikulum yang sudah ada.
-		$data['table'] = [];
-		
+		$data['table'] = [];   
 		if($this->input->post('btnSubmit') == true){
 			// setu rules dulu untuk input.
 			$this->form_validation->set_rules('cbJurusan', 'Jurusan', 'required');
@@ -123,10 +122,19 @@ class Masterbau extends CI_Controller {
 		$this->load->view('includes/header_bau', $data);
 		$this->load->view('nav/navbar_chief');
 		$this->load->view('master_biaya', $data);
-		$this->load->view('includes/footer_bau', $data);
+		$this->load->view('includes/footer', $data);
 	}
 	
 	public function master_keuangan(){
+        delete_cookie('generateUPP');
+        $tanggalSekarang = date('m').'-'.date('d');
+        if(($tanggalSekarang == '12-13' OR $tanggalSekarang == '01-01') AND get_cookie('generateUPP', true) == false){
+            echo get_cookie('generateUPP', true);
+            $this->model_notifikasi->generateNotifUPP();
+            $arrCookie = array('name'=>'generateUPP', 'value'=>'true', 'expire'=>60*60*24*30*6);
+            set_cookie($arrCookie);
+        }
+        
 		// global variable fungsi.
 		$data = [];
 		// ambil value untuk variable view, parameter 1 footerfixed, parameter 2 overflowhidden.
@@ -254,7 +262,7 @@ class Masterbau extends CI_Controller {
 		$this->load->view('includes/header_bau', $data);
 		$this->load->view('nav/navbar_chief');
 		$this->load->view('master_keuangan', $data);
-		$this->load->view('includes/footer_bau', $data);
+		$this->load->view('includes/footer', $data);
 	}
     
     public function master_beasiswa(){
@@ -322,7 +330,75 @@ class Masterbau extends CI_Controller {
 		$this->load->view('includes/header_bau', $data);
 		$this->load->view('nav/navbar_chief');
 		$this->load->view('master_beasiswa', $data);
-		$this->load->view('includes/footer_bau', $data);
+		$this->load->view('includes/footer', $data);
 	}
  
+    
+    public function dispensasi()
+    {
+        $data = [];
+        
+        // load view.
+		$this->load->view('includes/header', $data);
+		$this->load->view('nav/navbar_chief');
+		$this->load->view('dispensasi', $data);
+		$this->load->view('includes/footer', $data);
+    }
+	
+	public function beasiswa()
+    {
+        // global variable fungsi.
+		$data = [];
+		// ambil value untuk variable view, parameter 1 footerfixed, parameter 2 overflowhidden.
+		$data = $this->getVariable(false, false);
+		// table untuk tampilin kurikulum yang sudah ada.
+		$data['table'] = [];
+		// ambil beasiswa yang sudah ada dan tampilkan di combobox.
+        $tempBeasiswa = $this->model_informasi_beasiswa->getAllScholarship();
+		$data['arrayBeasiswa'] = [];
+        // isi combobox, jika kosong, isikan kosong.
+        if(count($tempBeasiswa) == 0){
+            $data['arrayBeasiswa']['null'] = '*Belum ada beasiswa*';
+        }else{
+            foreach($tempBeasiswa as $r){
+                $data['arrayBeasiswa'][$r->id] = $r->nama_beasiswa;
+            }
+        }
+		
+		if($this->input->post('btnSubmit') == true){
+			$this->form_validation->set_rules('txtNRP', 'NRP', 'required');
+			
+			if($this->form_validation->run() == true){
+				$data['selectedScholarship'] = $this->input->post('cbBeasiswa', true);
+				$data['NRP'] = $this->input->post('txtNRP', true);
+				$isLegit = $this->model_beasiswa->checkNRP($data['NRP']);
+				if($isLegit == false){
+					$this->model_beasiswa->insertScholarship($data['NRP'], $data['selectedScholarship']);
+					
+				}else{
+					$this->session->set_flashdata('error_beasiswa', 'Mahasiswa sudah terdaftar pada beasiswa lain.');
+					redirect('masterbau/beasiswa');
+				}
+			}else{
+				$this->session->set_flashdata('error_beasiswa', 'Semua field harus diisi.');
+                redirect('masterbau/beasiswa');
+			}
+		}
+		$allScholarship = $this->model_beasiswa->getAllScholarship();
+		// masukin ke table.
+		foreach($allScholarship as $r)
+		{
+			$data['table'][] = array(
+				'NRP' => $r['mahasiswa_nrp'],
+				'beasiswa' => $r['informasi_beasiswa_nama_beasiswa']
+			);
+		}
+		// current tab.
+		$data['currentTab'] = 'master_beasiswa';
+        // load view.
+		$this->load->view('includes/header', $data);
+		$this->load->view('nav/navbar_chief');
+		$this->load->view('beasiswa', $data);
+		$this->load->view('includes/footer', $data);
+    }
 }

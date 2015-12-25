@@ -22,17 +22,24 @@ class Confirmation_model extends CI_Model {
 		$this->load->model('class_model');
 		// Pengecekkan Session
 	}
-	
-	/* -----------------------------------------------------
-	Function getAllClassByLecturer
-	Mengambil data kelas yang diajar oleh lecturer tertentu 
-	berdasarkan order_by, dan tahun_ajaran tertentu.
-	Input: 
-		[1] lecturer_id = (string) NIP dari Dosen yang dicari.
-		[2] $orders = (assoc array) $nama_kolom => 'asc/desc'
-		[3] $yearNow = (string) tahun ajaran yang ingin dioutputkan
-	Output: Array Raw Kelas
+	/* ----------------------------------------------------
+	function getNamaDosen($id):
+		untuk mengambil nama dosen berdasarkan parameter
+		dosen id yang dipassingkan
 	----------------------------------------------------- */
+	 
+	public function getNamaDosen($id){
+		$this->db->select('nama');
+		$this->db->from('dosen');
+		$this->db->where('nip', $id);
+		$result = $this->db->get()->row()->nama;
+		return $result;
+	}
+	/*-------------------------------------------------------------
+	 function getAllClass($orders , $yearNow, $limit, $start) :
+	untuk mengambil detail semua dari kelas yang ada berdasarkan 
+	parameter tahun ajaran
+	---------------------------------------------------------------*/
 	
 	public function getAllClass($orders , $yearNow, $limit, $start){				
 		// Mengambil Data Kelas yang di ajar oleh lecturer
@@ -50,6 +57,89 @@ class Confirmation_model extends CI_Model {
 		}
 		$results = $this->db->get()->result();
 		return $results;
+	}
+	
+	/* --------------------------------------------------
+	function getDataTableForAllMatkul($orders, $yearNow):
+	untuk mengambil detail dari kelas (id kelas, kode mata kuliah,
+	jumlah sks, nama matakuliah) dan prosentase nilai grade
+	dari kelas tersebut 
+	----------------------------------------------------- */
+	public function getDataTableForAllMatkul($orders, $yearNow){
+		$this->db->select('k.id as id, mk.id as kode_mk,mk.jumlah_sks as sks, mk.nama as nama_mk ');
+		$this->db->from('mata_kuliah mk, kelas k, dosen d, informasi_kurikulum ik');
+		$this->db->where('k.tahun_ajaran',$yearNow);
+		$this->db->where('d.nip = k.dosen_nip');
+		$this->db->where('mk.id = k.mata_kuliah_id');
+		$this->db->where('ik.id = mk.informasi_kurikulum_id');
+		$this->db->join('ruangan r', 'r.id = k.ruangan_id','left');
+		$this->db->where('k.status',1);		
+		$this->db->group_by('kode_mk');
+		if ($orders != null){
+			foreach ($orders as $key => $value){
+				$this->db->order_by($key, $value);
+			}
+		}
+		$results = $this->db->get()->result();
+		/* ------------------------------------------------ 
+		menyimpan detail dari kelas ke dalam array
+		------------------------------------------------- */
+		$classes = [];
+		foreach ($results as $result){
+			$class = [];
+			$class[] = $result->kode_mk;
+			$class[] = $result->sks;
+			$class[] = $result->nama_mk;
+			// mengambil prosentase nilai dari kelas tersebut berdasarkan id kelas
+			$percentage = $this->getPercentageClass($result->id);
+			$class[] = $percentage["A"];
+			$class[] = $percentage["B"];
+			$class[] = $percentage["C"];
+			$class[] = $percentage["D"];
+			$class[] = $percentage["E"];
+			$classes[] = $class;
+		}
+		
+		return $classes;
+	}
+	
+	/*--------------------------------------------------------------------
+	getDataTableReportByLecturer($idDosen, $orders, $yearNow ):
+	mengambil data kelas berdasarkan id dosen, dan tahun ajaran  
+	----------------------------------------------------------------------*/
+	public function getDataTableReportByLecturer($idDosen, $orders, $yearNow ){
+		$this->db->select('k.id as id, mk.id as kode_mk, mk.nama as nama_mk, mk.jumlah_sks as sks');
+		$this->db->from('mata_kuliah mk, kelas k,informasi_kurikulum ik');
+		$this->db->where('k.dosen_nip',$idDosen);
+		$this->db->where('k.tahun_ajaran',$yearNow);
+		$this->db->where('mk.id = k.mata_kuliah_id');
+		$this->db->where('mk.informasi_kurikulum_id = ik.id');
+		$this->db->join('ruangan r', 'r.id = k.ruangan_id','left');
+		$this->db->where('k.status',1);
+		
+		foreach ($orders as $key => $value){
+			$this->db->order_by($key, $value);
+		}
+		$results = $this->db->get()->result();
+		$classes = [];
+		foreach ($results as $result){
+			$class = [];
+			$class[] = $result->kode_mk;
+			$class[] = $result->sks;
+			$class[] = $result->nama_mk;
+			/*------------------------------------------------------------ 
+			mengambil prosentase nilai dari kelas tersebut dan menyimpan
+			nya kedalam array class	
+			------------------------------------------------------------- */
+			$percentage = $this->getPercentageClass($result->id);
+			$class[] = $percentage["A"];
+			$class[] = $percentage["B"];
+			$class[] = $percentage["C"];
+			$class[] = $percentage["D"];
+			$class[] = $percentage["E"];
+			$classes[] = $class;
+		}
+		return $classes;
 	}
 	
 	/* -----------------------------------------------------
@@ -101,7 +191,12 @@ class Confirmation_model extends CI_Model {
 		}
 		return $classes;
 	}
-	
+	/* ---------------------------------------------------------
+	function sendComment($classID, $comments, $statusConf):
+	untuk mengupdate field komentar_kajur pada tabel kelas
+	dan juga mengupdate field status_konfirmasi pada tabel kelas
+	berdasarkan id kelas
+	---------------------------------------------------------- */
 	public function sendComment($classID, $comments, $statusConf){
 		/*
 		update di table kelas status_conf, komen_kajur
@@ -121,7 +216,7 @@ class Confirmation_model extends CI_Model {
 	
 	
 	/*======================================================
-	function insertStudentScore :
+	function IPSCounting :
 	untuk melakukan convert grade nilai setiap mahasiswa
 	untuk matkul yang telah di konfirmasi oleh kajur
 	lalu akan melakukan perhitungan ulang nilai ips 
@@ -129,9 +224,6 @@ class Confirmation_model extends CI_Model {
 	dan akan melakukan update pada tabel nilai_semester
 	=========================================================*/
 	public function IPSCounting($classId, $termYear){
-		//select jumlah SKS nya dulu
-		echo "classId: ".$classId."<br>";
-		
 		//select id mata kuliah
 		$this->db->select('mata_kuliah_id');
 		$this->db->from('kelas');
@@ -155,13 +247,13 @@ class Confirmation_model extends CI_Model {
 		$this->db->from('kelas_mahasiswa');
 		$this->db->where_in('kelas_id',$class);
 		$resultAllNrp = $this->db->get()->result_array();
-		
+		echo "year:".$termYear."<br>";
 		foreach($resultAllNrp as $rowNrp){
 			// memproses nilai untuk setiap mahasiswa yg ada
 			$nrp = $rowNrp['mahasiswa_nrp'];
 			$semester = $rowNrp['semester'];
-			
-			echo "NRP: ".$nrp."<br>"; 
+			echo "NRP:".$nrp."<br>";
+			echo "smt:".$semester."<br>";
 			//select nilai id sesuai dengan semester saat ini	
 			$this->db->select('nilai_id');
 			$this->db->from('kelas_mahasiswa');
@@ -305,21 +397,24 @@ class Confirmation_model extends CI_Model {
 					$this->db->from('nilai_semester');
 					$this->db->where('mahasiswa_nrp', $nrp);
 					$this->db->where('semester', $semester);
-					$this->db->where('tahun_ajaran', $termYear);
 					$resultNilaiSemester = $this->db->get()->row();
 					
 					if($resultNilaiSemester != null){
+						echo "ips sdh ada";
 						// kalau ada datanya lakukan update
+						
 						$data = array(
 							'ips'=>$IPS
 						);
 						
 						$this->db->where('mahasiswa_nrp', $nrp);
 						$this->db->where('semester', $semester);
-						$this->db->where('tahun_ajaran', $termYear);
 						$this->db->update('nilai_semester', $data);
+						
 					}
 					else{
+					echo "ips blm ada";
+					
 						// kalau tidak lakukan insert ke tabel nilai_semester
 						$data= array(
 							'mahasiswa_nrp' => $nrp,
@@ -374,7 +469,7 @@ class Confirmation_model extends CI_Model {
 				$totalValueNilaiGrade += $resultValueNilaiGrade;
 			}
 			
-			echo "totalValueNilaiGrade: ".$totalValueNilaiGrade."<br>";
+			//echo "totalValueNilaiGrade: ".$totalValueNilaiGrade."<br>";
 			// hitung total jumlah SKS yang telah diambil oleh mahasiswa tsb
 			
 			$this->db->select('mata_kuliah_id');
@@ -391,11 +486,11 @@ class Confirmation_model extends CI_Model {
 					$totalJumlahSKS += $result;	
 			}
 			
-			echo "Total jumlah sks yg telah diambil:".$totalJumlahSKS."<br>";
+			//echo "Total jumlah sks yg telah diambil:".$totalJumlahSKS."<br>";
 			
 			// hitung IPK
 			$IPK = $totalValueNilaiGrade / $totalJumlahSKS;
-			echo "IPK: ".$IPK;
+			//echo "IPK: ".$IPK;
 			// update field IPK pada tabel mahasiswa
 			$dataIPK = array(
 				'ipk' => $IPK
@@ -451,5 +546,65 @@ class Confirmation_model extends CI_Model {
         $this->db->where('id', $class_id);
         $this->db->update('kelas');
     }
-    
+    /*-----------------------------------------------
+	function allDosen : 
+	mengambil semua data dosen dari tabel dosen
+	--------------------------------------------------*/
+	public function allDosen(){
+		$this->db->select('*');
+		$this->db->from('dosen');
+		return $this->db->get()->result_array();
+	}
+	/* ---------------------------------------------
+	function getDosenId($ddDosen):
+	mengambil nip dosen dari tabel dosen berdasarkan
+	parameter nama dosen
+	------------------------------------------------ */
+	public function getDosenId($ddDosen){
+		$this->db->select('nip');
+		$this->db->from('dosen');
+		$this->db->where('nama', $ddDosen);
+		$result = $this->db->get()->row()->nip;
+		return $result;
+	}
+	
+	/* --------------------------------------------------
+	function getPercentageClass($classId):
+	untuk melakukan perhitungan prosentase nilai grade 
+	(A, B, C, D, E) pada suatu kelas berdasarkan id kelas
+	sekaligus menghitung ip dosen kelas tersebut
+	----------------------------------------------------- */
+	 public function getPercentageClass($classId){
+		$this->db->where('kelas_id',$classId);
+        $total = $this->db->get('kelas_mahasiswa')->num_rows();
+        $totalIPS = 0;
+        $percentage = [];
+        $percentage["A"] = 0;
+        $percentage["B"] = 0;
+        $percentage["C"] = 0;
+        $percentage["D"] = 0;
+        $percentage["E"] = 0;
+        $ipdosen = 0;
+        foreach ($percentage as $key => $value){
+            $this->db->from('kelas_mahasiswa km , nilai  n');
+            $this->db->where('km.kelas_id',$classId);
+            $this->db->where('km.nilai_id = n.id');
+            $this->db->like('n.nilai_grade',$key);
+            $num = $this->db->get()->num_rows();
+			
+            $this->db->select('value as nilai');
+            $this->db->where('index','valnilai_'.$key.'_to_IPK');
+            $this->db->from('data_umum');
+            $convert = $this->db->get()->row()->nilai;
+            if ($num != 0) {
+                $percentage[$key] = round($num / $total * 100, 1);
+            }
+            $ipdosen += $num * $convert;
+        }
+        if($ipdosen != 0) {
+            $ipdosen = round($ipdosen / $total, 2);
+        }
+        return $percentage;
+    }
+	
 }

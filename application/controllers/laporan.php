@@ -67,7 +67,7 @@ class Laporan extends CI_Controller {
 		$this->load->view('includes/header_bau', $data);
 		$this->load->view('nav/navbar_chief', $data);
 		$this->load->view('laporan_placeholder');
-		$this->load->view('includes/footer_bau', $data);
+		$this->load->view('includes/footer', $data);
 	}
 	
     /******************************************************************************************************
@@ -141,7 +141,7 @@ class Laporan extends CI_Controller {
 					$data['arrStudentDepartment'][] = $this->model_mahasiswa->getStudentDatum('informasi_kurikulum_id', 'nrp', $row['nrp']);
 					$data['arrStudentName'][] = $this->model_mahasiswa->getStudentDatum('nama', 'nrp', $row['nrp']);
 				}
-				// ambil hkeuangan sesuai matriculant.
+				// ambil hkeuangan sesuai student.
 				$tempHKid = $this->model_hkeuangan->getIdStudentUPP($data['arrStudentId']);
 				foreach($tempHKid as $row)
                 {
@@ -180,13 +180,79 @@ class Laporan extends CI_Controller {
 				redirect('laporan/laporan_usp');
 			}
 		}
+		// jika button search ditekan.
+		else if($this->input->post('btnSearch') == true)
+        {
+			// ambil data input search.
+			$data['search'] = $this->input->post('txtSearch');
+			// tanggal awal dan batas dfault.
+			$data['tanggalAwal'] = '1990-00-00';
+			$data['tanggalAkhir'] = '2200-00-00';
+			$data['isPeriode1'] = true;
+			$data['isPeriode2'] = true;
+			$data['isPeriode3'] = true;
+			// variable variable nya.
+			$data['arrCurriculumId'] = [];
+			$data['arrStudentId'] = [];
+			$data['arrStudentDepartment'] = [];
+			$data['arrStudent1stPeriod'] = [];
+			$data['arrStudent2ndPeriod'] = [];
+			$data['arrStudent3rdPeriod'] = [];
+			$data['arrStudentName'] = [];
+			
+			/* ambil nama mahasiswa yang mirip. ****/
+			$tempStudentName = $this->model_mahasiswa->getStudentNameSearch($data['search']);
+			foreach($tempStudentName as $row)
+            {
+				$data['arrStudentName'][] = $row['nama'];
+			}
+			
+			// ambil nrp milik mahasiswa2 tersebut. ***
+			foreach($tempStudentName as $row)
+            {
+				$data['arrStudentDepartment'][] = $this->model_mahasiswa->getStudentDatum('informasi_kurikulum_id', 'nama', $row['nama']);
+				$data['arrStudentId'][] = $this->model_mahasiswa->getStudentDatum('nrp', 'nama', $row['nama']);
+			}
+			// ambil hkeuangan sesuai student.
+			$tempHKid = $this->model_hkeuangan->getIdStudentUPP($data['arrStudentId']);
+			foreach($tempHKid as $row)
+			{
+				$data['arrHKid'][] = $row['id'];
+			}
+			// ambil jumlah, batas tanggal, dan status nya ***
+			foreach($tempHKid as $row)
+			{
+				$tempPeriod = $this->model_dkeuangan->getDFinanceFromHFinance('jumlah', 'id', $row['id']);
+				$data['arrStudent1stPeriod'][] = $tempPeriod[0]['jumlah'];
+				$data['arrStudent2ndPeriod'][] = $tempPeriod[1]['jumlah'];
+				$data['arrStudent3rdPeriod'][] = $tempPeriod[2]['jumlah'];
+				$data['arrJumlahUPP'][] = $this->model_hkeuangan->getHFinanceDatum('jumlah', 'id', $row['id']);
+				//$data['arrTBT'][] = $this->model_dkeuangan->getDFinanceFromHFinance('tanggal_batas', 'id', $row['id']);
+				$data['arrStatus'][] = $this->model_hkeuangan->getHFinanceDatum('status', 'id', $row['id']);
+			}
+			// masukin ke table.
+			for($a = 0; $a < count($data['arrStudentId']); $a++)
+			{
+				$data['table'][] = array(
+					'noreg' => $data['arrStudentId'][$a],
+					'nama' => $data['arrStudentName'][$a],
+					'1stPeriode' => $data['arrStudent1stPeriod'][$a],
+					'2ndPeriode' => $data['arrStudent2ndPeriod'][$a],
+					'3rdPeriode' => $data['arrStudent3rdPeriod'][$a],
+					'jumlah' => $data['arrJumlahUPP'][$a],
+					//'tanggal_batas' => $data['arrTBT'][$a],
+					'status' => $data['arrStatus'][$a]
+				);
+			}
+			
+		}
 		// current tab.
 		$data['currentTab'] = 'laporan_upp';
 		// load view.
 		$this->load->view('includes/header_bau', $data);
 		$this->load->view('nav/navbar_chief');
 		$this->load->view('laporan_upp', $data);
-		$this->load->view('includes/footer_bau', $data);
+		$this->load->view('includes/footer', $data);
 	}
 	
 	public function laporan_usp()
@@ -240,6 +306,7 @@ class Laporan extends CI_Controller {
 					$data['arrMatriculantDepartment'][] = $this->model_calon_mahasiswa->getMatriculantDatum('informasi_kurikulum_id', 'nomor_registrasi_id', $row['nomor_registrasi_id']);
 					$data['arrMatriculantName'][] = $this->model_calon_mahasiswa->getMatriculantDatum('nama', 'nomor_registrasi_id', $row['nomor_registrasi_id']);
 				}
+                
 				//variable
 				$data['arrHKid'] = [];
 				// ambil hkeuangan sesuai matriculant.
@@ -262,6 +329,7 @@ class Laporan extends CI_Controller {
 				// masukin ke table.
 				for($a = 0; $a < count($data['arrHKid']); $a++)
                 {
+                    
 					$data['table'][] = array(
 						'noreg' => $data['arrMatriculantId'][$a],
 						'jurusan' => $data['arrMatriculantDepartment'][$a],
@@ -316,7 +384,8 @@ class Laporan extends CI_Controller {
 			// ambil jumlah, batas tanggal, dan status nya ***
 			foreach($tempHKid as $row)
             {
-				$data['arrJumlahUSP'][] = $this->model_hkeuangan->getHFinanceDatum('jumlah', 'id', $row['id']);
+				
+                $data['arrJumlahUSP'][] = $this->model_hkeuangan->getHFinanceDatum('jumlah', 'id', $row['id']);
 				$data['arrTBT'][] = $this->model_dkeuangan->getDFinanceFromHFinance('tanggal_batas', 'id', $row['id']);
 				$data['arrStatus'][] = $this->model_hkeuangan->getHFinanceDatum('status', 'id', $row['id']);
 			}
@@ -340,7 +409,7 @@ class Laporan extends CI_Controller {
 		$this->load->view('includes/header_bau', $data);
 		$this->load->view('nav/navbar_chief', $data);
 		$this->load->view('laporan_usp', $data);
-		$this->load->view('includes/footer_bau', $data);
+		$this->load->view('includes/footer', $data);
 	}
  
 }

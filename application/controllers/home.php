@@ -78,7 +78,7 @@ class Home extends CI_Controller
                         $role="dosen";
                         $this->session->set_userdata('user_role', 'dosen');
                     }
-					
+
 					//ADDED ON 11-12-2015 BY CHRISTIAN LIMANTO
 					//CEK APAKAH YG LOGIN ADALAH PIMPINAN PMB
 					$user_role = $this->user_model->getRole($user);
@@ -93,6 +93,11 @@ class Home extends CI_Controller
                         $cookie_username = array('name' => 'sdp_username', 'value' => $this->input->post('username'), 'expire' => 60 * 60 * 24);
                         $cookie_role = array('name' => 'sdp_user_role', 'value' => $role, 'expire' => 60 * 60 * 24);
                     }
+                    $userData = $this->user_model->updateUserLogin($user);
+                    $this->session->set_userdata('count_new_notification',$userData->count_notification);
+                    $this->session->set_userdata('new_notification_from',$userData->last_login);
+
+
                     set_cookie($cookie_username);
                     set_cookie($cookie_role);
                     redirect('');
@@ -102,6 +107,11 @@ class Home extends CI_Controller
                     //MEMBUAT MENU YANG AKAN DITAMPILKAN
                     $this->session->set_userdata('username', $user);
                     $this->session->set_userdata('user_role', 'mahasiswa');
+                    $userData = $this->user_model->updateUserLogin($user);
+                    $this->session->set_userdata('count_new_notification',$userData->count_notification);
+                    $this->session->set_userdata('new_notification_from',$userData->last_login);
+
+
                     //JIKA MEMILIH FITUR REMEMBER ME
                     //MAKA USER LOGIN AKAN DISIMPAN KE COOKIE DENGAN LAMA 1 HARI
                     if ($this->input->post('remember')) {
@@ -163,10 +173,13 @@ class Home extends CI_Controller
     public function logout(){
         $this->session->unset_userdata('username');
         $this->session->unset_userdata('user_role');
+		$this->session->sess_destroy();
         if(get_cookie('sdp_username')){
             delete_cookie('sdp_username');
             delete_cookie('sdp_user_role');
         }
+		$this->load->model('modeldata');
+		$this->modeldata->triggerkonfirmasi();
         redirect('/');
     }
 

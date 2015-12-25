@@ -40,7 +40,7 @@ class pimpinanPMB extends CI_Controller {
 			else
 			{
 				echo "USERNAME/PASSWORD SALAH!";
-				$this->load->view('viewlogin',$data);
+				$this->load->view('pmb/viewlogin',$data);
 			}
 				
 		}
@@ -48,14 +48,14 @@ class pimpinanPMB extends CI_Controller {
 			$data["email"]="";
 			$data["nohp"]="";
 			$data["password"]="";
-			$this->load->view('viewlogin',$data);
+			$this->load->view('pmb/viewlogin',$data);
 		}
 	}
 	*/
 	public function home()
 	{
 		$data['listUncategorized']=$this->modelnya->cekNotif();
-		$this->load->view('viewhome',$data);
+		$this->load->view('pmb/viewhome',$data);
 	}
 	
 	public function listCalonMahasiswa()
@@ -154,7 +154,7 @@ class pimpinanPMB extends CI_Controller {
 			$data["end"] = 10;
 		}
 		//---------------------------------------------------
-		$this->load->view('viewlistcalonmahasiswa', $data);
+		$this->load->view('pmb/viewlistcalonmahasiswa', $data);
 	}
 	
 	public function listCalonMahasiswa1()
@@ -242,7 +242,7 @@ class pimpinanPMB extends CI_Controller {
 			$data["start"] = 0;
 			$data["end"] = 10;
 		}
-		$this->load->view('viewlistcalonmahasiswa', $data);
+		$this->load->view('pmb/viewlistcalonmahasiswa', $data);
 	}
 	
 	public function laporan()
@@ -317,7 +317,7 @@ class pimpinanPMB extends CI_Controller {
 				$data["arrobj"]= $this->modelnya->laporanCalonMahasiswa($data["listview"],1,$data["by"],$data["bywhat"]);
 			}
 		}
-		$this->load->view('viewlaporan', $data);
+		$this->load->view('pmb/viewlaporan', $data);
 	}
 	
 	
@@ -401,7 +401,7 @@ class pimpinanPMB extends CI_Controller {
 				$data["arrobj"]= $this->modelnya->laporanCalonMahasiswa1($data["listview"],1,$data['by'],$data['bywhat'],$field,$data['sort']);
 			}
 		}
-		$this->load->view('viewlaporan', $data);
+		$this->load->view('pmb/viewlaporan', $data);
 		
 	}
 	
@@ -469,7 +469,7 @@ class pimpinanPMB extends CI_Controller {
 			}
 		}
 		
-		$this->load->view('viewlaporan', $data);
+		$this->load->view('pmb/viewlaporan', $data);
 		
 	}
 	public function laporanStatistik()
@@ -490,7 +490,7 @@ class pimpinanPMB extends CI_Controller {
 			$data['allStatistik']=$this->Modelnya->getStatistik($parameter);
 		}
 		$data['TotalMhs']=$this->Modelnya->getTotalMhs();
-		$this->load->view('viewlaporanstatistik', $data);
+		$this->load->view('pmb/viewlaporanstatistik', $data);
 	}
 	
 	public function logout()
