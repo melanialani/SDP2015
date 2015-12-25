@@ -93,6 +93,7 @@
 					//mengambil semester sekarang
 					$data['nowSemester'] = $this->data_umum_model->getSemester();
 					$this->load->view('perwalian/jadwal',$data);
+					$this->load->view('includes/footer');
 				}else
 				{
 					//jika belum maka menampilkan error sksnya kurang dari minimum
@@ -125,8 +126,6 @@
 					//memasukan data semester ke dalam variable arr
 					array_push($arr,$row->semester);
 				}
-				//mengisi data combobox dengan variable arr yang berisi semester semester saja
-				$data['dataCombobox']=$arr;
 				//mengeset variable user dengan '' (kosong)
 				$user = '';
 				//mengecek apakah username terdapat disession
@@ -148,7 +147,18 @@
 				for($i=0;$i<count($arr);$i++){
 					//mengisi array variable table dengan tabel
 					//memanggil fungsi createTableCourse, memasukan input semester dan menghasilkan tabel semester tersebut
-					array_push($data['table'],$this->createTableCourse($arr[$i]));
+					$temp = $this->createTableCourse($arr[$i]);
+					$tempSemester="";
+					if($this->session->userdata('semesterMatakuliah'))
+					{
+						$tempSemester = $this->session->userdata('semesterMatakuliah');
+					}
+					if($temp)
+					{
+						array_push($data['table'],$temp);
+						$tempSemester .= $arr[$i] . ";";
+						$this->session->set_userdata('semesterMatakuliah',$tempSemester);
+					}
 				}
 				//mengload view perwalian
 				$this->load->view('perwalian/perwalian',$data);
@@ -251,6 +261,7 @@
      */
 		function createTableCourse($semester){
 			$matkul = $this->matakuliah_model->createFRS($this->session->userdata('username'));
+			$count=0;
 			if($this->db->affected_rows()>0){
 				$tmpl = array ( 'table_open'  => '<table class="table table-condensed" >');
 				$this->table->set_template($tmpl);
@@ -261,6 +272,7 @@
 					$hari='-';
 					if($row->semester == $semester && $row->hari <> '' && $row->status == '1' && $row->tahun_ajaran == $semesterNow)
 					{
+						$count++;
 						$class='info';
 						if($row->hari == "1")
 						{
@@ -297,6 +309,7 @@
 							}
 						}
 						$score = $row->nilai_grade;
+						
 						if($row->nilai_grade=='A' || $this->isPass($row->id) == 'false')
 						{
 							$class='active';
@@ -308,13 +321,13 @@
 						$rowData = array('<a class="hovertabel" href="#" title="Informasi" data-trigger="hover" data-html="true" data-toggle="popover" data-content="Hari: '.$hari.'<br />Jam: '.substr($row->jam_mulai,0,5) .'">'.$row->nama .'</a>',$row->jumlah_sks,$score, $checkbox);
 						if($row->berpraktikum == 1)
 						{
-							
-							$rowData = array('<b><a class="hovertabel" href="#" title="Informasi" data-trigger="hover" data-html="true" data-toggle="popover" data-content="Hari: '.$hari.'<br />Jam: '.substr($row->jam_mulai,0,5) .'">'.$row->nama .'</a></b>' , '<b>'.$row->jumlah_sks .'</b>', '<b>'. $row->nilai_grade .'</b>', $checkbox);	
+							$rowData = array('<b><a class="hovertabel" href="#" title="Informasi" data-trigger="hover" data-html="true" data-toggle="popover" data-content="Hari: '.$hari.'<br />Jam: '.substr($row->jam_mulai,0,5) .'">'.$row->nama .'</a></b>' , '<b>'.$row->jumlah_sks .'</b>', '<b>'. $row->nilai_grade .'</b>', $checkbox);
 						}
 						$this->table->add_row(array('data'=>$rowData,'class'=>$class,'data-toogle'=>'popover','data-trigger'=>'hover', 'title'=>$hari, 'data-content'=>'some' ));
 					}
 				}
-				return $this->table->generate();
+				if($count>0)
+					return $this->table->generate();
 			}
 			return false;
 		}
@@ -346,6 +359,10 @@
 		{
 			$passed = 'true';
 			$requirementCourse = $this->syarat_matakuliah_model->getRequirement($courseID);
+			if($courseID == 'MK032')
+			{
+				//print_r($requirementCourse);
+			}
 			foreach($requirementCourse as $row)
 			{
 				if($this->kelas_mahasiswa_model->search($row->id_syarat_matakuliah) == 'false')
@@ -427,9 +444,9 @@
 			//mengambil jadwal kuliah dari database
 			$schedule = $this->kelas_mahasiswa_model->getSchedule($studentID);
 			//membuat tabel
-			$tmpl = array ( 'table_open'  => '<table class="table">');
+			$tmpl = array ( 'table_open'  => '<table class="table table-bordered">');
 			$this->table->set_template($tmpl);
-			$this->table->set_heading('Kode Matkul','Nama Matkul','Dosen Pengajar','Hari','Jam Mulai','Ruangan');
+			$this->table->set_heading('Kode Matkul','Nama Matkul','Total SKS','Dosen Pengajar','Hari','Jam Mulai','Ruangan');
 			//mengambil semester sekarang
 			$semesterNow = $this->data_umum_model->getSemester();
 			foreach($schedule as $row)
@@ -455,11 +472,11 @@
 				{
 					$hari='Jumaat';
 				}
-				$rowData = array($row->id,$row->nama,$row->dosen, $hari,$row->jam_mulai,$row->ruangan);
+				$rowData = array($row->id,$row->nama,$row->SKS,$row->dosen, $hari,$row->jam_mulai,$row->ruangan);
 				
 				if($row->berpraktikum == 1)
 				{
-					$rowData = array('<b>'.$row->id .'</b>','<b>'.$row->nama .'</b>' ,'<b>'.$row->dosen .'</b>', '<b>'. $hari .'</b>', '<b>'.$row->jam_mulai .'</b>', '<b>'. $row->ruangan .'</b>');	
+					$rowData = array('<b>'.$row->id .'</b>','<b>'.$row->nama .'</b>','<b>'.$row->SKS .'</b>' ,'<b>'.$row->dosen .'</b>', '<b>'. $hari .'</b>', '<b>'.$row->jam_mulai .'</b>', '<b>'. $row->ruangan .'</b>');
 				}
 				$this->table->add_row(array('data'=>$rowData,'class'=>'table'));
 			}
@@ -480,6 +497,26 @@
 				$code .= '</div>';
 			}
 			print $code;
+		}
+		
+		
+		/**
+		 * Untuk mengeprint data nilai kelas berdasarkan kriteria tertentu
+		 * @param $classId kelas_id
+		 */
+		public function printPdf($classId){
+			
+			// Cek Berdasarkan session
+			$data['title'] = "Jadwal Kuliah Semester ". $this->data_umum_model->getSemester();
+			$html=$this->getSchedule();
+			$pdfFilePath = "print".$this->data_umum_model->getSemester().".pdf";
+			$this->load->library('m_pdf');
+			//actually, you can pass mPDF parameter on this load() function
+			$pdf = $this->m_pdf->load();
+			$header =$this->load->view('report/includes/headerReport',$data,true);
+			//generate the PDF!
+			$pdf->WriteHTML($header.$html);
+			$pdf->Output($pdfFilePath, "I");
 		}
 	}
 

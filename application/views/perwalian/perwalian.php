@@ -34,14 +34,17 @@
 					</div>					
 					<?php
 					}
-					
+					//$tempSemester = split(";",$this->session->userdata('semesterMatakuliah'));
+					//print_r($tempSemester);
+					$tempSemester=explode(';',$this->session->userdata('semesterMatakuliah'));
+					$this->session->unset_userdata('semesterMatakuliah');
 					for($i=0;$i<count($table);$i+=2){
 						echo '
 						<div class="col-sm-12" style="background:white">
 							<div class="col-sm-6" style="background:transparent">
 								<div class="panel panel-default">
 							  <!-- Default panel contents -->
-									<div class="panel-heading">Semester ' . $dataCombobox[$i] . '</div>
+									<div class="panel-heading">Semester ' . $tempSemester[$i] . '</div>
 									<div class="panel-body" id="courseTable">
 										'. $table[$i] .'
 									</div>
@@ -52,7 +55,7 @@
 								<div class="col-sm-6" style="background:transparent">
 									<div class="panel panel-default">
 								  <!-- Default panel contents -->
-										<div class="panel-heading">Semester '. $dataCombobox[$i+1] . '</div>
+										<div class="panel-heading">Semester '. $tempSemester[$i+1] . '</div>
 										<div class="panel-body" id="courseTable">
 											'. $table[$i+1] .'
 										</div>

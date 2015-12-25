@@ -109,7 +109,7 @@
 			$studentID = $this->session->userdata('username');
 			$detailStudent = $this->mahasiswa_model->getDetailStudent($studentID);
 			$semester = (+$detailStudent->semester);
-			$this->db->select('mata_kuliah.id,mata_kuliah.berpraktikum, mata_kuliah.nama,kelas.hari, kelas.jam_mulai, dosen.nama as dosen, ruangan.nama as ruangan');
+			$this->db->select('mata_kuliah.id,mata_kuliah.berpraktikum, mata_kuliah.nama,kelas.hari, kelas.jam_mulai, dosen.nama as dosen, ruangan.nama as ruangan, mata_kuliah.jumlah_sks as SKS');
 			$this->db->from('kelas, kelas_mahasiswa, dosen, ruangan, mata_kuliah');
 			$this->db->where('kelas.id = kelas_mahasiswa.kelas_id');
 			$this->db->where('kelas.ruangan_id = ruangan.id');

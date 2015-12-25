@@ -149,6 +149,7 @@
 			$this->db->where('mahasiswa_nrp',$studentID);
 			$this->db->where('semester',$semester);
 			$result = $this->db->get('nilai_semester')->row();
+			
 			if($this->db->affected_rows()>0)
 			{
 				return $result->ips;
