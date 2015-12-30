@@ -192,8 +192,15 @@ Class Revision_model extends CI_Model {
 	* @return
 	*/
 	public function getTakenClasses($nrp){
+		/*
+		SELECT makul.nama, n.nilai_akhir_grade, k.tahun_ajaran
+		FROM mata_kuliah makul, kelas_mahasiswa km, kelas k, nilai n
+		WHERE km.mahasiswa_nrp = '213116249' AND makul.id = k.mata_kuliah_id AND k.id = km.kelas_id AND km.nilai_id = n.id
+		*/
+		
 		// what fields to get
-		$this->db->select('mk.id as id, mk.nama as nama, mk.semester as semester, mk.jumlah_sks as jumlah_sks, mk.lulus_minimal as lulus_minimal, k.tahun_ajaran as tahun_ajaran, n.uts as uts, n.uas as uas, n.nilai_akhir_grade as nilai_akhir_grade, n.nilai_grade as nilai_grade');
+		$this->db->select('mk.id as id, mk.nama as nama, mk.semester as semester, mk.jumlah_sks as jumlah_sks, mk.lulus_minimal as lulus_minimal, k.tahun_ajaran as tahun_ajaran,
+							n.uts as uts, n.uas as uas, n.tugas as tugas, n.nilai_akhir_grade as nilai_akhir_grade, n.nilai_grade as nilai_grade');
 		
 		// connects the table
 		$this->db->where('km.nilai_id = n.id');
@@ -202,7 +209,7 @@ Class Revision_model extends CI_Model {
 		
 		// additional conditions
 		$this->db->where('km.mahasiswa_nrp', $nrp);
-		$this->db->where('(km.status_ambil = "A" or km.status_ambil = "r")');
+		$this->db->where('km.status_ambil', 'A');
 		
 		// the tables and their nickname
 		$this->db->from('nilai n, mata_kuliah mk, kelas k, kelas_mahasiswa km');
@@ -304,6 +311,32 @@ Class Revision_model extends CI_Model {
 		$hasil = $this->db->get('mahasiswa')->row_array();
 		return $hasil['sks'];
 	}
+	
+	/**
+	* Returns how many semester the student has taken
+	* 
+	* @param string $nrp
+	* 
+	* @return
+	*/
+	public function getJumlahSemester($nrp){
+		// what fields to get
+		$this->db->select('MAX(mk.semester) as jumlah_semester', FALSE); 
+		
+		// connects the table
+		$this->db->where('km.kelas_id = k.id');
+		$this->db->where('k.mata_kuliah_id = mk.id');
+		
+		// additional conditions
+		$this->db->where('km.mahasiswa_nrp', $nrp);
+		$this->db->where('(km.status_ambil = "A" or km.status_ambil = "r")');
+		
+		// the tables and their nickname
+		$this->db->from('mata_kuliah mk, kelas k, kelas_mahasiswa km');
+		
+		$hasil = $this->db->get()->row_array();
+		return $hasil['jumlah_semester'];
+    }
 
     public function getRevisionByClass($class_id){
         $this->db->where('kelas_id',$class_id);

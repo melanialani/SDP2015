@@ -3,19 +3,24 @@
 </style>
 
 <div class="container">
-	<div style="margin-left: 42%; margin-top: 4%;">
-		<label><b>NRP</b></label> <br>
-		<label><b>Nama</b></label> <br>
-		<label><b>IPK</b></label> <br>
-		<label><b>Total SKS</b></label>
-	</div>
-	
-	<div style="margin-left: 54%; margin-top: -11.9%;">
-		<label><b>:</b> <?php echo $nrp; ?></label> <br>
-		<label><b>:</b> <?php echo $nama; ?></label> <br>
-		<label><b>:</b> <?php echo $ipk; ?></label> <br>
-		<label><b>:</b> <?php echo $total_sks; ?></label>
-	</div>
+	<table align="center" border="0">
+		<tr>
+			<th style="text-align: left;"><label><b>NRP</b></label></th>
+			<th style="padding-left: 7px; text-align: left;"><label>: <?php echo $nrp; ?></label></th>
+		</tr>
+		<tr>
+			<th style="text-align: left;"><label><b>Nama</b></label></th>
+			<th style="padding-left: 7px; text-align: left;"><label>: <?php echo $nama; ?></label></th>
+		</tr>
+		<tr>
+			<th style="text-align: left;"><label><b>IPK</b></label></th>
+			<th style="padding-left: 7px; text-align: left;"><label>: <?php echo $ipk; ?></label></th>
+		</tr>
+		<tr>
+			<th style="text-align: left;"><label><b>Total SKS</b></label></th>
+			<th style="padding-left: 7px; text-align: left;"><label>: <?php echo $total_sks; ?></label></th>
+		</tr>
+	</table>
 	
 	<?php for($i = 1; $i <= $jumlah_semester; $i++) {
 		echo "<h4>SEMESTER " . $i . "</h4>";
@@ -36,10 +41,10 @@
 		} else {
 			for($j = 0; $j < count($semester[$i]); $j++) {
 				echo "		<tr> \n";
-				echo "			<th><p align='center' style='font-weight:normal;'>" . $semester[$i]['data']['id'] . " </p></th> \n";
-				echo "			<th><p align='center' style='font-weight:normal;'>" . $semester[$i]['data']['nama'] . " </p></th> \n";
-				echo "			<th><p align='center' style='font-weight:normal;'>" . $semester[$i]['data']['jumlah_sks'] . " </p></th> \n";
-				echo "			<th><p align='center' style='font-weight:normal;'>" . $semester[$i]['data']['nilai_grade'] . " </p></th> \n";
+				echo "			<th><p align='center' style='font-weight:normal;'>" . $semester[$i][$j]['id'] . " </p></th> \n";
+				echo "			<th><p align='center' style='font-weight:normal;'>" . $semester[$i][$j]['nama'] . " </p></th> \n";
+				echo "			<th><p align='center' style='font-weight:normal;'>" . $semester[$i][$j]['jumlah_sks'] . " </p></th> \n";
+				echo "			<th><p align='center' style='font-weight:normal;'>" . $semester[$i][$j]['nilai_grade'] . " </p></th> \n";
 				echo "		</tr> \n \n";
 			}
 		}

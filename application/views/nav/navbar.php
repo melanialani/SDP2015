@@ -25,8 +25,8 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Nilai <span class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                <li><?= anchor('/','Transkrip Nilai');?></li>
-                                <li><?= anchor('/','Nilai Semester');?></li>
+                                <li><?= anchor('grade/student_transcript','Transkrip Nilai');?></li>
+                                <li><?= anchor('grade/student_grade','Nilai Semester');?></li>
                             </ul>
                         </li>
                     <?php }

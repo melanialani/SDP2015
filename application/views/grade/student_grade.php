@@ -8,7 +8,7 @@
 </style>
 
 <div class="container">
-	<h1 style="text-align: center;">Laporan Nilai Semester</h1>
+	<h1 style="text-align: center;">Nilai Semester</h1>
 	<h3 style="text-align: center;"><?php echo $jurusan; ?></h3>
 	<input type="hidden" id="jumlah_semester" name="jumlah_semester" value="<?php echo $jumlah_semester; ?>" />
 	
@@ -52,13 +52,13 @@
 			} else {
 				for($j = 0; $j < count($semester[$i]); $j++) {
 					echo "		<tr> \n";
-					echo "			<th><p align='center'> " . $semester[$i]['data']['id'] . " </p></th> \n";
-					echo "			<th><p align='center'> " . $semester[$i]['data']['nama'] . " </p></th> \n";
-					echo "			<th><p align='center'> " . $semester[$i]['data']['uts'] . " </p></th> \n";
-					echo "			<th><p align='center'> " . $semester[$i]['data']['uas'] . " </p></th> \n";
-					echo "			<th><p align='center'> " . $semester[$i]['data']['tugas'] . " </p></th> \n";
-					echo "			<th><p align='center'> " . $semester[$i]['data']['nilai_akhir_grade'] . " </p></th> \n";
-					echo "			<th><p align='center'> " . $semester[$i]['data']['nilai_grade'] . " </p></th> \n";
+					echo "			<th><p align='center' style='font-weight:normal;'> " . $semester[$i][$j]['id'] . " </p></th> \n";
+					echo "			<th><p align='center' style='font-weight:normal;'> " . $semester[$i][$j]['nama'] . " </p></th> \n";
+					echo "			<th><p align='center' style='font-weight:normal;'> " . $semester[$i][$j]['uts'] . " </p></th> \n";
+					echo "			<th><p align='center' style='font-weight:normal;'> " . $semester[$i][$j]['uas'] . " </p></th> \n";
+					echo "			<th><p align='center' style='font-weight:normal;'> " . $semester[$i][$j]['tugas'] . " </p></th> \n";
+					echo "			<th><p align='center' style='font-weight:normal;'> " . $semester[$i][$j]['nilai_akhir_grade'] . " </p></th> \n";
+					echo "			<th><p align='center' style='font-weight:normal;'> " . $semester[$i][$j]['nilai_grade'] . " </p></th> \n";
 					echo "		</tr> \n \n";
 				}
 			}
@@ -71,9 +71,9 @@
 	<br>
 	
 	<div class="text-right">
-		<?php echo form_open('revision/student_grade'); ?>
+		<?php echo form_open('grade/student_grade'); ?>
 		<input type="hidden" id="selected_semester" name="selected_semester" value="<?php echo $selected_semester; ?>" />
-		<?php echo form_submit(['id'=>'print','name'=>'print','value'=>'Cetak Transkip','class'=>'btn btn-primary']); ?>
+		<?php echo form_submit(['id'=>'print','name'=>'print','value'=>'Cetak Nilai','class'=>'btn btn-primary']); ?>
 		<?php echo form_close(); ?>
 	</div></div>
 </div> <!-- End of Container -->

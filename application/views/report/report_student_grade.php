@@ -36,13 +36,13 @@
 					} else {
 						for($j = 0; $j < count($semester[$selected_semester]); $j++) {
 							echo "		<tr> \n";
-							echo "			<th><p align='center' style='font-weight:normal;'> " . $semester[$selected_semester]['data']['id'] . " </p></th> \n";
-							echo "			<th><p align='center' style='font-weight:normal;'> " . $semester[$selected_semester]['data']['nama'] . " </p></th> \n";
-							echo "			<th><p align='center' style='font-weight:normal;'> " . $semester[$selected_semester]['data']['uts'] . " </p></th> \n";
-							echo "			<th><p align='center' style='font-weight:normal;'> " . $semester[$selected_semester]['data']['uas'] . " </p></th> \n";
-							echo "			<th><p align='center' style='font-weight:normal;'> " . $semester[$selected_semester]['data']['tugas'] . " </p></th> \n";
-							echo "			<th><p align='center' style='font-weight:normal;'> " . $semester[$selected_semester]['data']['nilai_akhir_grade'] . " </p></th> \n";
-							echo "			<th><p align='center' style='font-weight:normal;'> " . $semester[$selected_semester]['data']['nilai_grade'] . " </p></th> \n";
+							echo "			<th><p align='center' style='font-weight:normal;'> " . $semester[$selected_semester][$j]['id'] . " </p></th> \n";
+							echo "			<th><p align='center' style='font-weight:normal;'> " . $semester[$selected_semester][$j]['nama'] . " </p></th> \n";
+							echo "			<th><p align='center' style='font-weight:normal;'> " . $semester[$selected_semester][$j]['uts'] . " </p></th> \n";
+							echo "			<th><p align='center' style='font-weight:normal;'> " . $semester[$selected_semester][$j]['uas'] . " </p></th> \n";
+							echo "			<th><p align='center' style='font-weight:normal;'> " . $semester[$selected_semester][$j]['tugas'] . " </p></th> \n";
+							echo "			<th><p align='center' style='font-weight:normal;'> " . $semester[$selected_semester][$j]['nilai_akhir_grade'] . " </p></th> \n";
+							echo "			<th><p align='center' style='font-weight:normal;'> " . $semester[$selected_semester][$j]['nilai_grade'] . " </p></th> \n";
 							echo "		</tr> \n \n";
 						}
 					}

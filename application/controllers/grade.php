@@ -16,6 +16,8 @@
  * Menambah fungsi printPdf dan perbaikan pada view
  * v0.5 - 27 November 2015
  * Menambhankan fungsi printPdf dengan pilihan
+ * v0.6 - 26 Desember 2015
+ * Menambhankan fungsi student_grade dan student_transcript
  */
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
@@ -38,12 +40,24 @@ class Grade extends CI_Controller {
      */
 	public function __construct(){
 		parent::__construct();
-		$this->load->model('class_model');
-        $this->load->model('grade_model');
+		
+		$this->load->helper('form');
+		$this->load->helper('cookie');
 		$this->load->helper('url');
+		
+		$this->load->library('form_validation');
 		$this->load->library('session');
-
+		$this->load->library('table');
+		$this->load->library('m_pdf');
+		
+		$this->load->model('dosen_model');
+		$this->load->model('mahasiswa_model');
+		$this->load->model('class_model');
+		$this->load->model('grade_model');
+		$this->load->model('notifikasi_model');
+		$this->load->model('revision_model');
 	}
+	
     public function index(){
         if($this->session->userdata('user_role') != 'dosen' && $this->session->userdata('user_role') != 'kajur'){
             redirect('/');
@@ -381,6 +395,146 @@ class Grade extends CI_Controller {
 		//generate the PDF!
 		$pdf->WriteHTML($header.$html);
 		$pdf->Output($pdfFilePath, "I");
+	}
+	
+	public function student_transcript(){
+		if($this->session->userdata('user_role') != 'mahasiswa') {
+            redirect('/');
+        } else {
+			// set head title
+			$data['title'] = "Transkip nilai sementara";
+			
+			// get student information from session
+			$data['nrp'] = $this->session->userdata('username');
+			$data['nama'] = $this->mahasiswa_model->getNameStudent($data['nrp']);
+			
+			// get information from database
+			$data['ipk'] = $this->revision_model->getStudentIPK($data['nrp']);
+			$data['total_sks'] = $this->revision_model->getStudentSKS($data['nrp']);
+			$data['angkatan'] = $this->revision_model->getStudentYear($data['nrp']);
+			$data['tahun_ajaran_sekarang'] = $this->revision_model->getCurrentSchoolYear();
+			$taken_classes = $this->revision_model->getTakenClasses($data['nrp']);
+			
+			// count how many semester the student has
+			$data['jumlah_semester'] = $this->revision_model->getJumlahSemester($data['nrp']);
+			
+			for ($i = 1; $i <= $data['jumlah_semester']; $i++){
+				$data['semester'][$i] = NULL;
+				$idx = 0;
+				
+				// isi variable data untuk tiap semester-nya
+				for ($j = 0; $j < count($taken_classes); $j++){
+					// cek data di taken_classes, apakah semester-nya sesuai
+					if ($taken_classes[$j]['semester'] == $i){
+						$data['semester'][$i][$idx]['id'] = $taken_classes[$j]['id'];
+						$data['semester'][$i][$idx]['nama'] = $taken_classes[$j]['nama'];
+						$data['semester'][$i][$idx]['jumlah_sks'] = $taken_classes[$j]['jumlah_sks'];
+						$data['semester'][$i][$idx]['nilai_grade'] = $taken_classes[$j]['nilai_grade'];
+						
+						$idx++;
+					}
+				}
+			}
+			
+			if ($this->input->post('print')){
+				//load the view, pass the variable and do not show it but "save" the output into variable
+				$html = $this->load->view('report/report_transcript', $data, TRUE);
+				$header =$this->load->view('report/includes/headerReport', $data, TRUE);
+				
+				// you can pass mPDF parameter on this load() function
+				$pdf = $this->m_pdf->load();
+				
+				// generate the PDF
+				$pdf->WriteHTML($header.$html);
+				
+				// this the the PDF filename that user will get to download
+				$pdf_filename = "Transkip Nilai.pdf";
+				
+				// offer to user via browser download (PDF won't be saved on your server)
+				$pdf->Output($pdf_filename, "I");
+			}
+			
+			$this->load->view('includes/header', $data);
+			$this->load->view('grade/student_transcript', $data);
+			$this->load->view('includes/footer');
+		}
+	}
+	
+	public function student_grade(){
+		if($this->session->userdata('user_role') != 'mahasiswa') {
+            redirect('/');
+        } else {
+			// set head title
+			$data['title'] = "Nilai Semester";
+			
+			// get student information from session
+			$data['nrp'] = $this->session->userdata('username');
+			$data['nama'] = $this->mahasiswa_model->getNameStudent($data['nrp']);
+			
+			// get information from form view
+			if (! $this->input->post('selected_semester')){
+				$data['selected_semester'] = "none";
+			} else { 
+				$data['selected_semester'] = explode('_', $this->input->post('selected_semester'));
+				$data['selected_semester'] = $data['selected_semester'][2]; echo $data['selected_semester'];
+			}
+			
+			// get information from database
+			$data['ipk'] = $this->revision_model->getStudentIPK($data['nrp']);
+			$data['total_sks'] = $this->revision_model->getStudentSKS($data['nrp']);
+			$data['angkatan'] = $this->revision_model->getStudentYear($data['nrp']);
+			$data['jurusan'] = $this->revision_model->getStudentCourse($data['nrp']);
+			$data['tahun_ajaran_sekarang'] = $this->revision_model->getCurrentSchoolYear();
+			$taken_classes = $this->revision_model->getTakenClasses($data['nrp']);
+			
+			// count how many semester the student has
+			$data['jumlah_semester'] = $this->revision_model->getJumlahSemester($data['nrp']);
+			
+			for ($i = 1; $i <= $data['jumlah_semester']; $i++){
+				$data['semester'][$i] = NULL;
+				$idx = 0;
+				
+				// isi variable data untuk tiap semester-nya
+				for ($j = 0; $j < count($taken_classes); $j++){
+					// cek data di taken_classes, apakah semester-nya sesuai
+					if ($taken_classes[$j]['semester'] == $i){
+						$data['semester'][$i][$idx]['id'] = $taken_classes[$j]['id'];
+						$data['semester'][$i][$idx]['nama'] = $taken_classes[$j]['nama'];
+						$data['semester'][$i][$idx]['uts'] = $taken_classes[$j]['uts'];
+						$data['semester'][$i][$idx]['uas'] = $taken_classes[$j]['uas'];
+						$data['semester'][$i][$idx]['tugas'] = $taken_classes[$j]['tugas'];
+						$data['semester'][$i][$idx]['nilai_akhir_grade'] = $taken_classes[$j]['nilai_akhir_grade'];
+						$data['semester'][$i][$idx]['nilai_grade'] = $taken_classes[$j]['nilai_grade'];
+						
+						$idx++;
+					}
+				}
+			}
+			
+			if ($this->input->post('print') && $data['selected_semester'] != "none"){
+				$data['title'] = "Nilai Semester " . $data['selected_semester'];
+				
+				//load the view, pass the variable and do not show it but "save" the output into variable
+				$html = $this->load->view('report/report_student_grade', $data, TRUE);
+				$header =$this->load->view('report/includes/headerReport', $data, TRUE);
+				
+				// you can pass mPDF parameter on this load() function
+				$pdf = $this->m_pdf->load();
+				
+				// generate the PDF
+				$pdf->WriteHTML($header.$html);
+				
+				// this the the PDF filename that user will get to download
+				$pdf_filename = "Nilai Semester.pdf";
+				
+				// offer to user via browser download (PDF won't be saved on your server)
+				$pdf->Output($pdf_filename, "I");
+			}
+			
+			$this->load->view('includes/header', $data);
+			$this->load->view('grade/student_grade', $data);
+			$this->load->view('includes/footer');
+		}
 	}
 
 }

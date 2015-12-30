@@ -5,23 +5,28 @@
 <div class="container">
 	<h1 style="text-align: center;">Transkip Nilai Sementara</h1>
 	
-	<hr>
+	<hr><br/>
 	
-	<div style="margin-left: 42%; margin-top: 4%;">
-		<label><b>NRP</b></label> <br>
-		<label><b>Nama</b></label> <br>
-		<label><b>IPK</b></label> <br>
-		<label><b>Total SKS</b></label>
-	</div>
+	<table align="center" border="0">
+		<tr>
+			<th style="text-align: left;"><label><b>NRP</b></label></th>
+			<th style="padding-left: 7px; text-align: left;"><label>: <?php echo $nrp; ?></label></th>
+		</tr>
+		<tr>
+			<th style="text-align: left;"><label><b>Nama</b></label></th>
+			<th style="padding-left: 7px; text-align: left;"><label>: <?php echo $nama; ?></label></th>
+		</tr>
+		<tr>
+			<th style="text-align: left;"><label><b>IPK</b></label></th>
+			<th style="padding-left: 7px; text-align: left;"><label>: <?php echo $ipk; ?></label></th>
+		</tr>
+		<tr>
+			<th style="text-align: left;"><label><b>Total SKS</b></label></th>
+			<th style="padding-left: 7px; text-align: left;"><label>: <?php echo $total_sks; ?></label></th>
+		</tr>
+	</table>
 	
-	<div style="margin-left: 48.5%; margin-top: -8.9%;">
-		<label>: <?php echo $nrp; ?></label> <br>
-		<label>: <?php echo $nama; ?></label> <br>
-		<label>: <?php echo $ipk; ?></label> <br>
-		<label>: <?php echo $total_sks; ?></label>
-	</div>
-	
-	<table width="100%" style="margin-top: -8%;">
+	<table width="100%" style="margin-top: -5%;">
 		<?php for($i = 1; $i <= $jumlah_semester; $i++) {
 			if ($i % 2 == 0){
 				echo "\n <td width='52.75%' style='padding-left:5%;'> \n";
@@ -29,7 +34,7 @@
 			
 			echo "<h3>SEMESTER " . $i . "</h3>";
 			
-			echo "\n <table id='table_transcript' class='table table-striped table-bordered' cellspacing='0'> \n";
+			echo "\n <table id='table_transcript' class='table table-striped table-bordered'> \n";
 			echo "	<thead> \n";
 			echo "		<tr> \n";
 			echo "			<th><p align='center'> Kode </p></th> \n";
@@ -45,10 +50,10 @@
 			} else {
 				for($j = 0; $j < count($semester[$i]); $j++) {
 					echo "		<tr> \n";
-					echo "			<th><p align='center' style='font-weight:normal;'>" . $semester[$i]['data']['id'] . " </p></th> \n";
-					echo "			<th><p align='center' style='font-weight:normal;'>" . $semester[$i]['data']['nama'] . " </p></th> \n";
-					echo "			<th><p align='center' style='font-weight:normal;'>" . $semester[$i]['data']['jumlah_sks'] . " </p></th> \n";
-					echo "			<th><p align='center' style='font-weight:normal;'>" . $semester[$i]['data']['nilai_grade'] . " </p></th> \n";
+					echo "			<th><p align='center' style='font-weight:normal;'>" . $semester[$i][$j]['id'] . " </p></th> \n";
+					echo "			<th><p align='center' style='font-weight:normal;'>" . $semester[$i][$j]['nama'] . " </p></th> \n";
+					echo "			<th><p align='center' style='font-weight:normal;'>" . $semester[$i][$j]['jumlah_sks'] . " </p></th> \n";
+					echo "			<th><p align='center' style='font-weight:normal;'>" . $semester[$i][$j]['nilai_grade'] . " </p></th> \n";
 					echo "		</tr> \n \n";
 				}
 			}
@@ -64,7 +69,7 @@
 	</table>
 	
 	<div class="text-right">
-		<?php echo form_open('revision/student_transcript'); ?>
+		<?php echo form_open('grade/student_transcript'); ?>
 		<?php echo form_submit(['id'=>'print','name'=>'print','value'=>'Cetak Transkip','class'=>'btn btn-primary']); ?>
 		<?php echo form_close(); ?>
 	</div>
